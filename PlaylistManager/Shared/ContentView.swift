@@ -20,7 +20,12 @@ struct ContentView: View {
     var body: some View {
         
         NavigationView {
-             Button("do something", action: doSomething)
+            VStack {
+                Button("do something", action: doSomething)
+                Button("dude", action: handleDude)
+                Button("sweet", action: handleSweet)
+            }
+            
             Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
         }
     }
@@ -33,6 +38,14 @@ struct ContentView: View {
         let temp = formatter.string(from: now)
         
         doSomethingText = temp
+    }
+    
+    private func handleDude() {
+        doSomethingText = "dude!"
+    }
+    
+    private func handleSweet() {
+        doSomethingText = "sweet!"
     }
     
     private func addItem() {

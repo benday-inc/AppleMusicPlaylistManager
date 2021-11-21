@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MusicKit
+import MediaPlayer
 
 struct ContentView: View {
     @State var doSomethingText = "(not set)"
@@ -26,6 +27,9 @@ struct ContentView: View {
                 buttonText
                     .padding([.leading, .trailing], 10)
             }
+            Button("get playlists", action: handleListPlaylists)
+            
+            Button("get all songs", action: handleGetAllSongs)
         }
     }
     
@@ -33,6 +37,29 @@ struct ContentView: View {
         let settingsUrl = UIApplication.openSettingsURLString
         
         doSomethingText = settingsUrl
+    }
+    
+    private func handleGetAllSongs() {
+        print("getting all songs...")
+        let songs = MPMediaQuery.songs()
+        
+        print("got all songs.")
+        
+        print("song count: \(songs.items?.count ?? -1)")
+    }
+    
+    private func handleListPlaylists() {
+        let myPlaylistQuery = MPMediaQuery.playlists()
+        let playlists = myPlaylistQuery.collections
+        for playlist in playlists! {
+            print(playlist.value(forProperty: MPMediaPlaylistPropertyName)!)
+                    
+            let songs = playlist.items
+            for song in songs {
+                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle)
+                print("\t\t", songTitle!)
+            }
+        }
     }
     
     /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
@@ -58,7 +85,7 @@ struct ContentView: View {
         let buttonText: Text
         switch musicAuthorizationStatus {
             case .notDetermined:
-                buttonText = Text("Continue")
+                buttonText = Text("Check for media library permissions")
             case .denied:
                 buttonText = Text("Open Settings")
             default:

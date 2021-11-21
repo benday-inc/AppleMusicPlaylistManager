@@ -1,0 +1,83 @@
+//
+//  ContentView.swift
+//  Shared
+//
+//  Created by Benjamin Day on 11/21/21.
+//
+
+import SwiftUI
+import MusicKit
+
+struct ContentView: View {
+    @State var doSomethingText = "(not set)"
+    /// The current authorization status of MusicKit.
+    @Binding var musicAuthorizationStatus: MusicAuthorization.Status
+    
+    /// Opens a URL using the appropriate system service.
+    @Environment(\.openURL) private var openURL
+    
+    var body: some View {
+        VStack {
+            Text("Hello, world!")
+                .padding()
+            Button("do something", action: handleDoSomething)
+            Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
+            Button(action: handleButtonPressed) {
+                buttonText
+                    .padding([.leading, .trailing], 10)
+            }
+        }
+    }
+    
+    private func handleDoSomething() {
+        let settingsUrl = UIApplication.openSettingsURLString
+        
+        doSomethingText = settingsUrl
+    }
+    
+    /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
+    private func handleButtonPressed() {
+        switch musicAuthorizationStatus {
+            case .notDetermined:
+                Task {
+                    let musicAuthorizationStatus = await MusicAuthorization.request()
+                    await update(with: musicAuthorizationStatus)
+                }
+            case .denied:
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                    openURL(settingsURL)
+                }
+            default:
+                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
+        }
+    }
+    
+    /// A button that the user taps to continue using the app according to the current
+    /// authorization status.
+    private var buttonText: Text {
+        let buttonText: Text
+        switch musicAuthorizationStatus {
+            case .notDetermined:
+                buttonText = Text("Continue")
+            case .denied:
+                buttonText = Text("Open Settings")
+            default:
+                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
+        }
+        return buttonText
+    }
+    
+    /// Safely updates the `musicAuthorizationStatus` property on the main thread.
+    @MainActor
+    private func update(with musicAuthorizationStatus: MusicAuthorization.Status) {
+        withAnimation {
+            self.musicAuthorizationStatus = musicAuthorizationStatus
+        }
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView(musicAuthorizationStatus: .constant(.notDetermined))
+    }
+}

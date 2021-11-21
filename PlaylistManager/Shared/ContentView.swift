@@ -7,10 +7,19 @@
 
 import SwiftUI
 import CoreData
+import MusicKit
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    
     @State var doSomethingText = "(not set)"
+    
+    /// The current authorization status of MusicKit.
+    @Binding var musicAuthorizationStatus: MusicAuthorization.Status
+    
+    /// Opens a URL using the appropriate system service.
+    @Environment(\.openURL) private var openURL
+    
    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
@@ -24,6 +33,7 @@ struct ContentView: View {
                 Button("do something", action: doSomething)
                 Button("dude", action: handleDude)
                 Button("sweet", action: handleSweet)
+                Button("music thing", action: handleMusicThing)
             }
             
             Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
@@ -46,6 +56,29 @@ struct ContentView: View {
     
     private func handleSweet() {
         doSomethingText = "sweet!"
+    }
+    
+    private func handleMusicThing() {
+        switch musicAuthorizationStatus {
+            case .notDetermined:
+                Task {
+                    let musicAuthorizationStatus = await MusicAuthorization.request()
+                    await update(with: musicAuthorizationStatus)
+                }
+            case .denied:
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                    openURL(settingsURL)
+                }
+            default:
+                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
+        }
+    }
+    
+    @MainActor
+    private func update(with musicAuthorizationStatus: MusicAuthorization.Status) {
+        withAnimation {
+            self.musicAuthorizationStatus = musicAuthorizationStatus
+        }
     }
     
     private func addItem() {

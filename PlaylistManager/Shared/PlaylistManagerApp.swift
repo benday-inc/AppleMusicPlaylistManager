@@ -4,7 +4,7 @@
 //
 //  Created by Benjamin Day on 11/20/21.
 //
-
+import MusicKit
 import SwiftUI
 
 @main
@@ -17,4 +17,6 @@ struct PlaylistManagerApp: App {
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
+    
+    
 }

@@ -8,33 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0403138F274A7E46009B0F23 /* Test20211121aApp.swift */; };
-		040313A0274A7E47009B0F23 /* Test20211121aApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0403138F274A7E46009B0F23 /* Test20211121aApp.swift */; };
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
-		040313A2274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
-		040313A4274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0403138F274A7E46009B0F23 /* Test20211121aApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test20211121aApp.swift; sourceTree = "<group>"; };
 		04031390274A7E46009B0F23 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04031391274A7E47009B0F23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		04031396274A7E47009B0F23 /* Test20211121a.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test20211121a.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0403139C274A7E47009B0F23 /* Test20211121a.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test20211121a.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04031396274A7E47009B0F23 /* PlaylistEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlaylistEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0403139E274A7E47009B0F23 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		040313AD274AEC58009B0F23 /* Test20211121a--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Test20211121a--iOS--Info.plist"; sourceTree = "<group>"; };
-		040313AE274AEC9A009B0F23 /* Test20211121a--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Test20211121a--macOS--Info.plist"; sourceTree = "<group>"; };
+		040313AD274AEC58009B0F23 /* PlaylistEditor--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--iOS--Info.plist"; sourceTree = "<group>"; };
+		040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--macOS--Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		04031393274A7E47009B0F23 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04031399274A7E47009B0F23 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -47,8 +36,8 @@
 		04031389274A7E46009B0F23 = {
 			isa = PBXGroup;
 			children = (
-				040313AE274AEC9A009B0F23 /* Test20211121a--macOS--Info.plist */,
-				040313AD274AEC58009B0F23 /* Test20211121a--iOS--Info.plist */,
+				040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */,
+				040313AD274AEC58009B0F23 /* PlaylistEditor--iOS--Info.plist */,
 				0403138E274A7E46009B0F23 /* Shared */,
 				0403139D274A7E47009B0F23 /* macOS */,
 				04031397274A7E47009B0F23 /* Products */,
@@ -68,8 +57,7 @@
 		04031397274A7E47009B0F23 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04031396274A7E47009B0F23 /* Test20211121a.app */,
-				0403139C274A7E47009B0F23 /* Test20211121a.app */,
+				04031396274A7E47009B0F23 /* PlaylistEditor.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,9 +73,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04031395274A7E47009B0F23 /* Test20211121a (iOS) */ = {
+		04031395274A7E47009B0F23 /* PlaylistEditor (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Test20211121a (iOS)" */;
+			buildConfigurationList = 040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "PlaylistEditor (iOS)" */;
 			buildPhases = (
 				04031392274A7E47009B0F23 /* Sources */,
 				04031393274A7E47009B0F23 /* Frameworks */,
@@ -97,26 +85,9 @@
 			);
 			dependencies = (
 			);
-			name = "Test20211121a (iOS)";
+			name = "PlaylistEditor (iOS)";
 			productName = "Test20211121a (iOS)";
-			productReference = 04031396274A7E47009B0F23 /* Test20211121a.app */;
-			productType = "com.apple.product-type.application";
-		};
-		0403139B274A7E47009B0F23 /* Test20211121a (macOS) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 040313AA274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Test20211121a (macOS)" */;
-			buildPhases = (
-				04031398274A7E47009B0F23 /* Sources */,
-				04031399274A7E47009B0F23 /* Frameworks */,
-				0403139A274A7E47009B0F23 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Test20211121a (macOS)";
-			productName = "Test20211121a (macOS)";
-			productReference = 0403139C274A7E47009B0F23 /* Test20211121a.app */;
+			productReference = 04031396274A7E47009B0F23 /* PlaylistEditor.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -127,17 +98,14 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					04031395274A7E47009B0F23 = {
 						CreatedOnToolsVersion = 13.1;
 					};
-					0403139B274A7E47009B0F23 = {
-						CreatedOnToolsVersion = 13.1;
-					};
 				};
 			};
-			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Test20211121a" */;
+			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "PlaylistEditor" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -150,8 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04031395274A7E47009B0F23 /* Test20211121a (iOS) */,
-				0403139B274A7E47009B0F23 /* Test20211121a (macOS) */,
+				04031395274A7E47009B0F23 /* PlaylistEditor (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -165,14 +132,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0403139A274A7E47009B0F23 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				040313A4274A7E47009B0F23 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -182,15 +141,6 @@
 			files = (
 				040313A1274A7E47009B0F23 /* ContentView.swift in Sources */,
 				0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		04031398274A7E47009B0F23 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				040313A2274A7E47009B0F23 /* ContentView.swift in Sources */,
-				040313A0274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +198,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -301,6 +253,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -318,7 +272,7 @@
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Test20211121a--iOS--Info.plist";
+				INFOPLIST_FILE = "PlaylistEditor--iOS--Info.plist";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "gunna do stuff with media library";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -331,8 +285,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.benday.Test20211121a;
-				PRODUCT_NAME = Test20211121a;
+				PRODUCT_BUNDLE_IDENTIFIER = com.benday.PlaylistEditor;
+				PRODUCT_NAME = PlaylistEditor;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -350,7 +304,7 @@
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Test20211121a--iOS--Info.plist";
+				INFOPLIST_FILE = "PlaylistEditor--iOS--Info.plist";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "gunna do stuff with media library";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -363,8 +317,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.benday.Test20211121a;
-				PRODUCT_NAME = Test20211121a;
+				PRODUCT_BUNDLE_IDENTIFIER = com.benday.PlaylistEditor;
+				PRODUCT_NAME = PlaylistEditor;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -373,70 +327,10 @@
 			};
 			name = Release;
 		};
-		040313AB274A7E47009B0F23 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z7SYY2QYHK;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Test20211121a--macOS--Info.plist";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "gunna do stuff with media library";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.benday.Test20211121a;
-				PRODUCT_NAME = Test20211121a;
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		040313AC274A7E47009B0F23 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z7SYY2QYHK;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Test20211121a--macOS--Info.plist";
-				INFOPLIST_KEY_NSAppleMusicUsageDescription = "gunna do stuff with media library";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.benday.Test20211121a;
-				PRODUCT_NAME = Test20211121a;
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Test20211121a" */ = {
+		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "PlaylistEditor" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				040313A5274A7E47009B0F23 /* Debug */,
@@ -445,20 +339,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Test20211121a (iOS)" */ = {
+		040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "PlaylistEditor (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				040313A8274A7E47009B0F23 /* Debug */,
 				040313A9274A7E47009B0F23 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		040313AA274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Test20211121a (macOS)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				040313AB274A7E47009B0F23 /* Debug */,
-				040313AC274A7E47009B0F23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

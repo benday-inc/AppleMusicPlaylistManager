@@ -14,22 +14,32 @@ struct ContentView: View {
     /// The current authorization status of MusicKit.
     @Binding var musicAuthorizationStatus: MusicAuthorization.Status
     
+    @State var _playlists: Array<PlaylistItem>
+    
+    
     /// Opens a URL using the appropriate system service.
     @Environment(\.openURL) private var openURL
     
     var body: some View {
         VStack {
-            Text("Hello, world!")
-                .padding()
-            Button("do something", action: handleDoSomething)
-            Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
-            Button(action: handleButtonPressed) {
-                buttonText
-                    .padding([.leading, .trailing], 10)
+            VStack {
+                Text("Hello, world!")
+                    .padding()
+                Button("do something", action: handleDoSomething)
+                Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
+                Button(action: handleButtonPressed) {
+                    buttonText
+                        .padding([.leading, .trailing], 10)
+                }
+                Button("get playlists", action: handleListPlaylists)
+                
+                Button("get all songs", action: handleGetAllSongs)
             }
-            Button("get playlists", action: handleListPlaylists)
-            
-            Button("get all songs", action: handleGetAllSongs)
+            List {
+                ForEach(_playlists) { item in
+                    Text("\(item.name)")
+                }
+            }
         }
     }
     
@@ -49,6 +59,22 @@ struct ContentView: View {
     }
     
     private func handleListPlaylists() {
+        let myPlaylistQuery = MPMediaQuery.playlists()
+        let playlists = myPlaylistQuery.collections
+        
+        var temp = Array<PlaylistItem>()
+        
+        for playlist in playlists! {
+            let tempAny = playlist.value(forProperty: MPMediaPlaylistPropertyName) as! String
+            
+            
+            temp.append(PlaylistItem(name: tempAny))
+        }
+        
+        _playlists = temp
+    }
+    
+    private func handleListPlaylistsAndSongsInPlaylists() {
         let myPlaylistQuery = MPMediaQuery.playlists()
         let playlists = myPlaylistQuery.collections
         for playlist in playlists! {
@@ -105,6 +131,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(musicAuthorizationStatus: .constant(.notDetermined))
+        ContentView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three"),PlaylistItem(name: "four")])
     }
 }

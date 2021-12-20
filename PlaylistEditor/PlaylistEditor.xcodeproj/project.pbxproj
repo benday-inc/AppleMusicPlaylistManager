@@ -10,6 +10,7 @@
 		0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0403138F274A7E46009B0F23 /* Test20211121aApp.swift */; };
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
+		0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0483507A27712826004F0FFB /* PlaylistItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		0403139E274A7E47009B0F23 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		040313AD274AEC58009B0F23 /* PlaylistEditor--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--macOS--Info.plist"; sourceTree = "<group>"; };
+		0483507A27712826004F0FFB /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +52,7 @@
 				0403138F274A7E46009B0F23 /* Test20211121aApp.swift */,
 				04031390274A7E46009B0F23 /* ContentView.swift */,
 				04031391274A7E47009B0F23 /* Assets.xcassets */,
+				0483507A27712826004F0FFB /* PlaylistItem.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 			files = (
 				040313A1274A7E47009B0F23 /* ContentView.swift in Sources */,
 				0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,
+				0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,24 +22,29 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            VStack {
-                Text("Hello, world!")
-                    .padding()
-                Button("do something", action: handleDoSomething)
-                Label(doSomethingText, systemImage: /*@START_MENU_TOKEN@*/"42.circle"/*@END_MENU_TOKEN@*/)
-                Button(action: handleButtonPressed) {
-                    buttonText
-                        .padding([.leading, .trailing], 10)
+            NavigationView {
+                List {
+                    ForEach(_playlists) { item in
+                        PlaylistCell(playlist: item)
+                    }
                 }
-                Button("get playlists", action: handleListPlaylists)
-                
-                Button("get all songs", action: handleGetAllSongs)
-            }
-            List {
-                ForEach(_playlists) { item in
-                    Text("\(item.name)")
+                .navigationTitle("Playlists")
+                .toolbar{
+                    
+                    HStack {
+                        Button(action: handleButtonPressed) {
+                            buttonText
+                                .padding([.leading, .trailing], 10)
+                        }
+                        
+                        Button("playlists", action: handleListPlaylists)
+                        
+                        Button("songs", action: handleGetAllSongs)
+                    }
+                    
                 }
             }
+            
         }
     }
     
@@ -111,7 +116,7 @@ struct ContentView: View {
         let buttonText: Text
         switch musicAuthorizationStatus {
             case .notDetermined:
-                buttonText = Text("Check for media library permissions")
+                buttonText = Text("permissions")
             case .denied:
                 buttonText = Text("Open Settings")
             default:
@@ -132,5 +137,15 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three"),PlaylistItem(name: "four")])
+    }
+}
+
+struct PlaylistCell: View {
+    var playlist: PlaylistItem
+    
+    var body: some View {
+        NavigationLink(destination: PlaylistDetail(playlist: playlist)) {
+            Label("\(playlist.name)", systemImage: "music.note.list")
+        }
     }
 }

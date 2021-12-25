@@ -12,11 +12,25 @@ import MediaPlayer
 struct PlaylistDetail: View {
     
     let playlist: PlaylistItem
+    @State var songs: Array<MediaItemWrapper> = Array<MediaItemWrapper>()
     
     var body: some View {
         NavigationView {
-            VStack{
-                Text("\(playlist.name)")
+//            VStack{
+//                Text("\(playlist.name)")
+//            }
+            
+            List {
+                if (songs.count == 0) {
+                    Text("no items")
+                }
+                else {
+                    ForEach(songs) { item in
+                        
+                        Text("\(item.trackName)")
+                        
+                    }
+                }
             }
             .navigationTitle("\(playlist.name)")
         }
@@ -29,14 +43,18 @@ struct PlaylistDetail: View {
             print("playlist instance is null")
         }
         else if (playlist.instance?.items == nil) {
-            print("playlist instnace items is null")
+            print("playlist instance items is null")
         }
         else {
-            let songs = playlist.instance!.items
-            for song in songs {
-                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle)
-                print("\t\t", songTitle!)
+            var temp = Array<MediaItemWrapper>()
+            let tempSongs = playlist.instance!.items
+            for song in tempSongs {
+                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle) 
+                // print("\t\t", songTitle!)
+                temp.append(MediaItemWrapper(instance: song))
             }
+            
+            songs = temp
         }
     }
 }

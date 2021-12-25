@@ -6,13 +6,38 @@
 //
 
 import SwiftUI
+import MusicKit
+import MediaPlayer
 
 struct PlaylistDetail: View {
     
     let playlist: PlaylistItem
     
     var body: some View {
-        Text("\(playlist.name)")
+        NavigationView {
+            VStack{
+                Text("\(playlist.name)")
+            }
+            .navigationTitle("\(playlist.name)")
+        }
+        .onAppear(perform: populate)
+            
+    }
+    
+    func populate() {
+        if (playlist.instance == nil) {
+            print("playlist instance is null")
+        }
+        else if (playlist.instance?.items == nil) {
+            print("playlist instnace items is null")
+        }
+        else {
+            let songs = playlist.instance!.items
+            for song in songs {
+                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle)
+                print("\t\t", songTitle!)
+            }
+        }
     }
 }
 

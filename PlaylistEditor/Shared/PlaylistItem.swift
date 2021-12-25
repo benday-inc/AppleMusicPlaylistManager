@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import MusicKit
+import MediaPlayer
 
 struct PlaylistItem: Identifiable, Hashable {
     var id = UUID()
     var name: String
+    var instance: MPMediaItemCollection?
 }

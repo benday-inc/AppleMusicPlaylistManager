@@ -73,7 +73,7 @@ struct ContentView: View {
             let tempAny = playlist.value(forProperty: MPMediaPlaylistPropertyName) as! String
             
             
-            temp.append(PlaylistItem(name: tempAny))
+            temp.append(PlaylistItem(name: tempAny, instance: playlist))
         }
         
         _playlists = temp

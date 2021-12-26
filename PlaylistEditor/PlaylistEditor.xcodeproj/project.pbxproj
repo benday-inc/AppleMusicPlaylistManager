@@ -11,6 +11,7 @@
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
 		0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD232778D87D00C76D96 /* PlaylistCell.swift */; };
+		0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD252778E65600C76D96 /* PlaylistsView.swift */; };
 		0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0472068A27774D6D00F7746D /* PlaylistDetail.swift */; };
 		0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0483507A27712826004F0FFB /* PlaylistItem.swift */; };
 /* End PBXBuildFile section */
@@ -25,6 +26,7 @@
 		040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--macOS--Info.plist"; sourceTree = "<group>"; };
 		0456FD2227789F6300C76D96 /* PlaylistEditor (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "PlaylistEditor (iOS).entitlements"; sourceTree = "<group>"; };
 		0456FD232778D87D00C76D96 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
+		0456FD252778E65600C76D96 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
 		0472068A27774D6D00F7746D /* PlaylistDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetail.swift; sourceTree = "<group>"; };
 		0483507A27712826004F0FFB /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,6 +63,7 @@
 				0483507A27712826004F0FFB /* PlaylistItem.swift */,
 				0472068A27774D6D00F7746D /* PlaylistDetail.swift */,
 				0456FD232778D87D00C76D96 /* PlaylistCell.swift */,
+				0456FD252778E65600C76D96 /* PlaylistsView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */,
 				0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */,
 				040313A1274A7E47009B0F23 /* ContentView.swift in Sources */,
 				0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,

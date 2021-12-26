@@ -10,124 +10,15 @@ import MusicKit
 import MediaPlayer
 
 struct ContentView: View {
-    @State var doSomethingText = "(not set)"
-    /// The current authorization status of MusicKit.
-    @Binding var musicAuthorizationStatus: MusicAuthorization.Status
-    
-    @State var _playlists: Array<PlaylistItem>
-    
-    
-    /// Opens a URL using the appropriate system service.
-    @Environment(\.openURL) private var openURL
     
     var body: some View {
-            NavigationView {
-                List {
-                    ForEach(_playlists) { item in
-                        PlaylistCell(playlist: item)
-                    }
-                }
-                .navigationTitle("Playlists")
-                .toolbar{
-                    HStack {
-//                        Button(action: handleButtonPressed) {
-//                            buttonText
-//                        }
-                        Button("playlists", action: handleListPlaylists)
-                        
-                        Button("songs", action: handleGetAllSongs)
-                    }
-                }
-            }.navigationViewStyle(.stack)
-            
-    }
-    
-    private func handleDoSomething() {
-        let settingsUrl = UIApplication.openSettingsURLString
-        
-        doSomethingText = settingsUrl
-    }
-    
-    private func handleGetAllSongs() {
-        print("getting all songs...")
-        let songs = MPMediaQuery.songs()
-        
-        print("got all songs.")
-        
-        print("song count: \(songs.items?.count ?? -1)")
-    }
-    
-    private func handleListPlaylists() {
-        let myPlaylistQuery = MPMediaQuery.playlists()
-        let playlists = myPlaylistQuery.collections
-        
-        var temp = Array<PlaylistItem>()
-        
-        for case let playlist as MPMediaPlaylist in playlists! {
-            temp.append(PlaylistItem(name: playlist.name!, instance: playlist))
-        }
-        
-        _playlists = temp
-    }
-    
-    private func handleListPlaylistsAndSongsInPlaylists() {
-        let myPlaylistQuery = MPMediaQuery.playlists()
-        let playlists = myPlaylistQuery.collections
-        for playlist in playlists! {
-            print(playlist.value(forProperty: MPMediaPlaylistPropertyName)!)
-                    
-            let songs = playlist.items
-            for song in songs {
-                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle)
-                print("\t\t", songTitle!)
-            }
-        }
-    }
-    
-    /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
-    private func handleButtonPressed() {
-        switch musicAuthorizationStatus {
-            case .notDetermined:
-                Task {
-                    let musicAuthorizationStatus = await MusicAuthorization.request()
-                    await update(with: musicAuthorizationStatus)
-                }
-            case .denied:
-                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                    openURL(settingsURL)
-                }
-            default:
-                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-    }
-    
-    /// A button that the user taps to continue using the app according to the current
-    /// authorization status.
-    private var buttonText: Text {
-        let buttonText: Text
-        switch musicAuthorizationStatus {
-            case .notDetermined:
-                buttonText = Text("permissions")
-            case .denied:
-                buttonText = Text("Open Settings")
-            default:
-                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-        return buttonText
-    }
-    
-    /// Safely updates the `musicAuthorizationStatus` property on the main thread.
-    @MainActor
-    private func update(with musicAuthorizationStatus: MusicAuthorization.Status) {
-        withAnimation {
-            self.musicAuthorizationStatus = musicAuthorizationStatus
-        }
+            PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree three"),PlaylistItem(name: "four")])
+        ContentView()
     }
 }
 

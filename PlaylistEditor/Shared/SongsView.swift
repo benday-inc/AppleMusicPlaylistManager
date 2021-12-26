@@ -19,14 +19,21 @@ struct SongsView: View {
     
     @State var _items: Array<MediaItemWrapper>
     
+    @State var itemCount: Int = -1
+    
     var body: some View {
         
         NavigationView {
-            List {
-                ForEach(_items) { item in
-                    SongCell(item: item)
+            VStack {
+                List {
+                    ForEach(_items) { item in
+                        SongCell(item: item)
+                    }
                 }
+                Text("Item count: \(itemCount)")
             }
+            
+            
             .navigationTitle("Songs")
             .toolbar{
                 HStack {
@@ -48,8 +55,8 @@ struct SongsView: View {
         let queryResults = query.items
         print("got all songs.")
         
-        print("song count: \(queryResults?.count ?? -1)")
-        
+        itemCount = queryResults?.count ?? -1
+                
         var temp = Array<MediaItemWrapper>()
         
         for case let item as MPMediaItem in queryResults! {

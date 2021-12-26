@@ -13,27 +13,22 @@ struct PlaylistDetail: View {
     
     let playlist: PlaylistItem
     @State var songs: Array<MediaItemWrapper> = Array<MediaItemWrapper>()
+    @State var songCount: Int = 0
     
     var body: some View {
         NavigationView {
-//            VStack{
-//                Text("\(playlist.name)")
-//            }
-            
             List {
                 if (songs.count == 0) {
                     Text("no items")
                 }
                 else {
                     ForEach(songs) { item in
-                        
-                        Text("\(item.trackName)")
-                        
+                        Text("\(item.trackName)").allowsTightening(true)
                     }
                 }
             }
-            .navigationTitle("\(playlist.name)")
-        }
+            Text("Count: \(songCount)")
+        }.navigationTitle("\(playlist.name)")
         .onAppear(perform: populate)
             
     }
@@ -47,7 +42,9 @@ struct PlaylistDetail: View {
         }
         else {
             var temp = Array<MediaItemWrapper>()
-            let tempSongs = playlist.instance!.items
+            let playlistInstance = playlist.instance!
+            songCount = playlistInstance.count
+            let tempSongs = playlistInstance.items
             for song in tempSongs {
                 // let songTitle = song.value(forProperty: MPMediaItemPropertyTitle) 
                 // print("\t\t", songTitle!)

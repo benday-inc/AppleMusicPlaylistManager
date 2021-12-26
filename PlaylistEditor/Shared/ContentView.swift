@@ -132,7 +132,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three"),PlaylistItem(name: "four")])
+        ContentView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree three"),PlaylistItem(name: "four")])
     }
 }
 
@@ -141,7 +141,7 @@ struct PlaylistCell: View {
     
     var body: some View {
         NavigationLink(destination: PlaylistDetail(playlist: playlist)) {
-            Label("\(playlist.name)", systemImage: "music.note.list")
+            Label("\(playlist.name)", systemImage: "music.note.list").allowsTightening(true)
         }
     }
 }

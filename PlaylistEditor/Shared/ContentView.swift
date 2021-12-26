@@ -136,12 +136,4 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct PlaylistCell: View {
-    var playlist: PlaylistItem
-    
-    var body: some View {
-        NavigationLink(destination: PlaylistDetail(playlist: playlist)) {
-            Label("\(playlist.name)", systemImage: "music.note.list").allowsTightening(true)
-        }
-    }
-}
+

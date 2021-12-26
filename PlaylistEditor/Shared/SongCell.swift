@@ -11,7 +11,14 @@ struct SongCell: View {
     var item: MediaItemWrapper
     
     var body: some View {
-        Label("\(item.artistName) - \(item.trackName)", systemImage: "music.note.list").allowsTightening(true)
+        HStack {
+            Image(systemName: "music.note.list")
+            VStack(alignment: .leading) {
+                Text(item.trackName).font(.title2).fontWeight(.bold).multilineTextAlignment(.leading)
+                Text("\(item.artistName) - \(item.albumName)")
+                    .multilineTextAlignment(.center)
+            }
+        }
     }
 }
 

@@ -21,7 +21,6 @@ struct ContentView: View {
     @Environment(\.openURL) private var openURL
     
     var body: some View {
-        VStack {
             NavigationView {
                 List {
                     ForEach(_playlists) { item in
@@ -41,7 +40,6 @@ struct ContentView: View {
                 }
             }.navigationViewStyle(.stack)
             
-        }
     }
     
     private func handleDoSomething() {

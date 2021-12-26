@@ -63,11 +63,8 @@ struct ContentView: View {
         
         var temp = Array<PlaylistItem>()
         
-        for playlist in playlists! {
-            let tempAny = playlist.value(forProperty: MPMediaPlaylistPropertyName) as! String
-            
-            
-            temp.append(PlaylistItem(name: tempAny, instance: playlist))
+        for case let playlist as MPMediaPlaylist in playlists! {
+            temp.append(PlaylistItem(name: playlist.name!, instance: playlist))
         }
         
         _playlists = temp

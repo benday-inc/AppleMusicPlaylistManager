@@ -12,7 +12,16 @@ import MediaPlayer
 struct ContentView: View {
     
     var body: some View {
+        TabView {
             PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])
+                .tabItem {
+                Label("Playlists", systemImage: "music.note.list")
+            }.tag(0)
+            Text("two").tabItem {
+                Label("Songs", systemImage: "square.and.pencil")
+            }.tag(1)
+        }
+
     }
 }
 

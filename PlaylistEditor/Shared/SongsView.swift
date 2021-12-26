@@ -17,7 +17,8 @@ struct SongsView: View {
     /// The current authorization status of MusicKit.
     @Binding var musicAuthorizationStatus: MusicAuthorization.Status
     
-    @State var _items: Array<MediaItemWrapper>
+    @State var items: Array<MediaItemWrapper>
+    @State var allItems: Array<MediaItemWrapper>?
     
     @State var itemCount: Int = -1
     
@@ -26,7 +27,7 @@ struct SongsView: View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(_items) { item in
+                    ForEach(items) { item in
                         SongCell(item: item)
                     }
                 }
@@ -41,7 +42,8 @@ struct SongsView: View {
 //                            buttonText
 //                        }
                     
-                    Button("songs", action: handleGetAllSongs)
+                    Button("all songs", action: handleGetAllSongs)
+                    Button("random songs", action: handleGetRandomSongs)
                 }
             }
         }.navigationViewStyle(.stack)
@@ -58,12 +60,38 @@ struct SongsView: View {
         itemCount = queryResults?.count ?? -1
                 
         var temp = Array<MediaItemWrapper>()
-        
+                
         for case let item as MPMediaItem in queryResults! {
             temp.append(MediaItemWrapper(item: item))
         }
         
-        _items = temp
+        items = temp
+        allItems = temp
+    }
+    
+    private func getRandomIndexes(maxIndex: Int, numberOfValuesToReturn: Int) -> Array<Int> {
+        var returnValues = Array<Int>()
+        
+        for _ in 0...numberOfValuesToReturn {
+            returnValues.append(Int.random(in: 1..<maxIndex))
+        }
+        
+        return returnValues
+    }
+    
+    private func handleGetRandomSongs() {
+        
+        let songCount = allItems!.count
+                
+        let randomIndexes = getRandomIndexes(maxIndex: songCount, numberOfValuesToReturn: 100)
+        
+        var temp = Array<MediaItemWrapper>()
+        
+        for index in randomIndexes {
+            temp.append(allItems![index])
+        }
+                
+        items = temp
     }
     
     private func handleListPlaylistsAndSongsInPlaylists() {
@@ -125,7 +153,7 @@ struct SongsView: View {
 
 struct SongsView_Previews: PreviewProvider {
     static var previews: some View {
-        SongsView(musicAuthorizationStatus: .constant(.notDetermined),_items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+        SongsView(musicAuthorizationStatus: .constant(.notDetermined),items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
 .previewInterfaceOrientation(.portrait)
     }
 }

@@ -30,20 +30,16 @@ struct ContentView: View {
                 }
                 .navigationTitle("Playlists")
                 .toolbar{
-                    
                     HStack {
                         Button(action: handleButtonPressed) {
                             buttonText
-                                .padding([.leading, .trailing], 10)
                         }
-                        
                         Button("playlists", action: handleListPlaylists)
                         
                         Button("songs", action: handleGetAllSongs)
                     }
-                    
                 }
-            }
+            }.navigationViewStyle(.stack)
             
         }
     }

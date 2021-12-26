@@ -49,7 +49,7 @@ struct PlaylistDetail: View {
             var temp = Array<MediaItemWrapper>()
             let tempSongs = playlist.instance!.items
             for song in tempSongs {
-                let songTitle = song.value(forProperty: MPMediaItemPropertyTitle) 
+                // let songTitle = song.value(forProperty: MPMediaItemPropertyTitle) 
                 // print("\t\t", songTitle!)
                 temp.append(MediaItemWrapper(instance: song))
             }

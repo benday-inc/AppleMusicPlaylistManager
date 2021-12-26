@@ -31,9 +31,9 @@ struct ContentView: View {
                 .navigationTitle("Playlists")
                 .toolbar{
                     HStack {
-                        Button(action: handleButtonPressed) {
-                            buttonText
-                        }
+//                        Button(action: handleButtonPressed) {
+//                            buttonText
+//                        }
                         Button("playlists", action: handleListPlaylists)
                         
                         Button("songs", action: handleGetAllSongs)

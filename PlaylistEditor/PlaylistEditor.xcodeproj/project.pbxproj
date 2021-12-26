@@ -22,6 +22,7 @@
 		0403139E274A7E47009B0F23 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		040313AD274AEC58009B0F23 /* PlaylistEditor--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlaylistEditor--macOS--Info.plist"; sourceTree = "<group>"; };
+		0456FD2227789F6300C76D96 /* PlaylistEditor (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "PlaylistEditor (iOS).entitlements"; sourceTree = "<group>"; };
 		0472068A27774D6D00F7746D /* PlaylistDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetail.swift; sourceTree = "<group>"; };
 		0483507A27712826004F0FFB /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -40,6 +41,7 @@
 		04031389274A7E46009B0F23 = {
 			isa = PBXGroup;
 			children = (
+				0456FD2227789F6300C76D96 /* PlaylistEditor (iOS).entitlements */,
 				040313AE274AEC9A009B0F23 /* PlaylistEditor--macOS--Info.plist */,
 				040313AD274AEC58009B0F23 /* PlaylistEditor--iOS--Info.plist */,
 				0403138E274A7E46009B0F23 /* Shared */,
@@ -275,6 +277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "PlaylistEditor (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;
@@ -307,6 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "PlaylistEditor (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;

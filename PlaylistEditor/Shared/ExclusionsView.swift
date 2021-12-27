@@ -22,10 +22,7 @@ struct ExclusionsView: View {
                             Text(item.value).swipeActions(
                                 edge: .trailing, allowsFullSwipe: true, content: {
                                 Button(role: .destructive) {
-                                    if let index = storage.excludedGenres.firstIndex(of: item) {
-                                        storage.excludedGenres.remove(at: index)
-                                        storage.save()
-                                    }
+                                    storage.removeGenreExclusion(item: item)
                                 } label: {
                                    Label("Delete", systemImage: "trash")
                                }

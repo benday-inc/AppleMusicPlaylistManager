@@ -42,9 +42,7 @@ struct SongsView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             
                             Button("genre", role: .destructive) {
-                                print("exclude genre: \(temp.genreName)")
-                                storage.excludedGenres.append(IdentifiableString(value: temp.genreName))
-                                storage.save()
+                                storage.addGenreExclusion(item: temp)
                             }
                             Button("artist", role: .destructive) {
                                 print("exclude artist: \(temp.artistName)")

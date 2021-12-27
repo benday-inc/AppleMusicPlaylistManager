@@ -11,6 +11,9 @@ import SwiftUI
 
 class PlaylistDataStore: ObservableObject {
     @Published var excludedGenres: [IdentifiableString] = []
+    @Published var excludedArtists: [IdentifiableString] = []
+    @Published var excludedAlbums: [IdentifiableString] = []
+    @Published var excludedTracks: [IdentifiableString] = []
     
     init() {
     
@@ -18,6 +21,18 @@ class PlaylistDataStore: ObservableObject {
     
     init(testData: [IdentifiableString]) {
         excludedGenres = testData
+    }
+    
+    func addGenreExclusion(item: MediaItemWrapper) {
+        excludedGenres.append(IdentifiableString(value: item.genreName))
+        save()
+    }
+    
+    func removeGenreExclusion(item: IdentifiableString) {
+        if let index = excludedGenres.firstIndex(of: item) {
+            excludedGenres.remove(at: index)
+            save()
+        }
     }
     
     func load() {

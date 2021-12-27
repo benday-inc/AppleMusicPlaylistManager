@@ -41,9 +41,16 @@ struct MediaItemWrapper: Identifiable, Hashable {
                 return _trackName
             }
             else {
-                let temp = _instance!.value(forProperty: MPMediaItemPropertyTitle) as! String
+                let temp = _instance!.value(forProperty: MPMediaItemPropertyTitle)
                 
-                return temp
+                if (temp == nil) {
+                    return ""
+                }
+                else {
+                    let returnValue = temp as! String
+                
+                    return returnValue
+                }
             }
         }
     }
@@ -54,9 +61,16 @@ struct MediaItemWrapper: Identifiable, Hashable {
                 return _albumName
             }
             else {
-                let temp = _instance!.value(forProperty: MPMediaItemPropertyAlbumTitle) as! String
+                let temp = _instance!.value(forProperty: MPMediaItemPropertyAlbumTitle)
                 
-                return temp
+                if (temp == nil) {
+                    return ""
+                }
+                else {
+                    let returnValue = temp as! String
+                
+                    return returnValue
+                }
             }
         }
     }
@@ -67,9 +81,16 @@ struct MediaItemWrapper: Identifiable, Hashable {
                 return _artistName
             }
             else {
-                let temp = _instance!.value(forProperty: MPMediaItemPropertyArtist) as! String
-            
-                return temp
+                let temp = _instance!.value(forProperty: MPMediaItemPropertyArtist)
+                
+                if (temp == nil) {
+                    return ""
+                }
+                else {
+                    let returnValue = temp as! String
+                
+                    return returnValue
+                }
             }
         }
     }
@@ -80,9 +101,16 @@ struct MediaItemWrapper: Identifiable, Hashable {
                 return "genre 123"
             }
             else {
-                let temp = _instance!.value(forProperty: MPMediaItemPropertyGenre) as! String
-            
-                return temp
+                let temp = _instance!.value(forProperty: MPMediaItemPropertyGenre)
+                
+                if (temp == nil) {
+                    return ""
+                }
+                else {
+                    let returnValue = temp as! String
+                
+                    return returnValue
+                }
             }
         }
     }

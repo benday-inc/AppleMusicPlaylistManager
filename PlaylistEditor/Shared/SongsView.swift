@@ -107,7 +107,15 @@ struct SongsView: View {
         var temp = Array<MediaItemWrapper>()
         
         for index in randomIndexes {
-            temp.append(allItems![index])
+            let tempSong = allItems![index]
+            
+            if (storage.isExcluded(item: tempSong) == false) {
+                temp.append(tempSong)
+                print("not excluded")
+            }
+            else {
+                print("excluded")
+            }
         }
                 
         items = temp

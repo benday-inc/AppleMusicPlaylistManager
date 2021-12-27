@@ -20,10 +20,15 @@ struct ContentView: View {
                 .tabItem {
                 Label("Songs", systemImage: "square.and.pencil")
             }.tag(0)
+            ExclusionsView()
+                .environmentObject(store)
+                .tabItem {
+                Label("Exclusions", systemImage: "slider.horizontal.3")
+            }.tag(1)
             PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])
                 .tabItem {
                 Label("Playlists", systemImage: "music.note.list")
-            }.tag(1)
+            }.tag(2)
             
         }
 

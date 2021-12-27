@@ -16,6 +16,8 @@
 		0456FD2A2779101800C76D96 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD292779101800C76D96 /* SongCell.swift */; };
 		0456FD2C277910C100C76D96 /* MediaItemWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD2B277910C100C76D96 /* MediaItemWrapper.swift */; };
 		0456FD2E277A164E00C76D96 /* PlaylistDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD2D277A164E00C76D96 /* PlaylistDataStore.swift */; };
+		0456FD30277A1CF400C76D96 /* ExclusionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD2F277A1CF400C76D96 /* ExclusionsView.swift */; };
+		0456FD32277A1EA200C76D96 /* IdentifiableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD31277A1EA200C76D96 /* IdentifiableString.swift */; };
 		0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0472068A27774D6D00F7746D /* PlaylistDetail.swift */; };
 		0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0483507A27712826004F0FFB /* PlaylistItem.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +37,8 @@
 		0456FD292779101800C76D96 /* SongCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
 		0456FD2B277910C100C76D96 /* MediaItemWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItemWrapper.swift; sourceTree = "<group>"; };
 		0456FD2D277A164E00C76D96 /* PlaylistDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDataStore.swift; sourceTree = "<group>"; };
+		0456FD2F277A1CF400C76D96 /* ExclusionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExclusionsView.swift; sourceTree = "<group>"; };
+		0456FD31277A1EA200C76D96 /* IdentifiableString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableString.swift; sourceTree = "<group>"; };
 		0472068A27774D6D00F7746D /* PlaylistDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetail.swift; sourceTree = "<group>"; };
 		0483507A27712826004F0FFB /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,6 +80,8 @@
 				0456FD292779101800C76D96 /* SongCell.swift */,
 				0456FD2B277910C100C76D96 /* MediaItemWrapper.swift */,
 				0456FD2D277A164E00C76D96 /* PlaylistDataStore.swift */,
+				0456FD2F277A1CF400C76D96 /* ExclusionsView.swift */,
+				0456FD31277A1EA200C76D96 /* IdentifiableString.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -171,9 +177,11 @@
 				0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */,
 				0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */,
 				040313A1274A7E47009B0F23 /* ContentView.swift in Sources */,
+				0456FD30277A1CF400C76D96 /* ExclusionsView.swift in Sources */,
 				0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,
 				0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */,
 				0456FD2C277910C100C76D96 /* MediaItemWrapper.swift in Sources */,
+				0456FD32277A1EA200C76D96 /* IdentifiableString.swift in Sources */,
 				0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

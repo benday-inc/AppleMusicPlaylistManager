@@ -10,7 +10,15 @@ import Foundation
 import SwiftUI
 
 class PlaylistDataStore: ObservableObject {
-    @Published var excludedGenres: [String] = []
+    @Published var excludedGenres: [IdentifiableString] = []
+    
+    init() {
+    
+    }
+    
+    init(testData: [IdentifiableString]) {
+        excludedGenres = testData
+    }
     
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory,

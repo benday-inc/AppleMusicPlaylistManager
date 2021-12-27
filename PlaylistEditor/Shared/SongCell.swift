@@ -17,14 +17,10 @@ struct SongCell: View {
                 Text(item.trackName).font(.title2).fontWeight(.bold).multilineTextAlignment(.leading)
                 Text("\(item.artistName) - \(item.albumName)")
                     .multilineTextAlignment(.center)
-                
-                }
-//            Image(systemName: "filemenu.and.cursorarrow").contextMenu {
-//                Button("hi") {
-//                    print("hi asdf")
-//                }
-//            }
-                
+                Text(item.genreName).font(.footnote).fontWeight(.thin).multilineTextAlignment(.leading)
+            }
+            
+//
         }
     }
 }

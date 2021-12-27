@@ -44,6 +44,7 @@ struct SongsView: View {
                             Button("genre", role: .destructive) {
                                 print("exclude genre: \(temp.genreName)")
                                 storage.excludedGenres.append(IdentifiableString(value: temp.genreName))
+                                storage.save()
                             }
                             Button("artist", role: .destructive) {
                                 print("exclude artist: \(temp.artistName)")

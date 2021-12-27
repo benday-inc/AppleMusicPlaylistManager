@@ -10,18 +10,18 @@ import MusicKit
 import MediaPlayer
 
 struct ContentView: View {
-    @StateObject private var store = PlaylistDataStore()
+    @StateObject private var storage = PlaylistDataStore()
     
     
     var body: some View {
         TabView {
             SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [])
-                .environmentObject(store)
+                .environmentObject(storage)
                 .tabItem {
                 Label("Songs", systemImage: "square.and.pencil")
             }.tag(0)
             ExclusionsView()
-                .environmentObject(store)
+                .environmentObject(storage)
                 .tabItem {
                 Label("Exclusions", systemImage: "slider.horizontal.3")
             }.tag(1)
@@ -30,6 +30,8 @@ struct ContentView: View {
                 Label("Playlists", systemImage: "music.note.list")
             }.tag(2)
             
+        }.onAppear {
+            storage.load()
         }
 
     }

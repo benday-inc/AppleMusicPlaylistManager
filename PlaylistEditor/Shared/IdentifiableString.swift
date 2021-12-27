@@ -9,7 +9,7 @@ import Foundation
 import MusicKit
 import MediaPlayer
 
-struct IdentifiableString: Identifiable, Hashable {
+struct IdentifiableString: Identifiable, Hashable, Encodable, Decodable {
     var id = UUID()
     var value: String
 }

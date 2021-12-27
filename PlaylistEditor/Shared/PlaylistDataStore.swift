@@ -20,6 +20,25 @@ class PlaylistDataStore: ObservableObject {
         excludedGenres = testData
     }
     
+    func load() {
+        PlaylistDataStore.load { result in
+            switch result {
+            case .failure(let error):
+                fatalError(error.localizedDescription)
+            case .success(let temp):
+                self.excludedGenres = temp
+            }
+        }
+    }
+    
+    func save() {
+        PlaylistDataStore.save(itemsToSave: excludedGenres) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+    }
+    
     private static func fileURL() throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
                                        in: .userDomainMask,
@@ -28,7 +47,7 @@ class PlaylistDataStore: ObservableObject {
             .appendingPathComponent("excluded-genres.data")
     }
     
-    static func load(completion: @escaping (Result<[String], Error>)->Void) {
+    private static func load(completion: @escaping (Result<[IdentifiableString], Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
                 let fileURL = try fileURL()
@@ -38,7 +57,7 @@ class PlaylistDataStore: ObservableObject {
                     }
                     return
                 }
-                let returnValues = try JSONDecoder().decode([String].self, from: file.availableData)
+                let returnValues = try JSONDecoder().decode([IdentifiableString].self, from: file.availableData)
                 DispatchQueue.main.async {
                     completion(.success(returnValues))
                 }
@@ -50,7 +69,7 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    static func save(itemsToSave: [String], completion: @escaping (Result<Int, Error>)->Void) {
+    private static func save(itemsToSave: [IdentifiableString], completion: @escaping (Result<Int, Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
                 let data = try JSONEncoder().encode(itemsToSave)

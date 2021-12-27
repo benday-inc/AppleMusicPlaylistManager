@@ -18,6 +18,7 @@ struct ExclusionsView: View {
                     Button(role: .destructive) {
                         if let index = storage.excludedGenres.firstIndex(of: item) {
                             storage.excludedGenres.remove(at: index)
+                            storage.save()
                         }
                     } label: {
                        Label("Delete", systemImage: "trash")
@@ -27,6 +28,7 @@ struct ExclusionsView: View {
             Text("Count: \(storage.excludedGenres.count)")
         }
     }
+    
 }
 
 struct ExclusionsView_Previews: PreviewProvider {

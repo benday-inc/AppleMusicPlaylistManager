@@ -45,7 +45,7 @@ struct SongsView: View {
                                 storage.addGenreExclusion(item: temp)
                             }
                             Button("artist", role: .destructive) {
-                                print("exclude artist: \(temp.artistName)")
+                                storage.addArtistExclusion(item: temp)
                             }
                         }
                 }

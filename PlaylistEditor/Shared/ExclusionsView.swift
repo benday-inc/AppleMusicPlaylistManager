@@ -30,7 +30,23 @@ struct ExclusionsView: View {
                         }
                     }
                 }
-                
+                Section(header: Text("Excluded Artists")) {
+                    if (storage.excludedArtists.isEmpty) {
+                        Text("(none)")
+                    }
+                    else {
+                        List(storage.excludedArtists){ item in
+                            Text(item.value).swipeActions(
+                                edge: .trailing, allowsFullSwipe: true, content: {
+                                Button(role: .destructive) {
+                                    storage.removeArtistExclusion(item: item)
+                                } label: {
+                                   Label("Delete", systemImage: "trash")
+                               }
+                            })
+                        }
+                    }
+                }
             }
 
             

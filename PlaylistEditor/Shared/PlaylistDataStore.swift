@@ -35,8 +35,20 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
+    func addArtistExclusion(item: MediaItemWrapper) {
+        excludedArtists.append(IdentifiableString(value: item.artistName))
+        save()
+    }
+    
+    func removeArtistExclusion(item: IdentifiableString) {
+        if let index = excludedArtists.firstIndex(of: item) {
+            excludedArtists.remove(at: index)
+            save()
+        }
+    }
+    
     func load() {
-        PlaylistDataStore.load { result in
+        PlaylistDataStore.load(filename: "excluded-genres") { result in
             switch result {
             case .failure(let error):
                 fatalError(error.localizedDescription)
@@ -44,28 +56,43 @@ class PlaylistDataStore: ObservableObject {
                 self.excludedGenres = temp
             }
         }
+        
+        PlaylistDataStore.load(filename: "excluded-artists") { result in
+            switch result {
+            case .failure(let error):
+                fatalError(error.localizedDescription)
+            case .success(let temp):
+                self.excludedArtists = temp
+            }
+        }
     }
     
     func save() {
-        PlaylistDataStore.save(itemsToSave: excludedGenres) { result in
+        PlaylistDataStore.save(filename: "excluded-genres", itemsToSave: excludedGenres) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+        
+        PlaylistDataStore.save(filename: "excluded-artists", itemsToSave: excludedArtists) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
     }
     
-    private static func fileURL() throws -> URL {
+    private static func fileURL(filename: String) throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
                                        in: .userDomainMask,
                                        appropriateFor: nil,
                                        create: false)
-            .appendingPathComponent("excluded-genres.data")
+            .appendingPathComponent("\(filename).data")
     }
     
-    private static func load(completion: @escaping (Result<[IdentifiableString], Error>)->Void) {
+    private static func load(filename: String, completion: @escaping (Result<[IdentifiableString], Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
-                let fileURL = try fileURL()
+                let fileURL = try fileURL(filename: filename)
                 guard let file = try? FileHandle(forReadingFrom: fileURL) else {
                     DispatchQueue.main.async {
                         completion(.success([]))
@@ -84,11 +111,11 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    private static func save(itemsToSave: [IdentifiableString], completion: @escaping (Result<Int, Error>)->Void) {
+    private static func save(filename: String, itemsToSave: [IdentifiableString], completion: @escaping (Result<Int, Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
                 let data = try JSONEncoder().encode(itemsToSave)
-                let outfile = try fileURL()
+                let outfile = try fileURL(filename: filename)
                 try data.write(to: outfile)
                 DispatchQueue.main.async {
                     completion(.success(itemsToSave.count))

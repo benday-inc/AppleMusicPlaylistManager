@@ -47,6 +47,23 @@ struct ExclusionsView: View {
                         }
                     }
                 }
+                Section(header: Text("Excluded Albums")) {
+                    if (storage.excludedAlbums.isEmpty) {
+                        Text("(none)")
+                    }
+                    else {
+                        List(storage.excludedAlbums){ item in
+                            Text(item.value).swipeActions(
+                                edge: .trailing, allowsFullSwipe: true, content: {
+                                Button(role: .destructive) {
+                                    storage.removeAlbumExclusion(item: item)
+                                } label: {
+                                   Label("Delete", systemImage: "trash")
+                               }
+                            })
+                        }
+                    }
+                }
             }
 
             

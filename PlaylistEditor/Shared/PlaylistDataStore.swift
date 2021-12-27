@@ -47,6 +47,18 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
+    func addAlbumExclusion(item: MediaItemWrapper) {
+        excludedAlbums.append(IdentifiableString(value: "\(item.artistName) - \(item.albumName)"))
+        save()
+    }
+    
+    func removeAlbumExclusion(item: IdentifiableString) {
+        if let index = excludedAlbums.firstIndex(of: item) {
+            excludedAlbums.remove(at: index)
+            save()
+        }
+    }
+    
     func load() {
         PlaylistDataStore.load(filename: "excluded-genres") { result in
             switch result {
@@ -65,6 +77,15 @@ class PlaylistDataStore: ObservableObject {
                 self.excludedArtists = temp
             }
         }
+        
+        PlaylistDataStore.load(filename: "excluded-albums") { result in
+            switch result {
+            case .failure(let error):
+                fatalError(error.localizedDescription)
+            case .success(let temp):
+                self.excludedAlbums = temp
+            }
+        }
     }
     
     func save() {
@@ -75,6 +96,12 @@ class PlaylistDataStore: ObservableObject {
         }
         
         PlaylistDataStore.save(filename: "excluded-artists", itemsToSave: excludedArtists) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+        
+        PlaylistDataStore.save(filename: "excluded-albums", itemsToSave: excludedAlbums) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }

@@ -33,7 +33,7 @@ struct SongsView: View {
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             
                             Button("album", role: .destructive) {
-                                print("exclude album: \(temp.albumName)")
+                                storage.addAlbumExclusion(item: temp)
                             }
                             Button("track", role: .destructive) {
                                 print("exclude track: \(temp.trackName)")

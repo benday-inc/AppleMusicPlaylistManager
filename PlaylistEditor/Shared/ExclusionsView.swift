@@ -13,7 +13,16 @@ struct ExclusionsView: View {
     var body: some View {
         VStack {
             List(storage.excludedGenres){ item in
-                Text(item.value)
+                Text(item.value).swipeActions(
+                    edge: .trailing, allowsFullSwipe: true, content: {
+                    Button(role: .destructive) {
+                        if let index = storage.excludedGenres.firstIndex(of: item) {
+                            storage.excludedGenres.remove(at: index)
+                        }
+                    } label: {
+                       Label("Delete", systemImage: "trash")
+                   }
+                })
             }
             Text("Count: \(storage.excludedGenres.count)")
         }

@@ -21,16 +21,34 @@ struct SongsView: View {
     @State var allItems: Array<MediaItemWrapper>?
     
     @State var itemCount: Int = -1
+    @State private var multiSelection = Set<UUID>()
     
     var body: some View {
         
         NavigationView {
             VStack {
-                List {
-                    ForEach(items) { item in
-                        SongCell(item: item)
-                    }
+                List(items, selection: $multiSelection) { temp in
+                    SongCell(item: temp)
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            
+                            Button("album", role: .destructive) {
+                                print("exclude album: \(temp.albumName)")
+                            }
+                            Button("track", role: .destructive) {
+                                print("exclude track: \(temp.trackName)")
+                            }
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            
+                            Button("genre", role: .destructive) {
+                                print("exclude genre: \(temp.genreName)")
+                            }
+                            Button("artist", role: .destructive) {
+                                print("exclude artist: \(temp.artistName)")
+                            }
+                        }
                 }
+                
                 Text("Item count: \(itemCount)")
             }
             
@@ -41,7 +59,7 @@ struct SongsView: View {
 //                        Button(action: handleButtonPressed) {
 //                            buttonText
 //                        }
-                    
+                    EditButton()
                     Button("all songs", action: handleGetAllSongs)
                     Button("random songs", action: handleGetRandomSongs)
                 }
@@ -61,7 +79,7 @@ struct SongsView: View {
                 
         var temp = Array<MediaItemWrapper>()
                 
-        for case let item as MPMediaItem in queryResults! {
+        for item in queryResults! {
             temp.append(MediaItemWrapper(item: item))
         }
         

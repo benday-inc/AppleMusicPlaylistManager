@@ -73,4 +73,17 @@ struct MediaItemWrapper: Identifiable, Hashable {
             }
         }
     }
+    
+    var genreName: String {
+        get {
+            if (_readFromItem == false) {
+                return "genre 123"
+            }
+            else {
+                let temp = _instance!.value(forProperty: MPMediaItemPropertyGenre) as! String
+            
+                return temp
+            }
+        }
+    }
 }

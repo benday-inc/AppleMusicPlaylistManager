@@ -16,6 +16,7 @@ struct SongsView: View {
     @State var doSomethingText = "(not set)"
     /// The current authorization status of MusicKit.
     @Binding var musicAuthorizationStatus: MusicAuthorization.Status
+    @EnvironmentObject var storage: PlaylistDataStore
     
     @State var items: Array<MediaItemWrapper>
     @State var allItems: Array<MediaItemWrapper>?
@@ -42,6 +43,7 @@ struct SongsView: View {
                             
                             Button("genre", role: .destructive) {
                                 print("exclude genre: \(temp.genreName)")
+                                storage.excludedGenres.append(temp.genreName)
                             }
                             Button("artist", role: .destructive) {
                                 print("exclude artist: \(temp.artistName)")
@@ -170,8 +172,10 @@ struct SongsView: View {
 
 
 struct SongsView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        SongsView(musicAuthorizationStatus: .constant(.notDetermined),items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+        SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+            .environmentObject(PlaylistDataStore())
 .previewInterfaceOrientation(.portrait)
     }
 }

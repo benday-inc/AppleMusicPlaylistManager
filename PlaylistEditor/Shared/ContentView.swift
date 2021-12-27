@@ -10,10 +10,14 @@ import MusicKit
 import MediaPlayer
 
 struct ContentView: View {
+    @StateObject private var store = PlaylistDataStore()
+    
     
     var body: some View {
         TabView {
-            SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: []).tabItem {
+            SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [])
+                .environmentObject(store)
+                .tabItem {
                 Label("Songs", systemImage: "square.and.pencil")
             }.tag(0)
             PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])

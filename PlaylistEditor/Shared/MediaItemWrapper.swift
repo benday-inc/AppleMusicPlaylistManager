@@ -33,6 +33,13 @@ struct MediaItemWrapper: Identifiable, Hashable {
         _trackName = ""
         _artistName = ""
         _albumName = ""
+        
+    }
+    
+    var mediaItem: MPMediaItem {
+        get {
+            return _instance!
+        }
     }
     
     var trackName: String {

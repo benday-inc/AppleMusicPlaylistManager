@@ -86,13 +86,25 @@ struct SongsView: View {
         let metadata = MPMediaPlaylistCreationMetadata(name: name)
         
         let playlistUUID = UUID()
+        
 
         MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { (playlist, error) in
             guard error == nil else {
                 fatalError("An error occurred while retrieving/creating playlist: \(error!.localizedDescription)")
             }
             
+            let populateThis = playlist!
+            
+            var mediaItems: [MPMediaItem] = []
+            
+            for track in items {
+                mediaItems.append(track.mediaItem)
+            }
+            
+            populateThis.add(mediaItems)
         }
+        
+
     }
     
     private func handleGetAllSongs() {

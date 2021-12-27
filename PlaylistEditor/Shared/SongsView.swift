@@ -51,6 +51,7 @@ struct SongsView: View {
                 }
                 
                 Text("Item count: \(itemCount)")
+                Button("Create Playlist", action: writePlaylist)
             }
             
             
@@ -67,6 +68,31 @@ struct SongsView: View {
             }
         }.navigationViewStyle(.stack)
         
+    }
+    
+    private func writePlaylist() {
+        let now = Date()
+        let calendar = Calendar.current
+
+        let year = calendar.component(.year, from: now)
+        let month = calendar.component(.month, from: now)
+        let day = calendar.component(.day, from: now)
+        let hour = calendar.component(.hour, from: now)
+        let minute = calendar.component(.minute, from: now)
+        let second = calendar.component(.second, from: now)
+        
+        
+        let name = "playlist \(year)\(month)\(day)_\(hour)\(minute)\(second)"
+        let metadata = MPMediaPlaylistCreationMetadata(name: name)
+        
+        let playlistUUID = UUID()
+
+        MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { (playlist, error) in
+            guard error == nil else {
+                fatalError("An error occurred while retrieving/creating playlist: \(error!.localizedDescription)")
+            }
+            
+        }
     }
     
     private func handleGetAllSongs() {

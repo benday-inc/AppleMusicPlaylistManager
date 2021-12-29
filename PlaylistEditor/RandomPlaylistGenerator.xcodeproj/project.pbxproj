@@ -26,9 +26,9 @@
 		0403138F274A7E46009B0F23 /* Test20211121aApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test20211121aApp.swift; sourceTree = "<group>"; };
 		04031390274A7E46009B0F23 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04031391274A7E47009B0F23 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		04031396274A7E47009B0F23 /* Random Playlist Generator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Random Playlist Generator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04031396274A7E47009B0F23 /* RandomPlaylistGenerator2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RandomPlaylistGenerator2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0403139E274A7E47009B0F23 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Random Playlist Generator--iOS--Info.plist"; sourceTree = "<group>"; };
+		040313AD274AEC58009B0F23 /* RandomPlaylistGenerator--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RandomPlaylistGenerator--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RandomPlaylistGenerator--macOS--Info.plist"; sourceTree = "<group>"; };
 		0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RandomPlaylistGenerator (iOS).entitlements"; sourceTree = "<group>"; };
 		0456FD232778D87D00C76D96 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 			children = (
 				0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */,
 				040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */,
-				040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */,
+				040313AD274AEC58009B0F23 /* RandomPlaylistGenerator--iOS--Info.plist */,
 				0403138E274A7E46009B0F23 /* Shared */,
 				0403139D274A7E47009B0F23 /* macOS */,
 				04031397274A7E47009B0F23 /* Products */,
@@ -89,7 +89,7 @@
 		04031397274A7E47009B0F23 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				04031396274A7E47009B0F23 /* Random Playlist Generator.app */,
+				04031396274A7E47009B0F23 /* RandomPlaylistGenerator2.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,9 +105,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		04031395274A7E47009B0F23 /* Random Playlist Generator (iOS) */ = {
+		04031395274A7E47009B0F23 /* RandomPlaylistGenerator (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Random Playlist Generator (iOS)" */;
+			buildConfigurationList = 040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "RandomPlaylistGenerator (iOS)" */;
 			buildPhases = (
 				04031392274A7E47009B0F23 /* Sources */,
 				04031393274A7E47009B0F23 /* Frameworks */,
@@ -117,9 +117,9 @@
 			);
 			dependencies = (
 			);
-			name = "Random Playlist Generator (iOS)";
+			name = "RandomPlaylistGenerator (iOS)";
 			productName = "Test20211121a (iOS)";
-			productReference = 04031396274A7E47009B0F23 /* Random Playlist Generator.app */;
+			productReference = 04031396274A7E47009B0F23 /* RandomPlaylistGenerator2.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -137,7 +137,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Random Playlist Generator" */;
+			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "RandomPlaylistGenerator" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -150,7 +150,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				04031395274A7E47009B0F23 /* Random Playlist Generator (iOS) */,
+				04031395274A7E47009B0F23 /* RandomPlaylistGenerator (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -245,6 +245,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Random Playlist Generator";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -299,6 +300,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "Random Playlist Generator";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -315,7 +317,7 @@
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
+				INFOPLIST_FILE = "RandomPlaylistGenerator--iOS--Info.plist";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -329,7 +331,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
-				PRODUCT_NAME = "Random Playlist Generator";
+				PRODUCT_NAME = RandomPlaylistGenerator2;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -348,7 +350,7 @@
 				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
+				INFOPLIST_FILE = "RandomPlaylistGenerator--iOS--Info.plist";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -362,7 +364,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
-				PRODUCT_NAME = "Random Playlist Generator";
+				PRODUCT_NAME = RandomPlaylistGenerator2;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -374,7 +376,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Random Playlist Generator" */ = {
+		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "RandomPlaylistGenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				040313A5274A7E47009B0F23 /* Debug */,
@@ -383,7 +385,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Random Playlist Generator (iOS)" */ = {
+		040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "RandomPlaylistGenerator (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				040313A8274A7E47009B0F23 /* Debug */,

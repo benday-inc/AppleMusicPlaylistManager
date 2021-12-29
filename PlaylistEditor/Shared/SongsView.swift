@@ -61,7 +61,6 @@ struct SongsView: View {
 //                        Button(action: handleButtonPressed) {
 //                            buttonText
 //                        }
-                    EditButton()
                     Button("all songs", action: handleGetAllSongs)
                     Button("random songs", action: handleGetRandomSongs)
                 }
@@ -140,7 +139,15 @@ struct SongsView: View {
     
     private func handleGetRandomSongs() {
         
+        if (allItems == nil) {
+            handleGetAllSongs()
+        }
+        
         let songCount = allItems!.count
+        
+        if (songCount == 0) {
+            handleGetAllSongs()
+        }
                 
         let randomIndexes = getRandomIndexes(maxIndex: songCount, numberOfValuesToReturn: 100)
         

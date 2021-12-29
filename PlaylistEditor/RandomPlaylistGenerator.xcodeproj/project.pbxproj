@@ -137,7 +137,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "PlaylistEditor" */;
+			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "RandomPlaylistGenerator" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -374,7 +374,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "PlaylistEditor" */ = {
+		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "RandomPlaylistGenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				040313A5274A7E47009B0F23 /* Debug */,

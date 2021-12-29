@@ -1,6 +1,6 @@
 //
 //  SongsView.swift
-//  PlaylistEditor (iOS)
+//  RandomPlaylistGenerator (iOS)
 //
 //  Created by Benjamin Day on 12/26/21.
 //
@@ -117,9 +117,11 @@ struct SongsView: View {
         itemCount = queryResults?.count ?? -1
                 
         var temp = Array<MediaItemWrapper>()
-                
-        for item in queryResults! {
-            temp.append(MediaItemWrapper(item: item))
+
+        if (queryResults != nil) {
+            for item in queryResults! {
+                temp.append(MediaItemWrapper(item: item))
+            }
         }
         
         items = temp

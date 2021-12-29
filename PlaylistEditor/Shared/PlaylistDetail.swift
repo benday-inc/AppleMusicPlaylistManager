@@ -1,6 +1,6 @@
 //
 //  PlaylistDetail.swift
-//  PlaylistEditor (iOS)
+//  RandomPlaylistGenerator (iOS)
 //
 //  Created by Benjamin Day on 12/25/21.
 //

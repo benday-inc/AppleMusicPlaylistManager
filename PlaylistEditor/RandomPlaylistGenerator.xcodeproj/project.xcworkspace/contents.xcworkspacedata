@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/benday/code/benday-inc/AppleMusicPlaylistManager/PlaylistEditor/RandomPlaylistGenerator.xcodeproj">
+      location = "self:/Users/benday/code/benday-inc/AppleMusicPlaylistManager/RandomPlaylistGenerator/RandomPlaylistGenerator.xcodeproj">
    </FileRef>
 </Workspace>

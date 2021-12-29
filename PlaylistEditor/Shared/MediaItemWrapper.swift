@@ -1,6 +1,6 @@
 //
 //  MediaItemWrapper.swift
-//  PlaylistEditor (iOS)
+//  RandomPlaylistGenerator (iOS)
 //
 //  Created by Benjamin Day on 12/26/21.
 //

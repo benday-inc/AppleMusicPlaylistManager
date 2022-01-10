@@ -60,19 +60,13 @@ struct SongsView: View {
             .navigationTitle("Songs")
             .toolbar{
                 HStack {
-//                        Button(action: handleButtonPressed) {
-//                            buttonText
-//                        }
-//                    Button("all songs", action: handleGetAllSongs)
                     EditButton()
                     if (self.editMode?.wrappedValue == .active) {
                         Button("Remove from Playlist", action: removeSelected)
                     }
                     if (self.editMode?.wrappedValue == .inactive) {
                         Button("Get Random", action: handleGetRandomSongs)
-                        
                     }
-
                 }
             }
             .environment(\.editMode, editMode)
@@ -118,8 +112,14 @@ struct SongsView: View {
     }
     
     private func removeSelected() {
-        
-        print("remove selected")
+        if (multiSelection.isEmpty == false) {
+            for id in multiSelection {
+                if let index = items.lastIndex(where: { $0.id == id })  {
+                    items.remove(at: index)
+                }
+            }
+            multiSelection = Set<UUID>()
+        }
     }
     
     private func handleGetAllSongs() {

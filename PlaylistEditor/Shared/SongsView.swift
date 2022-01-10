@@ -54,25 +54,34 @@ struct SongsView: View {
                     }
                     .onMove(perform: move)
                 }
-                
-
-            }
-            
+            }            
             
             .navigationTitle("Songs")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .bottomBar) {
-//                    Spacer()
-                    Button("Save Playlist", action: writePlaylist)
+                    Button() {
+                        writePlaylist()
+                    } label: {
+                        Label("Save Playlist", systemImage: "pianokeys").labelStyle(.titleAndIcon)
+                    }
                 }
                 ToolbarItemGroup(content: {
                     HStack {
                         EditButton()
                         if (self.editMode?.wrappedValue == .active) {
-                            Button("Remove from Playlist", action: removeSelected)
+                            Button() {
+                                removeSelected()
+                                
+                            } label: {
+                                Label("Remove from Playlist", systemImage: "trash")
+                            }
                         }
                         if (self.editMode?.wrappedValue == .inactive) {
-                            Button("Get Random", action: handleGetRandomSongs)
+                            Button() {
+                                handleGetRandomSongs()
+                            } label: {
+                                Label("Get Random", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
+                            }
                         }
                     }
                 })

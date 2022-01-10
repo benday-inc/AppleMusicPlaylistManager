@@ -23,6 +23,8 @@ struct SongsView: View {
     
     @State var itemCount: Int = -1
     @State private var multiSelection = Set<UUID>()
+    @Environment(\.editMode) var editMode
+    
     
     var body: some View {
         
@@ -61,10 +63,19 @@ struct SongsView: View {
 //                        Button(action: handleButtonPressed) {
 //                            buttonText
 //                        }
-                    Button("all songs", action: handleGetAllSongs)
-                    Button("random songs", action: handleGetRandomSongs)
+//                    Button("all songs", action: handleGetAllSongs)
+                    EditButton()
+                    if (self.editMode?.wrappedValue == .active) {
+                        Button("Remove from Playlist", action: removeSelected)
+                    }
+                    if (self.editMode?.wrappedValue == .inactive) {
+                        Button("Get Random", action: handleGetRandomSongs)
+                        
+                    }
+
                 }
             }
+            .environment(\.editMode, editMode)
         }.navigationViewStyle(.stack)
         
     }
@@ -104,6 +115,11 @@ struct SongsView: View {
         }
         
 
+    }
+    
+    private func removeSelected() {
+        
+        print("remove selected")
     }
     
     private func handleGetAllSongs() {

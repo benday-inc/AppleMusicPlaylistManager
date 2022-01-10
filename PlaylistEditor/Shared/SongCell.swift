@@ -19,10 +19,8 @@ struct SongCell: View {
                     .multilineTextAlignment(.center)
                 Text(item.genreName).font(.footnote).fontWeight(.thin).multilineTextAlignment(.leading)
             }
-            
-//
         }
-    }
+    }    
 }
 
 struct SongCell_Previews: PreviewProvider {

@@ -30,29 +30,31 @@ struct SongsView: View {
         
         NavigationView {
             VStack {
-                List(items, selection: $multiSelection) { temp in
-                    SongCell(item: temp)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                List(selection: $multiSelection) {
+                    ForEach (items) { item in
+                        SongCell(item: item)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             
                             Button("album", role: .destructive) {
-                                storage.addAlbumExclusion(item: temp)
+                                storage.addAlbumExclusion(item: item)
                             }
                             Button("track", role: .destructive) {
-                                print("exclude track: \(temp.trackName)")
+                                print("exclude track: \(item.trackName)")
                             }
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             
                             Button("genre", role: .destructive) {
-                                storage.addGenreExclusion(item: temp)
+                                storage.addGenreExclusion(item: item)
                             }
                             Button("artist", role: .destructive) {
-                                storage.addArtistExclusion(item: temp)
+                                storage.addArtistExclusion(item: item)
                             }
                         }
+                    }
+                    .onMove(perform: move)
                 }
                 
-                Text("Item count: \(itemCount)")
                 Button("Create Playlist", action: writePlaylist)
             }
             
@@ -72,6 +74,10 @@ struct SongsView: View {
             .environment(\.editMode, editMode)
         }.navigationViewStyle(.stack)
         
+    }
+    
+    func move(from source: IndexSet, to destination: Int) {
+        items.move(fromOffsets: source, toOffset: destination)
     }
     
     private func writePlaylist() {

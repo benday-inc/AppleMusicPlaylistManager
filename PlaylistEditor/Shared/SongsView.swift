@@ -55,22 +55,29 @@ struct SongsView: View {
                     .onMove(perform: move)
                 }
                 
-                Button("Create Playlist", action: writePlaylist)
+
             }
             
             
             .navigationTitle("Songs")
-            .toolbar{
-                HStack {
-                    EditButton()
-                    if (self.editMode?.wrappedValue == .active) {
-                        Button("Remove from Playlist", action: removeSelected)
-                    }
-                    if (self.editMode?.wrappedValue == .inactive) {
-                        Button("Get Random", action: handleGetRandomSongs)
-                    }
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .bottomBar) {
+//                    Spacer()
+                    Button("Save Playlist", action: writePlaylist)
                 }
-            }
+                ToolbarItemGroup(content: {
+                    HStack {
+                        EditButton()
+                        if (self.editMode?.wrappedValue == .active) {
+                            Button("Remove from Playlist", action: removeSelected)
+                        }
+                        if (self.editMode?.wrappedValue == .inactive) {
+                            Button("Get Random", action: handleGetRandomSongs)
+                        }
+                    }
+                })
+            })
+            
             .environment(\.editMode, editMode)
         }.navigationViewStyle(.stack)
         

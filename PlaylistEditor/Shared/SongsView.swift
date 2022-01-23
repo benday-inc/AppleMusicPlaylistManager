@@ -30,29 +30,42 @@ struct SongsView: View {
         
         NavigationView {
             VStack {
-                List(selection: $multiSelection) {
-                    ForEach (items) { item in
-                        SongCell(item: item)
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            
-                            Button("album", role: .destructive) {
-                                storage.addAlbumExclusion(item: item)
+                if (musicAuthorizationStatus == .authorized) {
+                    List(selection: $multiSelection) {
+                        ForEach (items) { item in
+                            SongCell(item: item)
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                
+                                Button("album", role: .destructive) {
+                                    storage.addAlbumExclusion(item: item)
+                                }
+                                Button("track", role: .destructive) {
+                                    print("exclude track: \(item.trackName)")
+                                }
                             }
-                            Button("track", role: .destructive) {
-                                print("exclude track: \(item.trackName)")
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                
+                                Button("genre", role: .destructive) {
+                                    storage.addGenreExclusion(item: item)
+                                }
+                                Button("artist", role: .destructive) {
+                                    storage.addArtistExclusion(item: item)
+                                }
                             }
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            
-                            Button("genre", role: .destructive) {
-                                storage.addGenreExclusion(item: item)
-                            }
-                            Button("artist", role: .destructive) {
-                                storage.addArtistExclusion(item: item)
-                            }
-                        }
+                        .onMove(perform: move)
                     }
-                    .onMove(perform: move)
+                }
+                else {
+                    Text("We need to get your permission to access your music library.")
+                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                        
+                    Button("Click here to start the authorization process.", action: handleButtonPressed)
+                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                        .padding(.all, 5.0)
+                        .border(/*@START_MENU_TOKEN@*/Color("AccentColor")/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                        
                 }
             }            
             
@@ -83,11 +96,19 @@ struct SongsView: View {
                                 Label("Get Random", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
                             }
                         }
+                        if (self.editMode?.wrappedValue == .active) {
+                            Button() {
+                                handleGetRandomSongs()
+                            } label: {
+                                Label("Get Random & Keep Selected", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
+                            }
+                        }
                     }
                 })
             })
             
             .environment(\.editMode, editMode)
+            
         }.navigationViewStyle(.stack)
         
     }
@@ -268,6 +289,9 @@ struct SongsView_Previews: PreviewProvider {
     static var previews: some View {
         SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
             .environmentObject(PlaylistDataStore())
-.previewInterfaceOrientation(.portrait)
+.previewInterfaceOrientation(.landscapeRight)
+// .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
+.previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+        
     }
 }

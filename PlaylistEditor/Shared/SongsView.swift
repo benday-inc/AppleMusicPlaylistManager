@@ -284,14 +284,27 @@ struct SongsView: View {
 
 
 
-struct SongsView_Previews: PreviewProvider {
-    
+
+
+struct Previews_SongsView_Previews: PreviewProvider {
     static var previews: some View {
-        SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+        SongsView(musicAuthorizationStatus: .constant(.authorized), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
             .environmentObject(PlaylistDataStore())
 .previewInterfaceOrientation(.landscapeRight)
 // .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
 .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+.previewDisplayName("ipad authorized")
+    }
+    
+    struct SongsView_Previews: PreviewProvider {
         
+        static var previews: some View {
+            SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+                .environmentObject(PlaylistDataStore())
+    .previewInterfaceOrientation(.landscapeRight)
+    // .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
+    .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
+    .previewDisplayName("ipad not authorized")
+        }
     }
 }

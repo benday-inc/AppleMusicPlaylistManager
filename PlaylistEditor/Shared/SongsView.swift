@@ -24,13 +24,16 @@ struct SongsView: View {
     @State var itemCount: Int = -1
     @State private var multiSelection = Set<UUID>()
     @Environment(\.editMode) var editMode
+    @Environment(\.isPreview) var isPreview
+    @State var isAuthorizedForMusic: Bool = false
     
     
     var body: some View {
         
         NavigationView {
             VStack {
-                if (musicAuthorizationStatus == .authorized) {
+                let _ = print("***** authorization status: \(musicAuthorizationStatus)")
+                if (isAuthorizedForMusic == true) {
                     List(selection: $multiSelection) {
                         ForEach (items) { item in
                             SongCell(item: item)
@@ -60,8 +63,15 @@ struct SongsView: View {
                     Text("We need to get your permission to access your music library.")
                         .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                         .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                        
-                    Button("Click here to start the authorization process.", action: handleButtonPressed)
+
+                    Button("Click here to start the authorization process.", action: {
+                        Task {
+                            print("*** calling handle button press")
+                            await handleButtonPressed()
+                            print("*** called handle button press")
+                        }
+                    })
+                    
                         .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                         .padding(.all, 5.0)
                         .border(/*@START_MENU_TOKEN@*/Color("AccentColor")/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
@@ -110,8 +120,17 @@ struct SongsView: View {
             .environment(\.editMode, editMode)
             
         }.navigationViewStyle(.stack)
+        .onAppear(perform: {
+            print("onAppear starting...")
+            Task {
+                await handleOnAppear()
+            }
+            print("onAppear exiting...")
+        })
         
     }
+    
+    
     
     func move(from source: IndexSet, to destination: Int) {
         items.move(fromOffsets: source, toOffset: destination)
@@ -196,6 +215,25 @@ struct SongsView: View {
         return returnValues
     }
     
+    private func handleOnAppear() async -> Void {
+        if (isPreview == true) {
+            return
+        }
+        
+        print ("handleOnAppear() starting...")
+        
+        let returnValue = await requestMusicAuthorization()
+
+        print ("handleOnAppear() starting...")
+        
+        if (returnValue == .authorized) {
+            isAuthorizedForMusic = true
+            handleGetRandomSongs()
+        }
+        
+        print ("handleOnAppear() exiting...")
+    }
+    
     private func handleGetRandomSongs() {
         
         if (allItems == nil) {
@@ -241,13 +279,42 @@ struct SongsView: View {
         }
     }
     
+    func requestMusicAuthorization() async -> MusicAuthorization.Status {
+            let currentStatus = MusicAuthorization.currentStatus
+
+        if (currentStatus == .notDetermined)
+        {
+            let status = await MusicAuthorization.request()
+    
+            return status
+        }
+        else {
+            print("returning current status: \(currentStatus)")
+            return currentStatus
+        }
+    }
+    
     /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
-    private func handleButtonPressed() {
+    private func handleButtonPressed() async {
+        print("requesting music auth status...")
+        
+        let status = await requestMusicAuthorization()
+        
+        print("returned music auth status: \(musicAuthorizationStatus)...")
+        
+        musicAuthorizationStatus = status
+        
+        /*
         switch musicAuthorizationStatus {
             case .notDetermined:
                 Task {
+                    print("requesting music auth status...")
+                    musicAuthorizationStatus = await MusicAuthorization.request()
+                    print("music auth status: \(musicAuthorizationStatus)...")
+                    /*
                     let musicAuthorizationStatus = await MusicAuthorization.request()
                     await update(with: musicAuthorizationStatus)
+                     */
                 }
             case .denied:
                 if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
@@ -256,6 +323,7 @@ struct SongsView: View {
             default:
                 fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
         }
+         */
     }
     
     /// A button that the user taps to continue using the app according to the current
@@ -306,5 +374,18 @@ struct Previews_SongsView_Previews: PreviewProvider {
     .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
     .previewDisplayName("ipad not authorized")
         }
+    }
+    
+    
+    
+}
+
+public extension EnvironmentValues {
+    var isPreview: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+        #else
+        return false
+        #endif
     }
 }

@@ -304,6 +304,11 @@ struct SongsView: View {
         
         musicAuthorizationStatus = status
         
+        if (status == .authorized)
+        {
+            isAuthorizedForMusic = true
+        }
+        
         /*
         switch musicAuthorizationStatus {
             case .notDetermined:

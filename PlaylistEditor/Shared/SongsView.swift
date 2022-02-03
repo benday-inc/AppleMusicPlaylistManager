@@ -28,6 +28,47 @@ struct SongsView: View {
     @State var isAuthorizedForMusic: Bool = false
     
     
+    private func removeExcluded(items: Array<MediaItemWrapper>) {
+        var removeThese = Array<MediaItemWrapper>()
+        
+        for item in items {
+            if (storage.isExcluded(item: item) == true) {
+                removeThese.append(item)
+            }
+        }
+        
+        for item in removeThese {
+            removeItem(item: item)
+        }
+    }
+    
+    private func removeItem(item: MediaItemWrapper) {
+        let removeAtIndex = items.firstIndex(where: { $0.id == item.id })
+        
+        if (removeAtIndex != nil) {
+            self.items.remove(at: removeAtIndex!)
+        }
+    }
+    
+    private func addAlbumExclusion(item: MediaItemWrapper) {
+        storage.addAlbumExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func addGenreExclusion(item: MediaItemWrapper) {
+        storage.addGenreExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func addArtistExclusion(item: MediaItemWrapper) {
+        storage.addArtistExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func removeTrack(item: MediaItemWrapper) {
+        removeItem(item: item)
+    }
+    
     var body: some View {
         
         NavigationView {
@@ -40,19 +81,18 @@ struct SongsView: View {
                                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 
                                 Button("album", role: .destructive) {
-                                    storage.addAlbumExclusion(item: item)
+                                    addAlbumExclusion(item: item)
                                 }
                                 Button("track", role: .destructive) {
-                                    print("exclude track: \(item.trackName)")
+                                    removeTrack(item: item)
                                 }
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                
                                 Button("genre", role: .destructive) {
-                                    storage.addGenreExclusion(item: item)
+                                    addGenreExclusion(item: item)
                                 }
                                 Button("artist", role: .destructive) {
-                                    storage.addArtistExclusion(item: item)
+                                    addArtistExclusion(item: item)
                                 }
                             }
                         }
@@ -245,24 +285,36 @@ struct SongsView: View {
         if (songCount == 0) {
             handleGetAllSongs()
         }
-                
+        
         let randomIndexes = getRandomIndexes(maxIndex: songCount, numberOfValuesToReturn: 100)
         
-        var temp = Array<MediaItemWrapper>()
+        var newPlaylistItems = Array<MediaItemWrapper>()
         
+        // copy pinned items to new playlist
+        if (multiSelection.isEmpty == false) {
+            for id in multiSelection {
+                if let index = items.lastIndex(where: { $0.id == id })  {
+                    newPlaylistItems.append(items[index])
+                }
+            }
+            multiSelection = Set<UUID>()
+        }
+        
+        // create random playlist
         for index in randomIndexes {
             let tempSong = allItems![index]
             
             if (storage.isExcluded(item: tempSong) == false) {
-                temp.append(tempSong)
+                newPlaylistItems.append(tempSong)
                 print("not excluded")
             }
             else {
                 print("excluded")
             }
         }
-                
-        items = temp
+              
+        // set new array to items for binding to UI
+        items = newPlaylistItems
     }
     
     private func handleListPlaylistsAndSongsInPlaylists() {
@@ -308,27 +360,6 @@ struct SongsView: View {
         {
             isAuthorizedForMusic = true
         }
-        
-        /*
-        switch musicAuthorizationStatus {
-            case .notDetermined:
-                Task {
-                    print("requesting music auth status...")
-                    musicAuthorizationStatus = await MusicAuthorization.request()
-                    print("music auth status: \(musicAuthorizationStatus)...")
-                    /*
-                    let musicAuthorizationStatus = await MusicAuthorization.request()
-                    await update(with: musicAuthorizationStatus)
-                     */
-                }
-            case .denied:
-                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                    openURL(settingsURL)
-                }
-            default:
-                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-         */
     }
     
     /// A button that the user taps to continue using the app according to the current

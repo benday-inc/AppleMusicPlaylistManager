@@ -14,6 +14,7 @@ struct SongsView: View {
     @Environment(\.openURL) private var openURL
 
     @State var doSomethingText = "(not set)"
+    @State var showPlaylistExistsAlert = false
     /// The current authorization status of MusicKit.
     @Binding var musicAuthorizationStatus: MusicAuthorization.Status
     @EnvironmentObject var storage: PlaylistDataStore
@@ -126,6 +127,13 @@ struct SongsView: View {
                         writePlaylist()
                     } label: {
                         Label("Save Playlist", systemImage: "pianokeys").labelStyle(.titleAndIcon)
+                    }.alert(isPresented: $showPlaylistExistsAlert) {
+                        Alert(
+                            title: Text("Important message"),
+                            message: Text("delete the existing Random playlist first using the Music app"),
+                            dismissButton: .default(Text("Uhhhgh. Seriously?"))
+                        )
+                    
                     }
                 }
                 ToolbarItemGroup(content: {
@@ -176,7 +184,26 @@ struct SongsView: View {
         items.move(fromOffsets: source, toOffset: destination)
     }
     
-    private func writePlaylist() {
+    private func getPlaylistByName(playlistName: String) -> MPMediaPlaylist? {
+        let myPlaylistQuery = MPMediaQuery.playlists()
+        
+        var returnValue: MPMediaPlaylist? = nil
+        let pred = MPMediaPropertyPredicate(value: playlistName,
+                                            forProperty: MPMediaPlaylistPropertyName)
+        
+        myPlaylistQuery.addFilterPredicate(pred)
+        
+        returnValue = myPlaylistQuery.collections?.first as? MPMediaPlaylist
+                
+//        for case let playlist as MPMediaPlaylist in playlists! {
+//
+//            temp.append(PlaylistItem(name: playlist.name!, instance: playlist))
+//        }
+        
+        return returnValue
+    }
+    
+    private func writePlaylistForDate() {
         let now = Date()
         let calendar = Calendar.current
 
@@ -190,7 +217,7 @@ struct SongsView: View {
         
         let name = "playlist \(year)\(month)\(day)_\(hour)\(minute)\(second)"
         let metadata = MPMediaPlaylistCreationMetadata(name: name)
-        
+                
         let playlistUUID = UUID()
         
 
@@ -211,6 +238,41 @@ struct SongsView: View {
         }
         
 
+    }
+    
+    private func createNewPlaylist(playlistName: String) {
+        let metadata = MPMediaPlaylistCreationMetadata(name: playlistName)
+                
+        let playlistUUID = UUID()
+
+        MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { (playlist, error) in
+            guard error == nil else {
+                fatalError("An error occurred while retrieving/creating playlist: \(error!.localizedDescription)")
+            }
+            
+            let populateThis = playlist!
+            
+            var mediaItems: [MPMediaItem] = []
+            
+            for track in items {
+                mediaItems.append(track.mediaItem)
+            }
+            
+            populateThis.add(mediaItems)
+        }
+    }
+    
+    private func writePlaylist() {
+        let name = "Random"
+        
+        let playlist = getPlaylistByName(playlistName: name)
+        
+        if (playlist == nil) {
+            createNewPlaylist(playlistName: name)
+        }
+        else {
+            showPlaylistExistsAlert = true
+        }
     }
     
     private func removeSelected() {

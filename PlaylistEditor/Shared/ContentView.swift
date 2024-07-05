@@ -18,22 +18,22 @@ struct ContentView: View {
             SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [])
                 .environmentObject(storage)
                 .tabItem {
-                Label("Songs", systemImage: "square.and.pencil")
-            }.tag(0)
+                    Label("Songs", systemImage: "square.and.pencil")
+                }.tag(0)
             ExclusionsView()
                 .environmentObject(storage)
                 .tabItem {
-                Label("Exclusions", systemImage: "slider.horizontal.3")
-            }.tag(1)
+                    Label("Exclusions", systemImage: "slider.horizontal.3")
+                }.tag(1)
             PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])
                 .tabItem {
-                Label("Playlists", systemImage: "music.note.list")
-            }.tag(2)
+                    Label("Playlists", systemImage: "music.note.list")
+                }.tag(2)
             
         }.onAppear {
             storage.load()
         }
-
+        
     }
 }
 

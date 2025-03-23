@@ -16,7 +16,6 @@ struct SongsView: View {
     @State var doSomethingText = "(not set)"
     @State var showPlaylistExistsAlert = false
     /// The current authorization status of MusicKit.
-    @Binding var musicAuthorizationStatus: MusicAuthorization.Status
     @EnvironmentObject var storage: PlaylistDataStore
     
     @State var items: Array<MediaItemWrapper>
@@ -26,55 +25,34 @@ struct SongsView: View {
     @State private var multiSelection = Set<UUID>()
     @Environment(\.editMode) var editMode
     @Environment(\.isPreview) var isPreview
-    // @State var isAuthorizedForMusic: Bool = false
     
     var body: some View {
         
         NavigationView {
             VStack {
-                let _ = print("***** authorization status: \(musicAuthorizationStatus)")
-                if (musicAuthorizationStatus == .authorized) {
-                    List(selection: $multiSelection) {
-                        ForEach (items) { item in
-                            SongCell(item: item)
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    
-                                    Button("album", role: .destructive) {
-                                        addAlbumExclusion(item: item)
-                                    }
-                                    Button("track", role: .destructive) {
-                                        removeTrack(item: item)
-                                    }
+                
+                List(selection: $multiSelection) {
+                    ForEach (items) { item in
+                        SongCell(item: item)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                
+                                Button("album", role: .destructive) {
+                                    addAlbumExclusion(item: item)
                                 }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button("genre", role: .destructive) {
-                                        addGenreExclusion(item: item)
-                                    }
-                                    Button("artist", role: .destructive) {
-                                        addArtistExclusion(item: item)
-                                    }
+                                Button("track", role: .destructive) {
+                                    removeTrack(item: item)
                                 }
-                        }
-                        .onMove(perform: move)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button("genre", role: .destructive) {
+                                    addGenreExclusion(item: item)
+                                }
+                                Button("artist", role: .destructive) {
+                                    addArtistExclusion(item: item)
+                                }
+                            }
                     }
-                }
-                else {
-                    Text("We need to get your permission to access your music library.")
-                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                    
-                    Button("Click here to start the authorization process.", action: {
-                        Task {
-                            print("*** calling handle button press")
-                            await handleButtonPressed()
-                            print("*** called handle button press")
-                        }
-                    })
-                    
-                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                    .padding(.all, 5.0)
-                    .border(/*@START_MENU_TOKEN@*/Color("AccentColor")/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                    
+                    .onMove(perform: move)
                 }
             }
             
@@ -124,15 +102,13 @@ struct SongsView: View {
             
             .environment(\.editMode, editMode)
             
-        }.navigationViewStyle(.stack)
-            .onAppear(perform: {
-                print("onAppear starting...")
-                Task {
-                    await handleOnAppear()
-                }
-                print("onAppear exiting...")
-            })
-        
+        }
+        .navigationViewStyle(.stack)
+        .onAppear() {
+            if (isPreview == false) {                
+                handleGetRandomSongs();
+            }
+        }
     }
     
     private func removeExcluded(items: Array<MediaItemWrapper>) {
@@ -316,26 +292,6 @@ struct SongsView: View {
         return returnValues
     }
     
-    private func handleOnAppear() async -> Void {
-        if (isPreview == true) {
-            return
-        }
-        
-        print ("handleOnAppear() starting...")
-        
-        let returnValue = await requestMusicAuthorization()
-        
-        musicAuthorizationStatus = returnValue
-        
-        print ("handleOnAppear() starting...")
-        
-        if (returnValue == .authorized) {
-            handleGetRandomSongs()
-        }
-        
-        print ("handleOnAppear() exiting...")
-    }
-    
     private func handleGetRandomSongs() {
         
         if (allItems == nil) {
@@ -392,79 +348,13 @@ struct SongsView: View {
             }
         }
     }
-    
-    func requestMusicAuthorization() async -> MusicAuthorization.Status {
-        let currentStatus = MusicAuthorization.currentStatus
-        
-        if (currentStatus == .notDetermined)
-        {
-            let status = await MusicAuthorization.request()
-            
-            return status
-        }
-        else {
-            print("returning current status: \(currentStatus)")
-            return currentStatus
-        }
-    }
-    
-    /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
-    private func handleButtonPressed() async {
-        print("requesting music auth status...")
-        
-        let status = await requestMusicAuthorization()
-        
-        print("returned music auth status: \(musicAuthorizationStatus)...")
-        
-        musicAuthorizationStatus = status        
-    }
-    
-    /// A button that the user taps to continue using the app according to the current
-    /// authorization status.
-    private var buttonText: Text {
-        let buttonText: Text
-        switch musicAuthorizationStatus {
-        case .notDetermined:
-            buttonText = Text("permissions")
-        case .denied:
-            buttonText = Text("Open Settings")
-        default:
-            fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-        return buttonText
-    }
-    
-    /// Safely updates the `musicAuthorizationStatus` property on the main thread.
-    @MainActor
-    private func update(with musicAuthorizationStatus: MusicAuthorization.Status) {
-        withAnimation {
-            self.musicAuthorizationStatus = musicAuthorizationStatus
-        }
-    }
 }
 
 
-
-
-
-struct Previews_SongsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SongsView(musicAuthorizationStatus: .constant(.authorized), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
-            .environmentObject(PlaylistDataStore())
-            .previewDisplayName("authorized")
-    }
-    
-    struct SongsView_Previews: PreviewProvider {
-        
-        static var previews: some View {
-            SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
-                .environmentObject(PlaylistDataStore())
-                .previewDisplayName("not authorized")
-        }
-    }
-    
-    
-    
+#Preview {
+    SongsView(items: [
+        MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),
+        MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),
+        MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+    .environmentObject(PlaylistDataStore())
 }
-
-

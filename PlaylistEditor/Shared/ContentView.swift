@@ -18,7 +18,7 @@ struct ContentView: View {
         
         if (musicAuthorizationStatus == .authorized)         {
             TabView {
-                SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [])
+                SongsView(items: [])
                     .environmentObject(storage)
                     .tabItem {
                         Label("Songs", systemImage: "square.and.pencil")

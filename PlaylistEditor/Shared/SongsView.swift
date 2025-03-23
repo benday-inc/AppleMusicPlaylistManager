@@ -26,56 +26,14 @@ struct SongsView: View {
     @State private var multiSelection = Set<UUID>()
     @Environment(\.editMode) var editMode
     @Environment(\.isPreview) var isPreview
-    @State var isAuthorizedForMusic: Bool = false
-    
-    
-    private func removeExcluded(items: Array<MediaItemWrapper>) {
-        var removeThese = Array<MediaItemWrapper>()
-        
-        for item in items {
-            if (storage.isExcluded(item: item) == true) {
-                removeThese.append(item)
-            }
-        }
-        
-        for item in removeThese {
-            removeItem(item: item)
-        }
-    }
-    
-    private func removeItem(item: MediaItemWrapper) {
-        let removeAtIndex = items.firstIndex(where: { $0.id == item.id })
-        
-        if (removeAtIndex != nil) {
-            self.items.remove(at: removeAtIndex!)
-        }
-    }
-    
-    private func addAlbumExclusion(item: MediaItemWrapper) {
-        storage.addAlbumExclusion(item: item)
-        removeExcluded(items: self.items)
-    }
-    
-    private func addGenreExclusion(item: MediaItemWrapper) {
-        storage.addGenreExclusion(item: item)
-        removeExcluded(items: self.items)
-    }
-    
-    private func addArtistExclusion(item: MediaItemWrapper) {
-        storage.addArtistExclusion(item: item)
-        removeExcluded(items: self.items)
-    }
-    
-    private func removeTrack(item: MediaItemWrapper) {
-        removeItem(item: item)
-    }
+    // @State var isAuthorizedForMusic: Bool = false
     
     var body: some View {
         
         NavigationView {
             VStack {
                 let _ = print("***** authorization status: \(musicAuthorizationStatus)")
-                if (isAuthorizedForMusic == true) {
+                if (musicAuthorizationStatus == .authorized) {
                     List(selection: $multiSelection) {
                         ForEach (items) { item in
                             SongCell(item: item)
@@ -126,14 +84,6 @@ struct SongsView: View {
                     Button("Save Playlist") {
                         writePlaylist()
                     }
-                    //                label: {
-                    //                        HStack {
-                    //                            Spacer()
-                    //                            Label("Save Playlist", systemImage: "pianokeys")
-                    //                                .labelStyle(.iconOnly)
-                    //                            Text("Save Playlist")
-                    //                        }
-                    //                    }
                     .alert(isPresented: $showPlaylistExistsAlert) {
                         Alert(
                             title: Text("Yah...uhhh...about that..."),
@@ -185,7 +135,46 @@ struct SongsView: View {
         
     }
     
+    private func removeExcluded(items: Array<MediaItemWrapper>) {
+        var removeThese = Array<MediaItemWrapper>()
+        
+        for item in items {
+            if (storage.isExcluded(item: item) == true) {
+                removeThese.append(item)
+            }
+        }
+        
+        for item in removeThese {
+            removeItem(item: item)
+        }
+    }
     
+    private func removeItem(item: MediaItemWrapper) {
+        let removeAtIndex = items.firstIndex(where: { $0.id == item.id })
+        
+        if (removeAtIndex != nil) {
+            self.items.remove(at: removeAtIndex!)
+        }
+    }
+    
+    private func addAlbumExclusion(item: MediaItemWrapper) {
+        storage.addAlbumExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func addGenreExclusion(item: MediaItemWrapper) {
+        storage.addGenreExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func addArtistExclusion(item: MediaItemWrapper) {
+        storage.addArtistExclusion(item: item)
+        removeExcluded(items: self.items)
+    }
+    
+    private func removeTrack(item: MediaItemWrapper) {
+        removeItem(item: item)
+    }
     
     func move(from source: IndexSet, to destination: Int) {
         items.move(fromOffsets: source, toOffset: destination)
@@ -336,10 +325,11 @@ struct SongsView: View {
         
         let returnValue = await requestMusicAuthorization()
         
+        musicAuthorizationStatus = returnValue
+        
         print ("handleOnAppear() starting...")
         
         if (returnValue == .authorized) {
-            isAuthorizedForMusic = true
             handleGetRandomSongs()
         }
         
@@ -426,12 +416,7 @@ struct SongsView: View {
         
         print("returned music auth status: \(musicAuthorizationStatus)...")
         
-        musicAuthorizationStatus = status
-        
-        if (status == .authorized)
-        {
-            isAuthorizedForMusic = true
-        }
+        musicAuthorizationStatus = status        
     }
     
     /// A button that the user taps to continue using the app according to the current
@@ -466,10 +451,7 @@ struct Previews_SongsView_Previews: PreviewProvider {
     static var previews: some View {
         SongsView(musicAuthorizationStatus: .constant(.authorized), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
             .environmentObject(PlaylistDataStore())
-            .previewInterfaceOrientation(.landscapeRight)
-        // .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
-            .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
-            .previewDisplayName("ipad authorized")
+            .previewDisplayName("authorized")
     }
     
     struct SongsView_Previews: PreviewProvider {
@@ -477,10 +459,7 @@ struct Previews_SongsView_Previews: PreviewProvider {
         static var previews: some View {
             SongsView(musicAuthorizationStatus: .constant(.notDetermined), items: [ MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),                                                                            MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),                                                                            MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
                 .environmentObject(PlaylistDataStore())
-                .previewInterfaceOrientation(.landscapeRight)
-            // .previewDevice(PreviewDevice(rawValue: "iPhone 12 Pro Max"))
-                .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (5th generation)"))
-                .previewDisplayName("ipad not authorized")
+                .previewDisplayName("not authorized")
         }
     }
     
@@ -488,12 +467,4 @@ struct Previews_SongsView_Previews: PreviewProvider {
     
 }
 
-public extension EnvironmentValues {
-    var isPreview: Bool {
-#if DEBUG
-        return ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-#else
-        return false
-#endif
-    }
-}
+

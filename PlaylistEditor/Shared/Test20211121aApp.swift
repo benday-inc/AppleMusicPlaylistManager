@@ -11,7 +11,7 @@ import SwiftUI
 struct Test20211121aApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView().navigationTitle("Random Playlist Generator")
+            ContentView(musicAuthorizationStatus: .notDetermined).navigationTitle("Random Playlist Generator")
         }
     }
 }

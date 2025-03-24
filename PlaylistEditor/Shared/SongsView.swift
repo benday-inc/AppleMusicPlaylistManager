@@ -43,6 +43,13 @@ struct SongsView: View {
                                     removeTrack(item: item)
                                 }
                             }
+                            .contextMenu() {
+                                Button("Play Track") {
+                                    withAnimation {
+                                        playNow(item: item)
+                                    }
+                                }
+                            }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button("genre", role: .destructive) {
                                     addGenreExclusion(item: item)
@@ -51,6 +58,7 @@ struct SongsView: View {
                                     addArtistExclusion(item: item)
                                 }
                             }
+                        
                     }
                     .onMove(perform: move)
                 }
@@ -59,8 +67,11 @@ struct SongsView: View {
             .navigationTitle("Songs")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    Button("Save Playlist") {
+                    
+                    Button() {
                         writePlaylist()
+                    } label: {
+                        Label("Save Playlist", systemImage: "square.and.arrow.down").labelStyle(.titleAndIcon)
                     }
                     .alert(isPresented: $showPlaylistExistsAlert) {
                         Alert(
@@ -68,12 +79,21 @@ struct SongsView: View {
                             message: Text("Can't overwrite an existing playlist. Delete the existing Random playlist first using the Music app"),
                             dismissButton: .default(Text("Uhhhgh. Seriously?"))
                         )
-                        
+                    }
+                    
+                    Spacer()
+                    Button() {
+                        play()
+                    } label: {
+                        Label("Listen / Play", systemImage: "play.rectangle").labelStyle(.titleAndIcon)
                     }
                 }
+                
                 ToolbarItemGroup(content: {
                     HStack {
                         EditButton()
+                        Spacer()
+                        Spacer()
                         if (self.editMode?.wrappedValue == .active) {
                             Button() {
                                 removeSelected()
@@ -98,6 +118,8 @@ struct SongsView: View {
                         }
                     }
                 })
+                
+                
             })
             
             .environment(\.editMode, editMode)
@@ -105,10 +127,36 @@ struct SongsView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear() {
-            if (isPreview == false) {                
+            if (isPreview == false) {
                 handleGetRandomSongs();
             }
         }
+    }
+    
+    private func playNow(item: MediaItemWrapper) {
+        let mediaItem = item.mediaItem
+        
+        let collection = MPMediaItemCollection(items: [mediaItem])
+        
+        let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+        
+        musicPlayer.prepend(MPMusicPlayerMediaItemQueueDescriptor(itemCollection: collection))
+        
+        musicPlayer.skipToNextItem() // Play the new track now
+    }
+    
+    private func play() {
+        var mediaItems: [MPMediaItem] = []
+        
+        for track in items {
+            mediaItems.append(track.mediaItem)
+        }
+        
+        let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+        
+        musicPlayer.setQueue(with: MPMediaItemCollection(items: mediaItems))
+        
+        musicPlayer.play()
     }
     
     private func removeExcluded(items: Array<MediaItemWrapper>) {
@@ -234,6 +282,8 @@ struct SongsView: View {
         }
     }
     
+    
+    
     private func writePlaylist() {
         let name = "Random"
         
@@ -358,3 +408,5 @@ struct SongsView: View {
         MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
     .environmentObject(PlaylistDataStore())
 }
+
+

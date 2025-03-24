@@ -33,6 +33,9 @@ struct ContentView: View {
                         Label("Playlists", systemImage: "music.note.list")
                     }.tag(2)
             }
+            .onAppear(){
+                storage.load()
+            }
         }
     }
     

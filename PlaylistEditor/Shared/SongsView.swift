@@ -171,7 +171,7 @@ struct SongsView: View {
         var removeThese = Array<MediaItemWrapper>()
         
         for item in items {
-            if (storage.isExcluded(item: item) == true) {
+            if (storage.isExcluded(item: item, playlistMode: playlistMode) == true) {
                 removeThese.append(item)
             }
         }
@@ -408,7 +408,7 @@ struct SongsView: View {
         for index in randomIndexes {
             let tempSong = allItems![index]
             
-            if (storage.isExcluded(item: tempSong) == false) {
+            if (storage.isExcluded(item: tempSong, playlistMode: playlistMode) == false) {
                 newPlaylistItems.append(tempSong)
                 print("not excluded")
             }

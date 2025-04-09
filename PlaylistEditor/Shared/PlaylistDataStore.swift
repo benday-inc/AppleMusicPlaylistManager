@@ -23,9 +23,13 @@ class PlaylistDataStore: ObservableObject {
         excludedGenres = testData
     }
     
-    func isExcluded(item: MediaItemWrapper) -> Bool {
+    func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
         if (contains(searchInValues: excludedGenres,
                      searchForValue: item.genreName) == true) {
+            if (playlistMode == "Mode: Classical" && item.genreName == "Classical") {
+                return false;
+            }
+            
             return true
         }
         else if (contains(searchInValues: excludedArtists,

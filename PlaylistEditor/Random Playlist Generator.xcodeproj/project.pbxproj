@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -51,10 +51,8 @@
 /* Begin PBXFrameworksBuildPhase section */
 		04031393274A7E47009B0F23 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -122,8 +120,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			name = "Random Playlist Generator (iOS)";
 			productName = "Test20211121a (iOS)";
 			productReference = 04031396274A7E47009B0F23 /* Random Playlist Generator.app */;
@@ -145,7 +141,6 @@
 				};
 			};
 			buildConfigurationList = 0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Random Playlist Generator" */;
-			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -153,6 +148,7 @@
 				Base,
 			);
 			mainGroup = 04031389274A7E46009B0F23;
+			preferredProjectObjectVersion = 90;
 			productRefGroup = 04031397274A7E47009B0F23 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -165,19 +161,16 @@
 /* Begin PBXResourcesBuildPhase section */
 		04031394274A7E47009B0F23 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */,
 				044BFB86277CCEFA00AEA0F5 /* Random Playlist Generator--iOS--Info.plist in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		04031392274A7E47009B0F23 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				0456FD2A2779101800C76D96 /* SongCell.swift in Sources */,
 				046E98882D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift in Sources */,
@@ -194,12 +187,11 @@
 				0456FD32277A1EA200C76D96 /* IdentifiableString.swift in Sources */,
 				0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		040313A5274A7E47009B0F23 /* Debug */ = {
+		040313A5274A7E47009B0F23 /* Debug configuration for PBXProject "Random Playlist Generator" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -261,7 +253,7 @@
 			};
 			name = Debug;
 		};
-		040313A6274A7E47009B0F23 /* Release */ = {
+		040313A6274A7E47009B0F23 /* Release configuration for PBXProject "Random Playlist Generator" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -316,7 +308,7 @@
 			};
 			name = Release;
 		};
-		040313A8274A7E47009B0F23 /* Debug */ = {
+		040313A8274A7E47009B0F23 /* Debug configuration for PBXNativeTarget "Random Playlist Generator (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -336,7 +328,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -351,7 +343,7 @@
 			};
 			name = Debug;
 		};
-		040313A9274A7E47009B0F23 /* Release */ = {
+		040313A9274A7E47009B0F23 /* Release configuration for PBXNativeTarget "Random Playlist Generator (iOS)" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -371,7 +363,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -393,19 +385,17 @@
 		0403138D274A7E46009B0F23 /* Build configuration list for PBXProject "Random Playlist Generator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				040313A5274A7E47009B0F23 /* Debug */,
-				040313A6274A7E47009B0F23 /* Release */,
+				040313A5274A7E47009B0F23 /* Debug configuration for PBXProject "Random Playlist Generator" */,
+				040313A6274A7E47009B0F23 /* Release configuration for PBXProject "Random Playlist Generator" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		040313A7274A7E47009B0F23 /* Build configuration list for PBXNativeTarget "Random Playlist Generator (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				040313A8274A7E47009B0F23 /* Debug */,
-				040313A9274A7E47009B0F23 /* Release */,
+				040313A8274A7E47009B0F23 /* Debug configuration for PBXNativeTarget "Random Playlist Generator (iOS)" */,
+				040313A9274A7E47009B0F23 /* Release configuration for PBXNativeTarget "Random Playlist Generator (iOS)" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */

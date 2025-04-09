@@ -20,6 +20,7 @@ struct SongsView: View {
     
     @State var items: Array<MediaItemWrapper>
     @State var allItems: Array<MediaItemWrapper>?
+    @State var playlistMode: String = "Mode: All"
     
     @State var itemCount: Int = -1
     @State private var multiSelection = Set<UUID>()
@@ -91,6 +92,13 @@ struct SongsView: View {
                 
                 ToolbarItemGroup(content: {
                     HStack {
+                        Button() {
+                            changePlaylistMode()
+                        } label: {
+                            Text(playlistMode)
+                        }
+                        Spacer()
+                        Spacer()
                         EditButton()
                         Spacer()
                         Spacer()
@@ -314,7 +322,22 @@ struct SongsView: View {
     private func handleGetAllSongs() {
         
         print("getting all songs...")
-        let query = MPMediaQuery.songs()
+        
+        let query: MPMediaQuery
+        
+        if (playlistMode == "Mode: All") {
+            query = MPMediaQuery.songs()
+        }
+        else {
+            query = MPMediaQuery.songs()
+            let classicalPredicate = MPMediaPropertyPredicate(
+                value: "Classical",
+                forProperty: MPMediaItemPropertyGenre,
+                comparisonType: .equalTo
+            )
+            query.addFilterPredicate(classicalPredicate)
+        }
+        
         let queryResults = query.items
         print("got all songs.")
         
@@ -340,6 +363,19 @@ struct SongsView: View {
         }
         
         return returnValues
+    }
+    
+    private func changePlaylistMode() {
+        if (playlistMode == "Mode: Classical") {
+            playlistMode = "Mode: All"
+        }
+        else {
+            playlistMode = "Mode: Classical"
+        }
+        
+        allItems = nil
+        items = Array<MediaItemWrapper>()
+        handleGetRandomSongs()
     }
     
     private func handleGetRandomSongs() {

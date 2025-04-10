@@ -73,15 +73,34 @@ struct ExclusionsView: View {
 }
 
 struct ExclusionsView_Previews: PreviewProvider {
-    static var testData: [IdentifiableString] = [
+    static var testDataExcludedGenres: [IdentifiableString] = [
         IdentifiableString(value: "genre 1"),
         IdentifiableString(value: "genre 2"),
         IdentifiableString(value: "genre 3"),
         IdentifiableString(value: "genre 4")
     ]
+    
+    static var testDataExcludedArtists: [IdentifiableString] = [
+        IdentifiableString(value: "artist 1"),
+        IdentifiableString(value: "artist 2"),
+        IdentifiableString(value: "artist 3"),
+        IdentifiableString(value: "artist 4")
+    ]
+    
+    static var testDataExcludedAlbums: [IdentifiableString] = [
+        IdentifiableString(value: "album 1"),
+        IdentifiableString(value: "album 2"),
+        IdentifiableString(value: "album 3"),
+        IdentifiableString(value: "album 4")
+    ]
         
     static var previews: some View {
+        let store = PlaylistDataStore(
+            testDataExcludedGenres: ExclusionsView_Previews.testDataExcludedGenres,
+            testDataExcludedArtists: ExclusionsView_Previews.testDataExcludedArtists,
+            testDataExcludedAlbums: ExclusionsView_Previews.testDataExcludedAlbums
+        )
         
-        ExclusionsView().environmentObject(PlaylistDataStore(testData: ExclusionsView_Previews.testData))
+        ExclusionsView().environmentObject(store)
     }
 }

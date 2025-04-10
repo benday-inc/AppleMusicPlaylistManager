@@ -15,14 +15,19 @@ class PlaylistDataStore: ObservableObject {
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
-    @Published var excludedTracks: [IdentifiableString] = []
+    private var isTestMode: Bool = false
     
     init() {
     
     }
     
-    init(testData: [IdentifiableString]) {
-        excludedGenres = testData
+    init(testDataExcludedGenres: [IdentifiableString],
+         testDataExcludedArtists: [IdentifiableString],
+         testDataExcludedAlbums: [IdentifiableString]) {
+        isTestMode = true
+        excludedGenres = testDataExcludedGenres
+        excludedAlbums = testDataExcludedAlbums
+        excludedArtists = testDataExcludedArtists
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
@@ -94,6 +99,10 @@ class PlaylistDataStore: ObservableObject {
     }
     
     func load() {
+        if (isTestMode == true) {
+            return;
+        }
+        
         PlaylistDataStore.load(filename: "excluded-genres") { result in
             switch result {
             case .failure(let error):
@@ -123,6 +132,10 @@ class PlaylistDataStore: ObservableObject {
     }
     
     func save() {
+        if (isTestMode == true) {
+            return;
+        }
+        
         PlaylistDataStore.save(filename: "excluded-genres", itemsToSave: excludedGenres) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)

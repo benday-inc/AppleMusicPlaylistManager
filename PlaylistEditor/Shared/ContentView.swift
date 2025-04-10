@@ -17,24 +17,26 @@ struct ContentView: View {
         MusicLibraryAuthorizationView(authorizationStatus: $musicAuthorizationStatus)
         
         if (musicAuthorizationStatus == .authorized)         {
-            TabView {
-                SongsView(items: [])
-                    .environmentObject(storage)
-                    .tabItem {
-                        Label("Songs", systemImage: "square.and.pencil")
-                    }.tag(0)
-                ExclusionsView()
-                    .environmentObject(storage)
-                    .tabItem {
-                        Label("Exclusions", systemImage: "slider.horizontal.3")
-                    }.tag(1)
-                PlaylistsView(_playlists: [])
-                    .tabItem {
-                        Label("Playlists", systemImage: "music.note.list")
-                    }.tag(2)
+            if (storage.isLoaded == false) {
+                Text("Loading...")
             }
-            .onAppear(){
-                storage.load()
+            else {
+                TabView {
+                    SongsView(items: [])
+                        .environmentObject(storage)
+                        .tabItem {
+                            Label("Songs", systemImage: "square.and.pencil")
+                        }.tag(0)
+                    ExclusionsView()
+                        .environmentObject(storage)
+                        .tabItem {
+                            Label("Exclusions", systemImage: "slider.horizontal.3")
+                        }.tag(1)
+                    PlaylistsView(_playlists: [])
+                        .tabItem {
+                            Label("Playlists", systemImage: "music.note.list")
+                        }.tag(2)
+                }
             }
         }
     }

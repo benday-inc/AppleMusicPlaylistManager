@@ -15,10 +15,14 @@ class PlaylistDataStore: ObservableObject {
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
+    @Published var isLoaded: Bool = false
     private var isTestMode: Bool = false
+    private var isLoadedCompleteGenre: Bool = false
+    private var isLoadedCompleteArtist: Bool = false
+    private var isLoadedCompleteAlbum: Bool = false
     
     init() {
-    
+        load()
     }
     
     init(testDataExcludedGenres: [IdentifiableString],
@@ -31,39 +35,46 @@ class PlaylistDataStore: ObservableObject {
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
+//        print("Checking \(playlistMode) exclusion: '\(item.artistName)'; '\(item.albumName)'; '\(item.genreName)'")
+        
         if (playlistMode != AppConstants.PLAYLIST_MODE_ALL) {
+//            print("Not checking excluded genres, artists, or albums in '\(playlistMode)' mode.")
             return false;
         }
-                
-        if (contains(searchInValues: excludedGenres,
-                     searchForValue: item.genreName) == true) {
-            return true
+        else {
+            let albumAndArtist = "\(item.artistName) - \(item.albumName)"
+            
+            if (contains(searchInValues: excludedGenres,
+                         searchForValue: item.genreName) == true) {
+                return true
+            }
+            else if (contains(searchInValues: excludedArtists,
+                         searchForValue: item.artistName) == true) {
+                return true
+            }
+            else if (contains(searchInValues: excludedAlbums,
+                         searchForValue: albumAndArtist) == true) {
+                return true
+            }
+            else {
+                return false
+            }
         }
-        
-        if (contains(searchInValues: excludedArtists,
-                     searchForValue: item.artistName) == true) {
-            return true
-        }
-        
-        let albumAndArtist = "\(item.artistName) - \(item.albumName)"
-        
-        if (contains(searchInValues: excludedAlbums,
-                     searchForValue: albumAndArtist) == true) {
-            return true
-        }
-        
-        return false
     }
     
     private func contains(searchInValues: [IdentifiableString],
                           searchForValue: String) -> Bool {
-        for item in searchInValues {
-            if (item.value == searchForValue) {
-                return true
-            }
-        }
+        let searchForValueAsIdentifiableString = IdentifiableString(value: searchForValue)
         
-        return false
+        let result = searchInValues.firstIndex(of: searchForValueAsIdentifiableString)
+        
+        if (result != nil) {
+            return true
+        }
+        else {
+//            print("Did not find '\(searchForValue)' in \(searchInValues)")
+            return false
+        }
     }
     
     func addGenreExclusion(item: MediaItemWrapper) {
@@ -104,15 +115,27 @@ class PlaylistDataStore: ObservableObject {
     
     func load() {
         if (isTestMode == true) {
+            isLoaded = true
             return;
         }
         
         PlaylistDataStore.load(filename: "excluded-genres") { result in
             switch result {
             case .failure(let error):
+                print("Error loading excluded genres: \(error)")
                 fatalError(error.localizedDescription)
             case .success(let temp):
+                print("Loaded excluded genres: \(temp.count)")
                 self.excludedGenres = temp
+                self.isLoadedCompleteGenre = true
+                
+                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
+                    self.isLoaded = true
+                    print("all loaded")
+                }
+                else {
+                    print("genres loaded but not all complete")
+                }
             }
         }
         
@@ -121,7 +144,17 @@ class PlaylistDataStore: ObservableObject {
             case .failure(let error):
                 fatalError(error.localizedDescription)
             case .success(let temp):
+                print("Loaded excluded artists: \(temp.count)")
                 self.excludedArtists = temp
+                self.isLoadedCompleteArtist = true
+                
+                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
+                    self.isLoaded = true
+                    print("all loaded")
+                }
+                else {
+                    print("artists loaded but not all complete")
+                }
             }
         }
         
@@ -130,7 +163,17 @@ class PlaylistDataStore: ObservableObject {
             case .failure(let error):
                 fatalError(error.localizedDescription)
             case .success(let temp):
+                print("Loaded excluded albums: \(temp.count)")
                 self.excludedAlbums = temp
+                self.isLoadedCompleteAlbum = true
+                
+                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
+                    self.isLoaded = true
+                    print("all loaded")
+                }
+                else {
+                    print("albums loaded but not all complete")
+                }
             }
         }
     }

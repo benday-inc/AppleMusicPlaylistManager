@@ -441,10 +441,10 @@ struct SongsView: View {
             
             if (storage.isExcluded(item: tempSong, playlistMode: playlistMode) == false) {
                 newPlaylistItems.append(tempSong)
-                print("not excluded")
+                // print("not excluded")
             }
             else {
-                print("excluded")
+                // print("excluded")
             }
         }
         

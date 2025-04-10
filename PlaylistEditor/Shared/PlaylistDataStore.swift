@@ -39,11 +39,13 @@ class PlaylistDataStore: ObservableObject {
                      searchForValue: item.genreName) == true) {
             return true
         }
-        else if (contains(searchInValues: excludedArtists,
+        
+        if (contains(searchInValues: excludedArtists,
                      searchForValue: item.artistName) == true) {
             return true
         }
-        else if (contains(searchInValues: excludedAlbums,
+        
+        if (contains(searchInValues: excludedAlbums,
                      searchForValue: "\(item.artistName) - \(item.albumName)") == true) {
             return true
         }

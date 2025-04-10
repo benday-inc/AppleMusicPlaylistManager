@@ -26,7 +26,7 @@ final class PlaylistDataStoreTests : XCTestCase {
         XCTAssertTrue(sut.excludedGenres.isEmpty)
     }
     
-    func emptyGenreExclusionsShouldNotExclude() async throws {
+    func testInAllSongsModeEmptyExclusionsShouldNotExclude() async throws {
         // Write your test here and use APIs like `XCTAssert(...)` to check expected conditions.
         
         let sut = PlaylistDataStore(testDataExcludedGenres: [],
@@ -45,5 +45,53 @@ final class PlaylistDataStoreTests : XCTestCase {
         
         XCTAssertEqual(expected, actual)
     }
+    
+    func testInAllSongsMode_Exclude_ExcludedGenre() async throws {
+        // Write your test here and use APIs like `XCTAssert(...)` to check expected conditions.
+        
+        let excluded: String = "ExcludedGenre"
+        let excludedIdentifiableString = IdentifiableString(value: excluded)
+        
+        let sut = PlaylistDataStore(testDataExcludedGenres: [excludedIdentifiableString],
+                                    testDataExcludedArtists: [],
+                                    testDataExcludedAlbums: [])
+        
+        let sampleItemMediaItemWrapper = MediaItemWrapper(
+            trackName: "track name",
+            albumName: "album name",
+            artistName: "artist name",
+            genreName: excluded)
+        
+        let expected = true
+        
+        let actual = sut.isExcluded(item: sampleItemMediaItemWrapper, playlistMode: AppConstants.PLAYLIST_MODE_ALL)
+        
+        XCTAssertEqual(expected, actual)
+    }
+    
+    func testInAllSongsMode_DontExclude_NonExcludedGenre() async throws {
+        // Write your test here and use APIs like `XCTAssert(...)` to check expected conditions.
+        
+        let excluded: String = "ExcludedGenre"
+        let excludedIdentifiableString = IdentifiableString(value: excluded)
+        
+        let sut = PlaylistDataStore(testDataExcludedGenres: [excludedIdentifiableString],
+                                    testDataExcludedArtists: [],
+                                    testDataExcludedAlbums: [])
+        
+        let sampleItemMediaItemWrapper = MediaItemWrapper(
+            trackName: "track name",
+            albumName: "album name",
+            artistName: "artist name",
+            genreName: "genre name")
+        
+        let expected = false
+        
+        let actual = sut.isExcluded(item: sampleItemMediaItemWrapper, playlistMode: AppConstants.PLAYLIST_MODE_ALL)
+        
+        XCTAssertEqual(expected, actual)
+    }
+    
+   
 
 }

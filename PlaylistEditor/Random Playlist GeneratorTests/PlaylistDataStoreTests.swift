@@ -180,8 +180,8 @@ final class PlaylistDataStoreTests : XCTestCase {
     func testInAllSongsMode_Exclude_ExcludedAlbum() async throws {
         // Write your test here and use APIs like `XCTAssert(...)` to check expected conditions.
         
-        let excluded: String = "artist name - EXCLUDED"
-        let excludedIdentifiableString = IdentifiableString(value: excluded)
+        let excluded: String = "EXCLUDED"
+        let excludedIdentifiableString = IdentifiableString(value: "artist name - " + excluded)
         
         let sut = PlaylistDataStore(testDataExcludedGenres: [],
                                     testDataExcludedArtists: [],

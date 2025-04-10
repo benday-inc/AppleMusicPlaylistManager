@@ -11,7 +11,10 @@ import SwiftUI
 struct Test20211121aApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView(musicAuthorizationStatus: .notDetermined).navigationTitle("Random Playlist Generator")
+            if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+                ContentView(musicAuthorizationStatus: .notDetermined)
+                    .navigationTitle("Random Playlist Generator")
+            }
         }
     }
 }

@@ -45,8 +45,10 @@ class PlaylistDataStore: ObservableObject {
             return true
         }
         
+        let albumAndArtist = "\(item.artistName) - \(item.albumName)"
+        
         if (contains(searchInValues: excludedAlbums,
-                     searchForValue: "\(item.artistName) - \(item.albumName)") == true) {
+                     searchForValue: albumAndArtist) == true) {
             return true
         }
         

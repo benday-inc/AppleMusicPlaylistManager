@@ -69,10 +69,11 @@ class PlaylistDataStore: ObservableObject {
         let result = searchInValues.firstIndex(of: searchForValueAsIdentifiableString)
         
         if (result != nil) {
+            print("Found '\(searchForValue)' '\(searchInValues.count)' items")
             return true
         }
         else {
-//            print("Did not find '\(searchForValue)' in \(searchInValues)")
+            print("Did not find '\(searchForValue)' '\(searchInValues.count)' items")
             return false
         }
     }

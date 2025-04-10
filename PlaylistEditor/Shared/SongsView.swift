@@ -39,12 +39,16 @@ struct SongsView: View {
                         SongCell(item: item)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 
-                                Button("album", role: .destructive) {
-                                    addAlbumExclusion(item: item)
-                                }
-                                Button("track", role: .destructive) {
+                                
+                                Button("track", systemImage: "trash", role: .destructive) {
                                     removeTrack(item: item)
                                 }
+                                .tint(.red)
+                                
+                                Button("album") {
+                                    addAlbumExclusion(item: item)
+                                }
+                                .tint(.secondary)
                             }
                             .contextMenu() {
                                 Button("Play Track") {
@@ -53,11 +57,12 @@ struct SongsView: View {
                                     }
                                 }
                             }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button("genre", role: .destructive) {
+                            .swipeActions(edge: .trailing) {
+                                Button("genre") {
                                     addGenreExclusion(item: item)
                                 }
-                                Button("artist", role: .destructive) {
+                                .tint(.secondary)
+                                Button("artist") {
                                     addArtistExclusion(item: item)
                                 }
                             }

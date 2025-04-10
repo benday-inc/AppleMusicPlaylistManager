@@ -9,6 +9,8 @@
 import Foundation
 import SwiftUI
 
+
+
 class PlaylistDataStore: ObservableObject {
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
@@ -24,12 +26,12 @@ class PlaylistDataStore: ObservableObject {
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
+        if (playlistMode != AppConstants.PLAYLIST_MODE_ALL) {
+            return false;
+        }
+                
         if (contains(searchInValues: excludedGenres,
                      searchForValue: item.genreName) == true) {
-            if (playlistMode == "Mode: Classical" && item.genreName == "Classical") {
-                return false;
-            }
-            
             return true
         }
         else if (contains(searchInValues: excludedArtists,

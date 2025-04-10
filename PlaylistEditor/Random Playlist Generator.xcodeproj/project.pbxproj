@@ -10,6 +10,7 @@
 		0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0403138F274A7E46009B0F23 /* Test20211121aApp.swift */; };
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
+		0442634C2DA804C20038D101 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442634B2DA804C20038D101 /* AppConstants.swift */; };
 		044BFB86277CCEFA00AEA0F5 /* Random Playlist Generator--iOS--Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */; };
 		0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD232778D87D00C76D96 /* PlaylistCell.swift */; };
 		0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD252778E65600C76D96 /* PlaylistsView.swift */; };
@@ -33,6 +34,7 @@
 		0403139E274A7E47009B0F23 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Random Playlist Generator--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RandomPlaylistGenerator--macOS--Info.plist"; sourceTree = "<group>"; };
+		0442634B2DA804C20038D101 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RandomPlaylistGenerator (iOS).entitlements"; sourceTree = "<group>"; };
 		0456FD232778D87D00C76D96 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		0456FD252778E65600C76D96 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				0403138E274A7E46009B0F23 /* Shared */,
 				0403139D274A7E47009B0F23 /* macOS */,
 				04031397274A7E47009B0F23 /* Products */,
+				0442634B2DA804C20038D101 /* AppConstants.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -176,6 +179,7 @@
 				046E98882D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift in Sources */,
 				0456FD2E277A164E00C76D96 /* PlaylistDataStore.swift in Sources */,
 				0456FD2827790D6B00C76D96 /* SongsView.swift in Sources */,
+				0442634C2DA804C20038D101 /* AppConstants.swift in Sources */,
 				0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */,
 				0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */,
 				040313A1274A7E47009B0F23 /* ContentView.swift in Sources */,

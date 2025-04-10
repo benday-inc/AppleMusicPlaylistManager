@@ -27,6 +27,8 @@ struct SongsView: View {
     @Environment(\.editMode) var editMode
     @Environment(\.isPreview) var isPreview
     
+
+    
     var body: some View {
         
         NavigationView {
@@ -90,17 +92,19 @@ struct SongsView: View {
                     }
                 }
                 
-                ToolbarItemGroup(content: {
+                ToolbarItemGroup(placement: .topBarLeading, content: {
                     HStack {
                         Button() {
                             changePlaylistMode()
                         } label: {
                             Text(playlistMode)
                         }
-                        Spacer()
-                        Spacer()
+                    }
+                } )
+                
+                ToolbarItemGroup(placement: .topBarTrailing, content: {
+                    HStack {
                         EditButton()
-                        Spacer()
                         Spacer()
                         if (self.editMode?.wrappedValue == .active) {
                             Button() {
@@ -125,19 +129,14 @@ struct SongsView: View {
                             }
                         }
                     }
-                })
-                
-                
+                } )
             })
-            
             .environment(\.editMode, editMode)
             
         }
         .navigationViewStyle(.stack)
         .onAppear() {
-            if (isPreview == false) {
-                handleGetRandomSongs();
-            }
+            handleGetRandomSongs();
         }
     }
     
@@ -222,11 +221,6 @@ struct SongsView: View {
         myPlaylistQuery.addFilterPredicate(pred)
         
         returnValue = myPlaylistQuery.collections?.first as? MPMediaPlaylist
-        
-        //        for case let playlist as MPMediaPlaylist in playlists! {
-        //
-        //            temp.append(PlaylistItem(name: playlist.name!, instance: playlist))
-        //        }
         
         return returnValue
     }
@@ -325,17 +319,28 @@ struct SongsView: View {
         
         let query: MPMediaQuery
         
-        if (playlistMode == "Mode: All") {
+        if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
             query = MPMediaQuery.songs()
         }
-        else {
+        else if (playlistMode == AppConstants.PLAYLIST_MODE_HENDRIE) {
             query = MPMediaQuery.songs()
-            let classicalPredicate = MPMediaPropertyPredicate(
-                value: "Classical",
+            let predicate = MPMediaPropertyPredicate(
+                value: "Phil Hendrie",
+                forProperty: MPMediaItemPropertyArtist,
+                comparisonType: .contains
+            )
+            query.addFilterPredicate(predicate)
+        }
+        else {
+            let genre = playlistMode.replacingOccurrences(of: "Mode: ", with: "")
+            
+            query = MPMediaQuery.songs()
+            let predicate = MPMediaPropertyPredicate(
+                value: genre,
                 forProperty: MPMediaItemPropertyGenre,
                 comparisonType: .equalTo
             )
-            query.addFilterPredicate(classicalPredicate)
+            query.addFilterPredicate(predicate)
         }
         
         let queryResults = query.items
@@ -366,11 +371,26 @@ struct SongsView: View {
     }
     
     private func changePlaylistMode() {
-        if (playlistMode == "Mode: Classical") {
-            playlistMode = "Mode: All"
+        let modes: [String] = [
+            AppConstants.PLAYLIST_MODE_ALL,
+            AppConstants.PLAYLIST_MODE_JAZZ,
+            AppConstants.PLAYLIST_MODE_CLASSICAL,
+            AppConstants.PLAYLIST_MODE_HENDRIE
+        ]
+        
+        let selectedIndex = modes.firstIndex(of: playlistMode)
+        
+        if (selectedIndex == nil) {
+            playlistMode = modes[0]
+            return
         }
         else {
-            playlistMode = "Mode: Classical"
+            if (selectedIndex! == modes.count - 1) {
+                playlistMode = modes[0]
+            }
+            else {
+                playlistMode = modes[selectedIndex! + 1]
+            }
         }
         
         allItems = nil
@@ -379,6 +399,9 @@ struct SongsView: View {
     }
     
     private func handleGetRandomSongs() {
+        if (isPreview == true) {
+            return
+        }
         
         if (allItems == nil) {
             handleGetAllSongs()

@@ -15,7 +15,6 @@ struct PlaylistsView: View {
 
     @State var doSomethingText = "(not set)"
     /// The current authorization status of MusicKit.
-    @Binding var musicAuthorizationStatus: MusicAuthorization.Status
     
     @State var _playlists: Array<PlaylistItem>
     
@@ -84,52 +83,14 @@ struct PlaylistsView: View {
         }
     }
     
-    /// Allows the user to authorize Apple Music usage when tapping the Continue/Open Setting button.
-    private func handleButtonPressed() {
-        switch musicAuthorizationStatus {
-            case .notDetermined:
-                Task {
-                    let musicAuthorizationStatus = await MusicAuthorization.request()
-                    await update(with: musicAuthorizationStatus)
-                }
-            case .denied:
-                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-                    openURL(settingsURL)
-                }
-            default:
-                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-    }
     
-    /// A button that the user taps to continue using the app according to the current
-    /// authorization status.
-    private var buttonText: Text {
-        let buttonText: Text
-        switch musicAuthorizationStatus {
-            case .notDetermined:
-                buttonText = Text("permissions")
-            case .denied:
-                buttonText = Text("Open Settings")
-            default:
-                fatalError("No button should be displayed for current authorization status: \(musicAuthorizationStatus).")
-        }
-        return buttonText
-    }
-    
-    /// Safely updates the `musicAuthorizationStatus` property on the main thread.
-    @MainActor
-    private func update(with musicAuthorizationStatus: MusicAuthorization.Status) {
-        withAnimation {
-            self.musicAuthorizationStatus = musicAuthorizationStatus
-        }
-    }
 }
 
 
 
 struct PlaylistsView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree three"),PlaylistItem(name: "four")])
+        PlaylistsView(_playlists: [ PlaylistItem(name: "one"),PlaylistItem(name: "two"),PlaylistItem(name: "three threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree threethree three"),PlaylistItem(name: "four")])
 .previewInterfaceOrientation(.landscapeLeft)
     }
 }

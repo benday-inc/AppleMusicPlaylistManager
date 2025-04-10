@@ -11,7 +11,6 @@
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
 		0442634C2DA804C20038D101 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442634B2DA804C20038D101 /* AppConstants.swift */; };
-		044BFB86277CCEFA00AEA0F5 /* Random Playlist Generator--iOS--Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */; };
 		0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD232778D87D00C76D96 /* PlaylistCell.swift */; };
 		0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD252778E65600C76D96 /* PlaylistsView.swift */; };
 		0456FD2827790D6B00C76D96 /* SongsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD2727790D6B00C76D96 /* SongsView.swift */; };
@@ -136,7 +135,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					04031395274A7E47009B0F23 = {
 						CreatedOnToolsVersion = 13.1;
@@ -166,7 +165,6 @@
 			isa = PBXResourcesBuildPhase;
 			files = (
 				040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */,
-				044BFB86277CCEFA00AEA0F5 /* Random Playlist Generator--iOS--Info.plist in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */
@@ -229,9 +227,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -291,9 +292,12 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -320,7 +324,6 @@
 				CODE_SIGN_ENTITLEMENTS = "RandomPlaylistGenerator (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
@@ -337,6 +340,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
 				PRODUCT_NAME = "Random Playlist Generator";
@@ -355,7 +359,6 @@
 				CODE_SIGN_ENTITLEMENTS = "RandomPlaylistGenerator (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z7SYY2QYHK;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
@@ -372,6 +375,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
 				PRODUCT_NAME = "Random Playlist Generator";

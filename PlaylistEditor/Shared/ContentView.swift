@@ -28,7 +28,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Exclusions", systemImage: "slider.horizontal.3")
                     }.tag(1)
-                PlaylistsView(musicAuthorizationStatus: .constant(.notDetermined), _playlists: [])
+                PlaylistsView(_playlists: [])
                     .tabItem {
                         Label("Playlists", systemImage: "music.note.list")
                     }.tag(2)

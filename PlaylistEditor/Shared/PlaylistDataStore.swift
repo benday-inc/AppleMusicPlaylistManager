@@ -64,16 +64,12 @@ class PlaylistDataStore: ObservableObject {
     
     private func contains(searchInValues: [IdentifiableString],
                           searchForValue: String) -> Bool {
-        let searchForValueAsIdentifiableString = IdentifiableString(value: searchForValue)
+        let result = searchInValues.contains { $0.value == searchForValue }
         
-        let result = searchInValues.firstIndex(of: searchForValueAsIdentifiableString)
-        
-        if (result != nil) {
-            print("Found '\(searchForValue)' '\(searchInValues.count)' items")
+        if (result == true) {
             return true
         }
         else {
-            print("Did not find '\(searchForValue)' '\(searchInValues.count)' items")
             return false
         }
     }

@@ -470,9 +470,9 @@ struct SongsView: View {
 
 #Preview {
     SongsView(items: [
-        MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1"),
-        MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2"),
-        MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3")])
+        MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1", genreName: "genre 1"),
+        MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2", genreName: "genre 1"),
+        MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3", genreName: "genre 1")])
     .environmentObject(PlaylistDataStore())
 }
 

@@ -16,13 +16,17 @@ struct MediaItemWrapper: Identifiable, Hashable {
     private var _trackName: String
     private var _artistName: String
     private var _albumName: String
+    private var _genreName: String
     
     init(trackName: String,
          albumName: String,
-         artistName: String) {
+         artistName: String,
+         genreName: String
+    ) {
         _trackName = trackName
         _artistName = artistName
         _albumName = albumName
+        _genreName = genreName
         _readFromItem = false
         _instance = nil
     }
@@ -33,7 +37,7 @@ struct MediaItemWrapper: Identifiable, Hashable {
         _trackName = ""
         _artistName = ""
         _albumName = ""
-        
+        _genreName = ""
     }
     
     var mediaItem: MPMediaItem {
@@ -105,7 +109,7 @@ struct MediaItemWrapper: Identifiable, Hashable {
     var genreName: String {
         get {
             if (_readFromItem == false) {
-                return "genre 123"
+                return _genreName
             }
             else {
                 let temp = _instance!.value(forProperty: MPMediaItemPropertyGenre)

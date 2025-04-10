@@ -26,7 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		044263582DA80FFA0038D101 /* PBXContainerItemProxy */ = {
+		0442636D2DA817E30038D101 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0403138A274A7E46009B0F23 /* Project object */;
 			proxyType = 1;
@@ -44,7 +44,7 @@
 		040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Random Playlist Generator--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RandomPlaylistGenerator--macOS--Info.plist"; sourceTree = "<group>"; };
 		0442634B2DA804C20038D101 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
-		044263542DA80FFA0038D101 /* Random Playlist GeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Random Playlist GeneratorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		044263692DA817E30038D101 /* Random Playlist GeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Random Playlist GeneratorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RandomPlaylistGenerator (iOS).entitlements"; sourceTree = "<group>"; };
 		0456FD232778D87D00C76D96 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		0456FD252778E65600C76D96 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
@@ -61,7 +61,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		044263552DA80FFA0038D101 /* Random Playlist GeneratorTests */ = {
+		0442636A2DA817E30038D101 /* Random Playlist GeneratorTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Random Playlist GeneratorTests";
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 			files = (
 			);
 		};
-		044263512DA80FFA0038D101 /* Frameworks */ = {
+		044263662DA817E30038D101 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -90,7 +90,7 @@
 				040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */,
 				0403138E274A7E46009B0F23 /* Shared */,
 				0403139D274A7E47009B0F23 /* macOS */,
-				044263552DA80FFA0038D101 /* Random Playlist GeneratorTests */,
+				0442636A2DA817E30038D101 /* Random Playlist GeneratorTests */,
 				04031397274A7E47009B0F23 /* Products */,
 				0442634B2DA804C20038D101 /* AppConstants.swift */,
 			);
@@ -122,7 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				04031396274A7E47009B0F23 /* Random Playlist Generator.app */,
-				044263542DA80FFA0038D101 /* Random Playlist GeneratorTests.xctest */,
+				044263692DA817E30038D101 /* Random Playlist GeneratorTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -153,25 +153,25 @@
 			productReference = 04031396274A7E47009B0F23 /* Random Playlist Generator.app */;
 			productType = "com.apple.product-type.application";
 		};
-		044263532DA80FFA0038D101 /* Random Playlist GeneratorTests */ = {
+		044263682DA817E30038D101 /* Random Playlist GeneratorTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0442635A2DA80FFA0038D101 /* Build configuration list for PBXNativeTarget "Random Playlist GeneratorTests" */;
+			buildConfigurationList = 0442636F2DA817E30038D101 /* Build configuration list for PBXNativeTarget "Random Playlist GeneratorTests" */;
 			buildPhases = (
-				044263502DA80FFA0038D101 /* Sources */,
-				044263512DA80FFA0038D101 /* Frameworks */,
-				044263522DA80FFA0038D101 /* Resources */,
+				044263652DA817E30038D101 /* Sources */,
+				044263662DA817E30038D101 /* Frameworks */,
+				044263672DA817E30038D101 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				044263592DA80FFA0038D101 /* PBXTargetDependency */,
+				0442636E2DA817E30038D101 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				044263552DA80FFA0038D101 /* Random Playlist GeneratorTests */,
+				0442636A2DA817E30038D101 /* Random Playlist GeneratorTests */,
 			);
 			name = "Random Playlist GeneratorTests";
 			productName = "Random Playlist GeneratorTests";
-			productReference = 044263542DA80FFA0038D101 /* Random Playlist GeneratorTests.xctest */;
+			productReference = 044263692DA817E30038D101 /* Random Playlist GeneratorTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -187,7 +187,7 @@
 					04031395274A7E47009B0F23 = {
 						CreatedOnToolsVersion = 13.1;
 					};
-					044263532DA80FFA0038D101 = {
+					044263682DA817E30038D101 = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 04031395274A7E47009B0F23;
 					};
@@ -207,7 +207,7 @@
 			projectRoot = "";
 			targets = (
 				04031395274A7E47009B0F23 /* Random Playlist Generator (iOS) */,
-				044263532DA80FFA0038D101 /* Random Playlist GeneratorTests */,
+				044263682DA817E30038D101 /* Random Playlist GeneratorTests */,
 			);
 		};
 /* End PBXProject section */
@@ -219,7 +219,7 @@
 				040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */,
 			);
 		};
-		044263522DA80FFA0038D101 /* Resources */ = {
+		044263672DA817E30038D101 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -247,7 +247,7 @@
 				0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */,
 			);
 		};
-		044263502DA80FFA0038D101 /* Sources */ = {
+		044263652DA817E30038D101 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
 			);
@@ -255,10 +255,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		044263592DA80FFA0038D101 /* PBXTargetDependency */ = {
+		0442636E2DA817E30038D101 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 04031395274A7E47009B0F23 /* Random Playlist Generator (iOS) */;
-			targetProxy = 044263582DA80FFA0038D101 /* PBXContainerItemProxy */;
+			targetProxy = 0442636D2DA817E30038D101 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -457,7 +457,7 @@
 			};
 			name = Release;
 		};
-		0442635B2DA80FFA0038D101 /* Debug configuration for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
+		044263702DA817E30038D101 /* Debug configuration for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -482,7 +482,7 @@
 			};
 			name = Debug;
 		};
-		0442635C2DA80FFA0038D101 /* Release configuration for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
+		044263712DA817E30038D101 /* Release configuration for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -526,11 +526,11 @@
 			);
 			defaultConfigurationName = Release;
 		};
-		0442635A2DA80FFA0038D101 /* Build configuration list for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
+		0442636F2DA817E30038D101 /* Build configuration list for PBXNativeTarget "Random Playlist GeneratorTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0442635B2DA80FFA0038D101 /* Debug configuration for PBXNativeTarget "Random Playlist GeneratorTests" */,
-				0442635C2DA80FFA0038D101 /* Release configuration for PBXNativeTarget "Random Playlist GeneratorTests" */,
+				044263702DA817E30038D101 /* Debug configuration for PBXNativeTarget "Random Playlist GeneratorTests" */,
+				044263712DA817E30038D101 /* Release configuration for PBXNativeTarget "Random Playlist GeneratorTests" */,
 			);
 			defaultConfigurationName = Release;
 		};

@@ -27,7 +27,7 @@ struct SongsView: View {
     @Environment(\.editMode) var editMode
     @Environment(\.isPreview) var isPreview
     
-
+    @State var isFirstShowOfForm = true
     
     var body: some View {
         
@@ -141,7 +141,10 @@ struct SongsView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear() {
-            handleGetRandomSongs();
+            if (isFirstShowOfForm == true) {
+                isFirstShowOfForm = false;
+                handleGetRandomSongs();
+            }
         }
     }
     

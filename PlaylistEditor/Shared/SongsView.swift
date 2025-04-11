@@ -369,91 +369,39 @@ struct SongsView: View {
     }
     
     private func handleGetAllSongs() {
-        
-        print("getting all songs...")
-        
-        let query: MPMediaQuery
+        var query: MPMediaQuery
         
         if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
             query = MPMediaQuery.songs()
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_HENDRIE) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: "Phil Hendrie",
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: "Phil Hendrie")
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_SPYRO_GYRA) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: "Spyro Gyra",
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: "Spyro Gyra")
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_RIPPINGTONS) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: "Rippingtons",
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: "Rippingtons")
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_YELLOWJACKETS) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: "Yellowjackets",
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: "Yellowjackets")
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_CHICK_COREA) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: "Chick Corea",
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: "Chick Corea")
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: currentArtist,
-                forProperty: MPMediaItemPropertyArtist,
-                comparisonType: .contains
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForArtist(artist: currentArtist)
         }
         else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_GENRE) {
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: currentGenre,
-                forProperty: MPMediaItemPropertyGenre,
-                comparisonType: .equalTo
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForGenre(genre: currentGenre)
         }
         else {
             let genre = playlistMode.replacingOccurrences(of: "Mode: ", with: "")
             
-            query = MPMediaQuery.songs()
-            let predicate = MPMediaPropertyPredicate(
-                value: genre,
-                forProperty: MPMediaItemPropertyGenre,
-                comparisonType: .equalTo
-            )
-            query.addFilterPredicate(predicate)
+            query = getMediaQueryForGenre(genre: genre)
         }
         
         let queryResults = query.items
-        print("got all songs.")
         
         itemCount = queryResults?.count ?? -1
         
@@ -467,6 +415,33 @@ struct SongsView: View {
         
         items = temp
         allItems = temp
+    }
+    
+    private func getMediaQueryForArtist(artist: String) -> MPMediaQuery {
+        let query = MPMediaQuery.songs()
+        
+        let predicate = MPMediaPropertyPredicate(
+            value: artist,
+            forProperty: MPMediaItemPropertyArtist,
+            comparisonType: .contains
+        )
+        query.addFilterPredicate(predicate)
+        
+        return query
+    }
+    
+    private func getMediaQueryForGenre(genre: String) -> MPMediaQuery {
+        var query = MPMediaQuery.songs()
+        
+        let predicate = MPMediaPropertyPredicate(
+            value: genre,
+            forProperty: MPMediaItemPropertyGenre,
+            comparisonType: .equalTo
+        )
+        
+        query.addFilterPredicate(predicate)
+        
+        return query
     }
     
     private func getRandomIndexes(maxIndex: Int, numberOfValuesToReturn: Int) -> Array<Int> {

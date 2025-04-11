@@ -20,4 +20,7 @@ enum AppConstants {
     static let PLAYLIST_MODE_YELLOWJACKETS = "Mode: Yellowjackets"
     static let PLAYLIST_MODE_RANDOMIZE_ARTIST = "Mode: Randomize Artist"
     static let PLAYLIST_MODE_RANDOMIZE_GENRE = "Mode: Randomize Genre"
+    static let PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN = "Mode: Latin"
+    static let PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ = "Mode: Smooth Jazz"
+    static let NUMBER_OF_TRACKS_IN_PLAYLIST = 150
 }

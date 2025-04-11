@@ -368,53 +368,114 @@ struct SongsView: View {
         }
     }
     
-    private func handleGetAllSongs() {
-        var query: MPMediaQuery
-        
-        if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
-            query = MPMediaQuery.songs()
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_HENDRIE) {
-            query = getMediaQueryForArtist(artist: "Phil Hendrie")
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_SPYRO_GYRA) {
-            query = getMediaQueryForArtist(artist: "Spyro Gyra")
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_RIPPINGTONS) {
-            query = getMediaQueryForArtist(artist: "Rippingtons")
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_YELLOWJACKETS) {
-            query = getMediaQueryForArtist(artist: "Yellowjackets")
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_CHICK_COREA) {
-            query = getMediaQueryForArtist(artist: "Chick Corea")
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST) {
-            query = getMediaQueryForArtist(artist: currentArtist)
-        }
-        else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_GENRE) {
-            query = getMediaQueryForGenre(genre: currentGenre)
+    private func isGenreCategory(mode: String) -> Bool {
+        if (mode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN) {
+            return true
         }
         else {
-            let genre = playlistMode.replacingOccurrences(of: "Mode: ", with: "")
+            return false
+        }
+    }
+    
+    private func isArtistCategory(mode: String) -> Bool {
+        if (mode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
+    private func handleGetAllSongsForGenreCategory() {
+        if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN) {
+            populateResultsForGenres(genres: ["Latin", "Latin Jazz", "Salsa", "Timba", "Música tropical"])
+        }
+        else {
+            populateResultsForWhenSomethingWentWrong()
+        }
+    }
+    
+    private func handleGetAllSongsForArtistCategory() {
+        if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ) {
+            let artists = [
+                "Everette Harp",
+                "Gerald Albright",
+                "Nelson Rangell",
+                "Torcuato Mariano",
+                "Eric Marienthal",
+                "Fourplay",
+                "Jeff Kashiwa",
+                "Spyro Gyra",
+                "Rippingtons",
+                "Russ Freeman",
+                "Tom Schuman",
+                "Jeff Lorber",
+                "Brandon Fields",
+                "Dave Koz",
+                "Incognito",
+                "Lee Ritenour",
+                "Dave Samuels",
+                "David Samuels",
+                "Grover Washington",
+                "Chuck Loeb",
+                "Larry Carlton",
+                "Najee",
+                "Brian Culbertson"]
             
-            query = getMediaQueryForGenre(genre: genre)
+            populateResultsForArtists(artists: artists)
         }
+        else {
+            populateResultsForWhenSomethingWentWrong()
+        }
+    }
+    
+    private func populateResultsForWhenSomethingWentWrong() {
+        populateResultsForMediaQuery(query: MPMediaQuery.songs())
+    }
+    
+    private func handleGetAllSongs() {
         
-        let queryResults = query.items
-        
-        itemCount = queryResults?.count ?? -1
-        
-        var temp = Array<MediaItemWrapper>()
-        
-        if (queryResults != nil) {
-            for item in queryResults! {
-                temp.append(MediaItemWrapper(item: item))
+        if (isGenreCategory(mode: playlistMode)) {
+            handleGetAllSongsForGenreCategory()
+        }
+        else if (isArtistCategory(mode: playlistMode)) {
+            handleGetAllSongsForArtistCategory()
+        }
+        else {
+            var query: MPMediaQuery
+            
+            if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
+                query = MPMediaQuery.songs()
             }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_HENDRIE) {
+                query = getMediaQueryForArtist(artist: "Phil Hendrie")
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_SPYRO_GYRA) {
+                query = getMediaQueryForArtist(artist: "Spyro Gyra")
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_RIPPINGTONS) {
+                query = getMediaQueryForArtist(artist: "Rippingtons")
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_YELLOWJACKETS) {
+                query = getMediaQueryForArtist(artist: "Yellowjackets")
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_CHICK_COREA) {
+                query = getMediaQueryForArtist(artist: "Chick Corea")
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST) {
+                query = getMediaQueryForArtist(artist: currentArtist)
+            }
+            else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_GENRE) {
+                query = getMediaQueryForGenre(genre: currentGenre)
+            }
+            else {
+                let genre = playlistMode.replacingOccurrences(of: "Mode: ", with: "")
+                
+                query = getMediaQueryForGenre(genre: genre)
+            }
+            
+            populateResultsForMediaQuery(query: query)
         }
-        
-        items = temp
-        allItems = temp
     }
     
     private func getMediaQueryForArtist(artist: String) -> MPMediaQuery {
@@ -431,7 +492,7 @@ struct SongsView: View {
     }
     
     private func getMediaQueryForGenre(genre: String) -> MPMediaQuery {
-        var query = MPMediaQuery.songs()
+        let query = MPMediaQuery.songs()
         
         let predicate = MPMediaPropertyPredicate(
             value: genre,
@@ -442,6 +503,56 @@ struct SongsView: View {
         query.addFilterPredicate(predicate)
         
         return query
+    }
+    
+    private func populateResultsForGenres(genres: [String]) {
+        
+        var returnValues = Array<MediaItemWrapper>()
+        
+        for genre in genres {
+            let query = getMediaQueryForGenre(genre: genre)
+            
+            if (query.items != nil) {
+                for item in query.items! {
+                    returnValues.append(MediaItemWrapper(item: item))
+                }
+            }
+        }
+        
+        items = returnValues
+        allItems = returnValues
+    }
+    
+    private func populateResultsForArtists(artists: [String]) {
+        
+        var returnValues = Array<MediaItemWrapper>()
+        
+        for artist in artists {
+            let query = getMediaQueryForArtist(artist: artist)
+            
+            if (query.items != nil) {
+                for item in query.items! {
+                    returnValues.append(MediaItemWrapper(item: item))
+                }
+            }
+        }
+        
+        items = returnValues
+        allItems = returnValues
+    }
+    
+    private func populateResultsForMediaQuery(query: MPMediaQuery) {
+        
+        var returnValues = Array<MediaItemWrapper>()
+        
+        if (query.items != nil) {
+            for item in query.items! {
+                returnValues.append(MediaItemWrapper(item: item))
+            }
+        }
+        
+        items = returnValues
+        allItems = returnValues
     }
     
     private func getRandomIndexes(maxIndex: Int, numberOfValuesToReturn: Int) -> Array<Int> {
@@ -458,6 +569,8 @@ struct SongsView: View {
         let modes: [String] = [
             AppConstants.PLAYLIST_MODE_ALL,
             AppConstants.PLAYLIST_MODE_JAZZ,
+            AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN,
+            AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ,
             AppConstants.PLAYLIST_MODE_CLASSICAL,
             AppConstants.PLAYLIST_MODE_YELLOWJACKETS,
             AppConstants.PLAYLIST_MODE_CHICK_COREA,
@@ -500,7 +613,9 @@ struct SongsView: View {
             handleGetAllSongs()
         }
         
-        let randomIndexes = getRandomIndexes(maxIndex: songCount, numberOfValuesToReturn: 100)
+        let randomIndexes = getRandomIndexes(
+            maxIndex: songCount,
+            numberOfValuesToReturn: AppConstants.NUMBER_OF_TRACKS_IN_PLAYLIST)
         
         var newPlaylistItems = Array<MediaItemWrapper>()
         

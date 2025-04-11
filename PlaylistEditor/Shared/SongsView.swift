@@ -59,6 +59,20 @@ struct SongsView: View {
                                         playNow(item: item)
                                     }
                                 }
+                                Divider()
+                                Button("Randomize Artist and Play") {
+                                    withAnimation {
+                                        randomizeArtist(item: item)
+                                        play()
+                                    }
+                                }
+                                Button("Randomize Genre and Play") {
+                                    withAnimation {
+                                        randomizeGenre(item: item)
+                                        play()
+                                    }
+                                }
+                                Divider()
                                 Button("Randomize Artist") {
                                     withAnimation {
                                         randomizeArtist(item: item)
@@ -67,6 +81,12 @@ struct SongsView: View {
                                 Button("Randomize Genre") {
                                     withAnimation {
                                         randomizeGenre(item: item)
+                                    }
+                                }
+                                Divider()
+                                Button("Play Album") {
+                                    withAnimation {
+                                        playAlbum(item: item)
                                     }
                                 }
                             }
@@ -164,13 +184,57 @@ struct SongsView: View {
     private func playNow(item: MediaItemWrapper) {
         let mediaItem = item.mediaItem
         
-        let collection = MPMediaItemCollection(items: [mediaItem])
+        playMediaItemsNow(items: [mediaItem])
+    }
+    
+    private func playMediaItemsNow(items: [MPMediaItem]) {
+        let collection = MPMediaItemCollection(items: items)
         
         let musicPlayer = MPMusicPlayerController.systemMusicPlayer
         
         musicPlayer.prepend(MPMusicPlayerMediaItemQueueDescriptor(itemCollection: collection))
         
-        musicPlayer.skipToNextItem() // Play the new track now
+        musicPlayer.skipToNextItem()
+    }
+    
+    private func playAlbum(item: MediaItemWrapper) {
+        let mediaItem = item.mediaItem
+        
+        let tracksInAlbum = getTracksInAlbum(of: mediaItem)
+        
+        playMediaItemsNow(items: tracksInAlbum)
+    }
+    
+    func getTracksInAlbum(of mediaItem: MPMediaItem) -> [MPMediaItem] {
+        guard let albumTitle = mediaItem.albumTitle else {
+            return []
+        }
+
+        let query = MPMediaQuery.songs()
+
+        // Filter by album title
+        let albumPredicate = MPMediaPropertyPredicate(
+            value: albumTitle,
+            forProperty: MPMediaItemPropertyAlbumTitle,
+            comparisonType: .equalTo
+        )
+        query.addFilterPredicate(albumPredicate)
+
+        if let artist = mediaItem.albumArtist {
+            let artistPredicate = MPMediaPropertyPredicate(
+                value: artist,
+                forProperty: MPMediaItemPropertyAlbumArtist,
+                comparisonType: .equalTo
+            )
+            query.addFilterPredicate(artistPredicate)
+        }
+
+        // Sort by track number if available
+        let sortedTracks = query.items?.sorted {
+            ($0.albumTrackNumber) < ($1.albumTrackNumber)
+        }
+
+        return sortedTracks ?? []
     }
     
     private func randomizeGenre(item: MediaItemWrapper) {
@@ -556,13 +620,22 @@ struct SongsView: View {
     }
     
     private func getRandomIndexes(maxIndex: Int, numberOfValuesToReturn: Int) -> Array<Int> {
-        var returnValues = Array<Int>()
         
-        for _ in 0...numberOfValuesToReturn {
-            returnValues.append(Int.random(in: 1..<maxIndex))
+        if (maxIndex == 0) {
+            return [0]
         }
-        
-        return returnValues
+        else if (maxIndex == 1) {
+            return [0, 1]
+        }
+        else {
+            var returnValues = Array<Int>()
+            
+            for _ in 0...numberOfValuesToReturn {
+                returnValues.append(Int.random(in: 1..<maxIndex))
+            }
+            
+            return returnValues
+        }
     }
     
     private func changePlaylistMode() {

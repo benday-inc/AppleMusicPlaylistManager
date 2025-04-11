@@ -29,6 +29,9 @@ struct SongsView: View {
     
     @State var isFirstShowOfForm = true
     
+    @State var currentArtist: String = ""
+    @State var currentGenre: String = ""
+    
     var body: some View {
         
         NavigationView {
@@ -54,6 +57,16 @@ struct SongsView: View {
                                 Button("Play Track") {
                                     withAnimation {
                                         playNow(item: item)
+                                    }
+                                }
+                                Button("Randomize Artist") {
+                                    withAnimation {
+                                        randomizeArtist(item: item)
+                                    }
+                                }
+                                Button("Randomize Genre") {
+                                    withAnimation {
+                                        randomizeGenre(item: item)
                                     }
                                 }
                             }
@@ -158,6 +171,40 @@ struct SongsView: View {
         musicPlayer.prepend(MPMusicPlayerMediaItemQueueDescriptor(itemCollection: collection))
         
         musicPlayer.skipToNextItem() // Play the new track now
+    }
+    
+    private func randomizeGenre(item: MediaItemWrapper) {
+        let genre = item.genreName
+        
+        if (genre == "") {
+            return
+        }
+        else {
+            currentGenre = genre
+            currentArtist = ""
+            playlistMode = AppConstants.PLAYLIST_MODE_RANDOMIZE_GENRE
+            
+            allItems = nil
+            items = Array<MediaItemWrapper>()
+            handleGetRandomSongs()
+        }
+    }
+    
+    private func randomizeArtist(item: MediaItemWrapper) {
+        let artist = item.artistName
+        
+        if (artist == "") {
+            return
+        }
+        else {
+            currentGenre = ""
+            currentArtist = artist
+            playlistMode = AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST
+            
+            allItems = nil
+            items = Array<MediaItemWrapper>()
+            handleGetRandomSongs()
+        }
     }
     
     private func play() {
@@ -375,6 +422,24 @@ struct SongsView: View {
             )
             query.addFilterPredicate(predicate)
         }
+        else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST) {
+            query = MPMediaQuery.songs()
+            let predicate = MPMediaPropertyPredicate(
+                value: currentArtist,
+                forProperty: MPMediaItemPropertyArtist,
+                comparisonType: .contains
+            )
+            query.addFilterPredicate(predicate)
+        }
+        else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_GENRE) {
+            query = MPMediaQuery.songs()
+            let predicate = MPMediaPropertyPredicate(
+                value: currentGenre,
+                forProperty: MPMediaItemPropertyGenre,
+                comparisonType: .equalTo
+            )
+            query.addFilterPredicate(predicate)
+        }
         else {
             let genre = playlistMode.replacingOccurrences(of: "Mode: ", with: "")
             
@@ -430,7 +495,6 @@ struct SongsView: View {
         
         if (selectedIndex == nil) {
             playlistMode = modes[0]
-            return
         }
         else {
             if (selectedIndex! == modes.count - 1) {

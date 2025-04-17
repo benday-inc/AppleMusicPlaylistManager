@@ -631,8 +631,14 @@ struct SongsView: View {
             var returnValues = Array<Int>()
             
             for _ in 0...numberOfValuesToReturn {
-                returnValues.append(Int.random(in: 1..<maxIndex))
+                let randomValue = Int.random(in: 1..<maxIndex)
+                
+                if (returnValues.contains(randomValue) == false) {
+                    returnValues.append(randomValue)
+                }
             }
+            
+            
             
             return returnValues
         }

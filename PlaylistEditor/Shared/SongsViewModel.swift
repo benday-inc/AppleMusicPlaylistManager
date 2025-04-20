@@ -10,7 +10,7 @@ import MediaPlayer
 
 class SongsViewModel : ObservableObject {
     @Published public var items: [MediaItemWrapper] = []
-    @Published public var allItems: [MediaItemWrapper]? = []
+    @Published public var allItems: [MediaItemWrapper]? = nil
     
     @Published var currentArtist: String = ""
     @Published var currentGenre: String = ""

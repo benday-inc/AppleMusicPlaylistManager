@@ -182,9 +182,13 @@ struct SongsView: View {
     }
     
     private func playNow(item: MediaItemWrapper) {
+        if item.mediaItem == nil {
+            return
+        }
+        
         let mediaItem = item.mediaItem
         
-        playMediaItemsNow(items: [mediaItem])
+        playMediaItemsNow(items: [mediaItem!])
     }
     
     private func playMediaItemsNow(items: [MPMediaItem]) {
@@ -198,7 +202,11 @@ struct SongsView: View {
     }
     
     private func playAlbum(item: MediaItemWrapper) {
-        let mediaItem = item.mediaItem
+        if item.mediaItem == nil {
+            return
+        }
+        
+        let mediaItem = item.mediaItem!
         
         let tracksInAlbum = getTracksInAlbum(of: mediaItem)
         
@@ -275,7 +283,9 @@ struct SongsView: View {
         var mediaItems: [MPMediaItem] = []
         
         for track in items {
-            mediaItems.append(track.mediaItem)
+            if (track.mediaItem != nil) {
+                mediaItems.append(track.mediaItem!)
+            }
         }
         
         let musicPlayer = MPMusicPlayerController.systemMusicPlayer
@@ -372,13 +382,13 @@ struct SongsView: View {
             var mediaItems: [MPMediaItem] = []
             
             for track in items {
-                mediaItems.append(track.mediaItem)
+                if track.mediaItem != nil {
+                    mediaItems.append(track.mediaItem!)
+                }
             }
             
             populateThis.add(mediaItems)
         }
-        
-        
     }
     
     private func createNewPlaylist(playlistName: String) {
@@ -396,7 +406,9 @@ struct SongsView: View {
             var mediaItems: [MPMediaItem] = []
             
             for track in items {
-                mediaItems.append(track.mediaItem)
+                if track.mediaItem != nil {                   
+                    mediaItems.append(track.mediaItem!)
+                }
             }
             
             populateThis.add(mediaItems)
@@ -743,9 +755,9 @@ struct SongsView: View {
 
 #Preview {
     SongsView(items: [
-        MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1", genreName: "genre 1"),
-        MediaItemWrapper(trackName: "track name 2", albumName: "album name 2", artistName: "artist name 2", genreName: "genre 1"),
-        MediaItemWrapper(trackName: "track name 3", albumName: "album name 3", artistName: "artist name 3", genreName: "genre 1")])
+        MediaItemWrapper(trackName: "track name 1", artistName: "artist name 1", albumName: "album name 1", genreName: "genre 1"),
+        MediaItemWrapper(trackName: "track name 2", artistName: "artist name 2", albumName: "album name 2", genreName: "genre 1"),
+        MediaItemWrapper(trackName: "track name 3", artistName: "artist name 3", albumName: "album name 3", genreName: "genre 1")])
     .environmentObject(PlaylistDataStore())
 }
 

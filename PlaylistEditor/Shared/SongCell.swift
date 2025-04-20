@@ -25,6 +25,6 @@ struct SongCell: View {
 
 struct SongCell_Previews: PreviewProvider {
     static var previews: some View {
-        SongCell(item: MediaItemWrapper(trackName: "track name 1", albumName: "album name 1", artistName: "artist name 1", genreName: "genre 1"))
+        SongCell(item: MediaItemWrapper(trackName: "track name 1", artistName: "artist name 1", albumName: "album name 1", genreName: "genre 1"))
     }
 }

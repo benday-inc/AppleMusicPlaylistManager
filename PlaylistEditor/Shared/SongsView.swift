@@ -35,7 +35,7 @@ struct SongsView: View {
         NavigationView {
             VStack {
                 
-                List(selection: viewModel.multiSelection) {
+                List(selection: $viewModel.multiSelection) {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {

@@ -383,6 +383,10 @@ class SongsViewModel : ObservableObject {
         
         // create random playlist
         for index in randomIndexes {
+            if index >= allItems!.count {
+                continue
+            }
+            
             let tempSong = allItems![index]
             
             if (storage.isExcluded(item: tempSong, playlistMode: playlistMode) == false) {

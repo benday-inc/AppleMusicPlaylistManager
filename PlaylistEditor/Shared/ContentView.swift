@@ -22,8 +22,9 @@ struct ContentView: View {
             }
             else {
                 TabView {
-                    SongsView(items: [])
+                    SongsView()
                         .environmentObject(storage)
+                        .environmentObject(SongsViewModel(storage: storage))
                         .tabItem {
                             Label("Songs", systemImage: "square.and.pencil")
                         }.tag(0)

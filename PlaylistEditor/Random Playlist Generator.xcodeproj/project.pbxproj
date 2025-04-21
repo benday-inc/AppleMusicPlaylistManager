@@ -23,6 +23,7 @@
 		046E98882D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E98872D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift */; };
 		046E988A2D90A9F0005C8AE7 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E98892D90A9F0005C8AE7 /* EnvironmentValues.swift */; };
 		0472068B27774D6D00F7746D /* PlaylistDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0472068A27774D6D00F7746D /* PlaylistDetail.swift */; };
+		047DEE122DB6C80C00AFFCE7 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047DEE112DB6C80C00AFFCE7 /* AboutView.swift */; };
 		0483507B27712826004F0FFB /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0483507A27712826004F0FFB /* PlaylistItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		046E98872D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicLibraryAuthorizationView.swift; sourceTree = "<group>"; };
 		046E98892D90A9F0005C8AE7 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		0472068A27774D6D00F7746D /* PlaylistDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetail.swift; sourceTree = "<group>"; };
+		047DEE112DB6C80C00AFFCE7 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		0483507A27712826004F0FFB /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +119,7 @@
 				0456FD31277A1EA200C76D96 /* IdentifiableString.swift */,
 				046E98872D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift */,
 				0437422F2DB549B900969FA1 /* SongsViewModel.swift */,
+				047DEE112DB6C80C00AFFCE7 /* AboutView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 			files = (
 				0456FD2A2779101800C76D96 /* SongCell.swift in Sources */,
 				046E98882D90A278005C8AE7 /* MusicLibraryAuthorizationView.swift in Sources */,
+				047DEE122DB6C80C00AFFCE7 /* AboutView.swift in Sources */,
 				0456FD2E277A164E00C76D96 /* PlaylistDataStore.swift in Sources */,
 				0456FD2827790D6B00C76D96 /* SongsView.swift in Sources */,
 				0442634C2DA804C20038D101 /* AppConstants.swift in Sources */,

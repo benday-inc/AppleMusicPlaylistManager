@@ -37,6 +37,11 @@ struct ContentView: View {
                         .tabItem {
                             Label("Playlists", systemImage: "music.note.list")
                         }.tag(2)
+                    AboutView()
+                        .tabItem {
+                            Label("About", systemImage: "info.bubble")
+                        }.tag(3)
+                    
                 }
             }
         }

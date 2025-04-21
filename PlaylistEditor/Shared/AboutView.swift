@@ -22,7 +22,7 @@ struct AboutView: View {
                     Image("bdc-logo")
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 1000)
                         .padding()
                     Text("www.benday.com")
                         .foregroundColor(.blue)
@@ -43,12 +43,13 @@ struct AboutView: View {
                     Image("slide-speaker-logo")
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: 1000)
                     Text("www.slidespeaker.ai")
                         .foregroundColor(.blue)
                         .underline()
                 }
             }
+            Spacer()
         }
         .padding()
     }

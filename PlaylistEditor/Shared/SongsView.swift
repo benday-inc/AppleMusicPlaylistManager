@@ -13,14 +13,15 @@ struct SongsView: View {
     @EnvironmentObject var viewModel: SongsViewModel
     
     @State var showPlaylistExistsAlert = false
-        
+    
     @Environment(\.editMode) var editMode
     
     @State var isFirstShowOfForm = true
+    @State var isPlaylistSheetVisible = false
     
     var body: some View {
         NavigationView {
-            VStack {                
+            VStack {
                 List(selection: $viewModel.multiSelection) {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
@@ -88,13 +89,18 @@ struct SongsView: View {
                     .onMove(perform: viewModel.move)
                 }
             }
+            .sheet(isPresented: $isPlaylistSheetVisible, content: {
+                PlaylistNameSheetView()
+            })
             
             .navigationTitle("Songs")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .bottomBar) {
                     
                     Button() {
-                        writePlaylist()
+                        // writePlaylist()
+                        // playlistName = ""
+                        isPlaylistSheetVisible = true
                     } label: {
                         Label("Save Playlist", systemImage: "square.and.arrow.down").labelStyle(.titleAndIcon)
                     }
@@ -222,7 +228,7 @@ struct SongsView: View {
 
 
 #Preview {
-
+    
     let items = [
         MediaItemWrapper(trackName: "track name 1", artistName: "artist name 1", albumName: "album name 1", genreName: "genre 1"),
         MediaItemWrapper(trackName: "track name 2", artistName: "artist name 2", albumName: "album name 2", genreName: "genre 1"),

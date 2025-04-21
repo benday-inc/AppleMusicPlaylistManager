@@ -10,25 +10,13 @@ import MusicKit
 import MediaPlayer
 
 struct SongsView: View {
-    /// Opens a URL using the appropriate system service.
-    @Environment(\.openURL) private var openURL
     @EnvironmentObject var viewModel: SongsViewModel
     
-    @State var doSomethingText = "(not set)"
     @State var showPlaylistExistsAlert = false
-    // @EnvironmentObject var storage: PlaylistDataStore
-    
-//    @State var items: Array<MediaItemWrapper>
-//    @State var allItems: Array<MediaItemWrapper>?
-    
-    @State var itemCount: Int = -1
-
+        
     @Environment(\.editMode) var editMode
-    @Environment(\.isPreview) var isPreview
     
     @State var isFirstShowOfForm = true
-    
-
     
     var body: some View {
         

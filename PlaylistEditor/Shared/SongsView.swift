@@ -19,10 +19,8 @@ struct SongsView: View {
     @State var isFirstShowOfForm = true
     
     var body: some View {
-        
         NavigationView {
-            VStack {
-                
+            VStack {                
                 List(selection: $viewModel.multiSelection) {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
@@ -167,10 +165,6 @@ struct SongsView: View {
         }
     }
     
-    
-    
-    
-    
     private func getPlaylistByName(playlistName: String) -> MPMediaPlaylist? {
         let myPlaylistQuery = MPMediaQuery.playlists()
         
@@ -183,43 +177,6 @@ struct SongsView: View {
         returnValue = myPlaylistQuery.collections?.first as? MPMediaPlaylist
         
         return returnValue
-    }
-    
-    private func writePlaylistForDate() {
-        let now = Date()
-        let calendar = Calendar.current
-        
-        let year = calendar.component(.year, from: now)
-        let month = calendar.component(.month, from: now)
-        let day = calendar.component(.day, from: now)
-        let hour = calendar.component(.hour, from: now)
-        let minute = calendar.component(.minute, from: now)
-        let second = calendar.component(.second, from: now)
-        
-        
-        let name = "playlist \(year)\(month)\(day)_\(hour)\(minute)\(second)"
-        let metadata = MPMediaPlaylistCreationMetadata(name: name)
-        
-        let playlistUUID = UUID()
-        
-        
-        MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { (playlist, error) in
-            guard error == nil else {
-                fatalError("An error occurred while retrieving/creating playlist: \(error!.localizedDescription)")
-            }
-            
-            let populateThis = playlist!
-            
-            var mediaItems: [MPMediaItem] = []
-            
-            for track in viewModel.items {
-                if track.mediaItem != nil {
-                    mediaItems.append(track.mediaItem!)
-                }
-            }
-            
-            populateThis.add(mediaItems)
-        }
     }
     
     private func createNewPlaylist(playlistName: String) {
@@ -245,8 +202,6 @@ struct SongsView: View {
             populateThis.add(mediaItems)
         }
     }
-    
-    
     
     private func writePlaylist() {
         let name = "Random"

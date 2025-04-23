@@ -104,18 +104,9 @@ struct SongsView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     
                     Button() {
-                        // writePlaylist()
-                        // playlistName = ""
-                        isPlaylistSheetVisible = true
+                        isPlaylistSheetVisible.toggle()
                     } label: {
                         Label("Save Playlist", systemImage: "square.and.arrow.down").labelStyle(.titleAndIcon)
-                    }
-                    .alert(isPresented: $showPlaylistExistsAlert) {
-                        Alert(
-                            title: Text("Yah...uhhh...about that..."),
-                            message: Text("Can't overwrite an existing playlist. Delete the existing Random playlist first using the Music app"),
-                            dismissButton: .default(Text("Uhhhgh. Seriously?"))
-                        )
                     }
                     
                     Spacer()

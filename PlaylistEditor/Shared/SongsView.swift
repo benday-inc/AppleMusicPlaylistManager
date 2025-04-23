@@ -87,7 +87,7 @@ struct SongsView: View {
                         
                     }
                     .onMove(perform: viewModel.move)
-                }
+                }                
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
                 PlaylistNameSheetView() { doSave, playlistName in
@@ -106,14 +106,22 @@ struct SongsView: View {
                     Button() {
                         isPlaylistSheetVisible.toggle()
                     } label: {
-                        Label("Save Playlist", systemImage: "square.and.arrow.down").labelStyle(.titleAndIcon)
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                            Text("Save")
+                        }
+                        .padding(.bottom)
                     }
                     
                     Spacer()
                     Button() {
                         viewModel.play()
                     } label: {
-                        Label("Listen / Play", systemImage: "play.rectangle").labelStyle(.titleAndIcon)
+                        HStack {
+                            Text("Play")
+                            Image(systemName: "play.rectangle")
+                        }
+                        .padding(.bottom)
                     }
                 }
                 

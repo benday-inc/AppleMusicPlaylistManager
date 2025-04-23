@@ -11,65 +11,67 @@ struct ExclusionsView: View {
     @EnvironmentObject var storage: PlaylistDataStore
     
     var body: some View {
-        VStack {
-            Form() {
-                Section(header: Text("Excluded Genres")) {
-                    if (storage.excludedGenres.isEmpty) {
-                        Text("(none)")
+        NavigationView {
+            VStack {
+                Form() {
+                    Section(header: Text("Excluded Genres")) {
+                        if (storage.excludedGenres.isEmpty) {
+                            Text("(none)")
+                        }
+                        else {
+                            List(storage.excludedGenres){ item in
+                                Text(item.value).swipeActions(
+                                    edge: .trailing, allowsFullSwipe: true, content: {
+                                        Button(role: .destructive) {
+                                            storage.removeGenreExclusion(item: item)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    })
+                            }
+                        }
                     }
-                    else {
-                        List(storage.excludedGenres){ item in
-                            Text(item.value).swipeActions(
-                                edge: .trailing, allowsFullSwipe: true, content: {
-                                Button(role: .destructive) {
-                                    storage.removeGenreExclusion(item: item)
-                                } label: {
-                                   Label("Delete", systemImage: "trash")
-                               }
-                            })
+                    Section(header: Text("Excluded Artists")) {
+                        if (storage.excludedArtists.isEmpty) {
+                            Text("(none)")
+                        }
+                        else {
+                            List(storage.excludedArtists){ item in
+                                Text(item.value).swipeActions(
+                                    edge: .trailing, allowsFullSwipe: true, content: {
+                                        Button(role: .destructive) {
+                                            storage.removeArtistExclusion(item: item)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    })
+                            }
+                        }
+                    }
+                    Section(header: Text("Excluded Albums")) {
+                        if (storage.excludedAlbums.isEmpty) {
+                            Text("(none)")
+                        }
+                        else {
+                            List(storage.excludedAlbums){ item in
+                                Text(item.value).swipeActions(
+                                    edge: .trailing, allowsFullSwipe: true, content: {
+                                        Button(role: .destructive) {
+                                            storage.removeAlbumExclusion(item: item)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    })
+                            }
                         }
                     }
                 }
-                Section(header: Text("Excluded Artists")) {
-                    if (storage.excludedArtists.isEmpty) {
-                        Text("(none)")
-                    }
-                    else {
-                        List(storage.excludedArtists){ item in
-                            Text(item.value).swipeActions(
-                                edge: .trailing, allowsFullSwipe: true, content: {
-                                Button(role: .destructive) {
-                                    storage.removeArtistExclusion(item: item)
-                                } label: {
-                                   Label("Delete", systemImage: "trash")
-                               }
-                            })
-                        }
-                    }
-                }
-                Section(header: Text("Excluded Albums")) {
-                    if (storage.excludedAlbums.isEmpty) {
-                        Text("(none)")
-                    }
-                    else {
-                        List(storage.excludedAlbums){ item in
-                            Text(item.value).swipeActions(
-                                edge: .trailing, allowsFullSwipe: true, content: {
-                                Button(role: .destructive) {
-                                    storage.removeAlbumExclusion(item: item)
-                                } label: {
-                                   Label("Delete", systemImage: "trash")
-                               }
-                            })
-                        }
-                    }
-                }
+                
+                
             }
-
-            
+            .navigationTitle("Exclusion Editor")
         }
-    }
-    
+    }    
 }
 
 struct ExclusionsView_Previews: PreviewProvider {

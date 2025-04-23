@@ -99,7 +99,7 @@ struct SongsView: View {
                 }
             })
             
-            .navigationTitle("Songs")
+            .navigationTitle("Playlist Builder")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .bottomBar) {
                     

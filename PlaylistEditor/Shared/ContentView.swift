@@ -26,17 +26,17 @@ struct ContentView: View {
                         .environmentObject(storage)
                         .environmentObject(SongsViewModel(storage: storage))
                         .tabItem {
-                            Label("Songs", systemImage: "square.and.pencil")
+                            Label("Build Playlist", systemImage: "square.and.pencil")
                         }.tag(0)
                     ExclusionsView()
                         .environmentObject(storage)
                         .tabItem {
-                            Label("Exclusions", systemImage: "slider.horizontal.3")
+                            Label("Playlist Exclusions", systemImage: "slider.horizontal.3")
                         }.tag(1)
-                    PlaylistsView(_playlists: [])
-                        .tabItem {
-                            Label("Playlists", systemImage: "music.note.list")
-                        }.tag(2)
+//                    PlaylistsView(_playlists: [])
+//                        .tabItem {
+//                            Label("Playlists", systemImage: "music.note.list")
+//                        }.tag(2)
                     AboutView()
                         .tabItem {
                             Label("About", systemImage: "info.bubble")

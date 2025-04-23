@@ -90,7 +90,13 @@ struct SongsView: View {
                 }
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
-                PlaylistNameSheetView()
+                PlaylistNameSheetView() { doSave, playlistName in
+                    if (doSave == true) {
+                        createNewPlaylist(playlistName: playlistName)
+                    }
+                    
+                    isPlaylistSheetVisible = false
+                }
             })
             
             .navigationTitle("Songs")
@@ -186,44 +192,30 @@ struct SongsView: View {
     }
     
     private func createNewPlaylist(playlistName: String) {
-        let metadata = MPMediaPlaylistCreationMetadata(name: playlistName)
+        let trimmed = playlistName.trimmingCharacters(in: .whitespaces)
         
+        let metadata = MPMediaPlaylistCreationMetadata(name: trimmed)
         let playlistUUID = UUID()
         
-        MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { (playlist, error) in
-            guard error == nil else {
-                fatalError("An error occurred while retrieving/creating playlist: \(error!.localizedDescription)")
+        MPMediaLibrary.default().getPlaylist(with: playlistUUID, creationMetadata: metadata) { playlist, error in
+            guard let playlist = playlist, error == nil else {
+                print("Error creating playlist: \(error?.localizedDescription ?? "unknown error")")
+                return
             }
             
-            let populateThis = playlist!
-            
-            var mediaItems: [MPMediaItem] = []
-            
-            for track in viewModel.items {
-                if track.mediaItem != nil {
-                    mediaItems.append(track.mediaItem!)
+            let mediaItems = viewModel.items.compactMap { $0.mediaItem }
+                  
+            playlist.add(mediaItems) { addError in
+                if let addError = addError {
+                    print("Failed to add items: \(addError.localizedDescription)")
+                } else {
+                    print("Successfully added \(mediaItems.count) tracks to \(playlistName)")
                 }
             }
             
-            populateThis.add(mediaItems)
         }
     }
     
-    private func writePlaylist() {
-        let name = "Random"
-        
-        let playlist = getPlaylistByName(playlistName: name)
-        
-        if (playlist == nil) {
-            print("playlist doesn't exist...creating new")
-            createNewPlaylist(playlistName: name)
-        }
-        else {
-            print("playlist doesn't exist...creating new")
-            
-            showPlaylistExistsAlert = true
-        }
-    }
 }
 
 

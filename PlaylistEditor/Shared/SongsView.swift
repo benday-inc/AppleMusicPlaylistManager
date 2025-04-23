@@ -110,7 +110,9 @@ struct SongsView: View {
                             Image(systemName: "square.and.arrow.down")
                             Text("Save")
                         }
-                        .padding(.bottom)
+#if(ios)
+.padding(.bottom)
+#endif
                     }
                     
                     Spacer()
@@ -121,7 +123,9 @@ struct SongsView: View {
                             Text("Play")
                             Image(systemName: "play.rectangle")
                         }
-                        .padding(.bottom)
+#if(ios)
+.padding(.bottom)
+#endif
                     }
                 }
                 

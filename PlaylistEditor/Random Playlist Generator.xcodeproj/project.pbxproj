@@ -415,7 +415,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Random Playlist Generator";
+				INFOPLIST_KEY_CFBundleDisplayName = Playlists;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -433,9 +433,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
 				PRODUCT_NAME = "Random Playlist Generator";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
 			name = Debug;
 		};
@@ -452,7 +455,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Random Playlist Generator--iOS--Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Random Playlist Generator";
+				INFOPLIST_KEY_CFBundleDisplayName = Playlists;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -470,9 +473,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.benday.RandomPlaylistGenerator;
 				PRODUCT_NAME = "Random Playlist Generator";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

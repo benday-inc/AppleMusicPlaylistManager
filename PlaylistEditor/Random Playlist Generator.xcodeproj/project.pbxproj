@@ -11,6 +11,7 @@
 		040313A1274A7E47009B0F23 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04031390274A7E46009B0F23 /* ContentView.swift */; };
 		040313A3274A7E47009B0F23 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04031391274A7E47009B0F23 /* Assets.xcassets */; };
 		043742302DB549B900969FA1 /* SongsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437422F2DB549B900969FA1 /* SongsViewModel.swift */; };
+		043B82D22DEF0C880000E3B2 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043B82D12DEF0C880000E3B2 /* CarPlaySceneDelegate.swift */; };
 		0442634C2DA804C20038D101 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0442634B2DA804C20038D101 /* AppConstants.swift */; };
 		0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD232778D87D00C76D96 /* PlaylistCell.swift */; };
 		0456FD262778E65600C76D96 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456FD252778E65600C76D96 /* PlaylistsView.swift */; };
@@ -48,6 +49,7 @@
 		040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Random Playlist Generator--iOS--Info.plist"; sourceTree = "<group>"; };
 		040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RandomPlaylistGenerator--macOS--Info.plist"; sourceTree = "<group>"; };
 		0437422F2DB549B900969FA1 /* SongsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsViewModel.swift; sourceTree = "<group>"; };
+		043B82D12DEF0C880000E3B2 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
 		0442634B2DA804C20038D101 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		044263692DA817E30038D101 /* Random Playlist GeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Random Playlist GeneratorTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "RandomPlaylistGenerator (iOS).entitlements"; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 		04031389274A7E46009B0F23 = {
 			isa = PBXGroup;
 			children = (
+				043B82D12DEF0C880000E3B2 /* CarPlaySceneDelegate.swift */,
 				0456FD2227789F6300C76D96 /* RandomPlaylistGenerator (iOS).entitlements */,
 				040313AE274AEC9A009B0F23 /* RandomPlaylistGenerator--macOS--Info.plist */,
 				040313AD274AEC58009B0F23 /* Random Playlist Generator--iOS--Info.plist */,
@@ -256,6 +259,7 @@
 				0456FD30277A1CF400C76D96 /* ExclusionsView.swift in Sources */,
 				0403139F274A7E47009B0F23 /* Test20211121aApp.swift in Sources */,
 				046E988A2D90A9F0005C8AE7 /* EnvironmentValues.swift in Sources */,
+				043B82D22DEF0C880000E3B2 /* CarPlaySceneDelegate.swift in Sources */,
 				047DEE142DB6DA2200AFFCE7 /* PlaylistNameSheetView.swift in Sources */,
 				0456FD242778D87D00C76D96 /* PlaylistCell.swift in Sources */,
 				0456FD2C277910C100C76D96 /* MediaItemWrapper.swift in Sources */,

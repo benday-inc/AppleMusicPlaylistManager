@@ -51,7 +51,7 @@ struct CategoryEditorView: View {
                             .foregroundColor(.secondary)
                     } else {
                         ForEach(category.genres, id: \.self) { genre in
-                            Text(genre)
+                            Text(genre)                            
                         }
                     }
                     Button(action: { isAddGenreSheetPresented = true }) {
@@ -139,7 +139,19 @@ struct CategoryEditorView: View {
     }
 }
 
-#Preview {
+#Preview("non-empty category") {
+    let viewModel = CategoryListViewModel()
+    let selected = viewModel.addNewCategory()
+    
+    selected.artists.append("Artist 1")
+    selected.artists.append("Artist 2")
+    selected.genres.append("Genre A")
+    selected.genres.append("Genre B")
+    
+    return CategoryEditorView(category: selected, viewModel: viewModel)
+}
+
+#Preview("empty category") {
     let viewModel = CategoryListViewModel()
     let selected = viewModel.addNewCategory()
     CategoryEditorView(category: selected, viewModel: viewModel)

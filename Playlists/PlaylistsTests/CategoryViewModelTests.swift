@@ -31,11 +31,7 @@ final class CategoryViewModelTests: XCTestCase {
     
     func testLoadFromEmptyCategoryNamePopulateName() throws {
         // arrange
-        var category = Category()
-        
-        category.artists = []
-        category.genres = []
-        category.name = ""
+        var category = getEmptyCategory()
         
         let sut = CategoryViewModel()
         
@@ -50,13 +46,29 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertTrue(sut.artists.isEmpty)
     }
     
-    func testLoadFromPopulatedCategory() throws {
-        // arrange
+    func getEmptyCategory() -> Playlists.Category {
+        var category = Category()
+        
+        category.artists = []
+        category.genres = []
+        category.name = ""
+        
+        return category
+    }
+    
+    func getPopulatedCategory() -> Playlists.Category {
         var category = Category()
         
         category.artists = ["artist1", "artist2", "artist3"]
         category.genres = ["genre1", "genre2"]
         category.name = "Test Category"
+        
+        return category
+    }
+    
+    func testLoadFromPopulatedCategory() throws {
+        // arrange
+        var category = getPopulatedCategory()
         
         let sut = CategoryViewModel()
         
@@ -73,5 +85,25 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
     }
     
+    func testSetNameReportsHasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.name = "New Name"
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertEqual("New Name", sut.name)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
+    }
 
 }

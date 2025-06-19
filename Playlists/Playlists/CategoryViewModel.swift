@@ -12,7 +12,16 @@ import Combine
 public class CategoryViewModel : ObservableObject {
     @Published var isLoaded: Bool = false
     @Published var hasChanges: Bool = false
-    @Published var name: String
+    @Published var name: String {
+        didSet {
+            if let model = model {
+                hasChanges = (name != model.name)
+            }
+            else {
+                hasChanges = true
+            }
+        }
+    }
     @Published var genres: [String] = []
     @Published var artists: [String] = []
     private var model: Category?

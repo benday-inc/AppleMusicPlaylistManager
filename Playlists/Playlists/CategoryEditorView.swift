@@ -24,10 +24,8 @@ struct CategoryEditorView: View {
             Section(header: Text("Artists")) {
                 List {
                     if category.artists.isEmpty {
-                        
                         Text("No artists in this category.")
                             .foregroundColor(.secondary)
-                        
                     } else {
                         ForEach(category.artists, id: \.self) { artist in
                             Text(artist)
@@ -42,7 +40,6 @@ struct CategoryEditorView: View {
                                 })
                         }
                     }
-                    
                     Button(action: { isAddArtistSheetPresented = true }) {
                         HStack {
                             Image(systemName: "plus.circle")
@@ -89,11 +86,25 @@ struct CategoryEditorView: View {
         }
         .navigationTitle("Edit Category")
         .toolbar {
-            Button("Remove") {
-                viewModel.removeCategory()
-                dismiss()
+            ToolbarItem(placement: .destructiveAction) {
+                Button("Remove") {
+                    viewModel.removeCategory()
+                    dismiss()
+                }
+                .disabled(viewModel.selectedItem == nil || !viewModel.isLoaded)
             }
-            .disabled(viewModel.selectedItem == nil || !viewModel.isLoaded)
+            ToolbarItemGroup(placement: .bottomBar) {
+                Button("Cancel") {
+                    category.undoChanges()
+                    dismiss()
+                }
+                Spacer()
+                Button("Save") {
+                    category.saveChanges()
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
+            }
         }
         .onAppear {
             print("CategoryEditorView onAppear")
@@ -105,12 +116,10 @@ struct CategoryEditorView: View {
 #Preview("non-empty category") {
     let viewModel = CategoryListViewModel()
     let selected = viewModel.addNewCategory()
-    
     selected.artists.append("Artist 1")
     selected.artists.append("Artist 2")
     selected.genres.append("Genre A")
     selected.genres.append("Genre B")
-    
     return CategoryEditorView(category: selected, viewModel: viewModel)
 }
 

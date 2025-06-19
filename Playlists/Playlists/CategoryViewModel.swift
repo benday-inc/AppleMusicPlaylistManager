@@ -32,7 +32,18 @@ public class CategoryViewModel : ObservableObject {
             }
         }
     }
-    @Published var artists: [String] = []
+    
+    @Published var artists: [String] = [] {
+        didSet {
+            if let model = model {
+                hasChanges = (artists != model.artists)
+            }
+            else {
+                hasChanges = true
+            }
+        }
+    }
+    
     private var model: Category?
     
     init() {

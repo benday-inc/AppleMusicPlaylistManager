@@ -165,5 +165,65 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertEqual(sut.genres, ["genre123", "genre2"])
         XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
     }
+    
+    func testRemoveArtist_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.artists.remove(at: 0)
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist2", "artist3"])
+    }
+    
+    func testAddArtist_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.artists.append("artist4")
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3", "artist4"])
+    }
+    
+    func testModifyArtist_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.artists[0] = "artist123"
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist123", "artist2", "artist3"])
+    }
 
 }

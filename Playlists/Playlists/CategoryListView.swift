@@ -46,21 +46,21 @@ struct CategoryListView: View {
                 }
             }
             .navigationTitle("Category List")
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    Button("Add") {
+                        _ = viewModel.addNewCategory()
+                    }
+                    .disabled(viewModel.isLoaded == false)
+                    
+                    Button("Remove") {
+                        viewModel.removeCategory()
+                    }
+                    .disabled(viewModel.selectedItem == nil || viewModel.isLoaded == false)
+                }
+            })
         }
         .navigationViewStyle(.stack)
-        .toolbar(content: {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                Button("Add") {
-                    _ = viewModel.addNewCategory()
-                }
-                .disabled(viewModel.isLoaded == false)
-                
-                Button("Remove") {
-                    viewModel.removeCategory()
-                }
-                .disabled(viewModel.selectedItem == nil || viewModel.isLoaded == false)
-            }
-        })
     }
 }
 

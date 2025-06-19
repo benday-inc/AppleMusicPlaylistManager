@@ -11,6 +11,7 @@ import MediaPlayer
 
 struct ContentView: View {
     @StateObject private var storage = PlaylistDataStore()
+    @StateObject private var categoryViewModel = CategoryListViewModel()
     @State var musicAuthorizationStatus: MusicAuthorization.Status
     
     var body: some View {
@@ -23,10 +24,15 @@ struct ContentView: View {
             else {
                 TabView {
                     CategoryListView()
-                        .environmentObject(CategoryListViewModel())
+                        .environmentObject(categoryViewModel)
                         .tabItem {
                             Label("Categories", systemImage: "list.bullet")
                         }.tag(0)
+                        .onAppear() {
+                            if (categoryViewModel.isLoaded == false) {
+                                categoryViewModel.load(from: [])
+                            }
+                        }
                     SongsView()
                         .environmentObject(storage)
                         .environmentObject(SongsViewModel(storage: storage))
@@ -51,16 +57,7 @@ struct ContentView: View {
             }
         }
     }
-    
-    private func handleOnAppear() async -> Void {
-        print ("handleOnAppear() starting...")
-        
-        let returnValue = await requestMusicAuthorization()
-        
-        musicAuthorizationStatus = returnValue
-        
-        print ("handleOnAppear() exiting...")
-    }
+
     
     func requestMusicAuthorization() async -> MusicAuthorization.Status {
         let currentStatus = MusicAuthorization.currentStatus

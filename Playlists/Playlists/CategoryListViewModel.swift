@@ -39,6 +39,7 @@ public class CategoryListViewModel : ObservableObject {
     }
     
     public func addNewCategory() -> CategoryViewModel {
+        print("Add New Category")
         let newCategory = CategoryViewModel()
         newCategory.name = getNewCategoryName()
         unfilteredItems.append(newCategory)

@@ -11,13 +11,23 @@ struct CategoryEditorView: View {
     @ObservedObject var category: CategoryViewModel
     @ObservedObject var viewModel: CategoryListViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    @State private var isAddArtistSheetPresented = false
+    @State private var newArtistName = ""
 
     var body: some View {
         Form {
             Section(header: Text("Category Name")) {
                 TextField("Name", text: $category.name)
             }
-            Section(header: Text("Artists")) {
+            Section(header: HStack {
+                Text("Artists")
+                Spacer()
+                Button(action: { isAddArtistSheetPresented = true }) {
+                    Image(systemName: "plus.circle")
+                }
+                .accessibilityLabel("Add Artist")
+            }) {
                 if category.artists.isEmpty {
                     Text("No artists in this category.")
                         .foregroundColor(.secondary)
@@ -34,6 +44,36 @@ struct CategoryEditorView: View {
                 } else {
                     List(category.genres, id: \.self) { genre in
                         Text(genre)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isAddArtistSheetPresented) {
+            NavigationStack {
+                VStack(spacing: 16) {
+                    Text("Add Artist")
+                        .font(.headline)
+                    TextField("Artist name", text: $newArtistName)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                    Button("Add") {
+                        let trimmed = newArtistName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty && !category.artists.contains(trimmed) {
+                            category.artists.append(trimmed)
+                        }
+                        newArtistName = ""
+                        isAddArtistSheetPresented = false
+                    }
+                    .disabled(newArtistName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    Spacer()
+                }
+                .padding()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            isAddArtistSheetPresented = false
+                            newArtistName = ""
+                        }
                     }
                 }
             }

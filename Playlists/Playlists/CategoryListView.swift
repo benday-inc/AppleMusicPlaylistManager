@@ -12,23 +12,27 @@ struct CategoryListView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Filter Categories")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.leading)
                 HStack {
-                    if (viewModel.isLoaded == true) {
-                        Text("Filter")
-                        Spacer()
-                            
-                        TextField("Filter", text: $viewModel.filterTextValue)
-                            .frame(width: 150)
-                            .onSubmit {
-                                viewModel.updateFilteredItems()
-                            }
-                        if (viewModel.isFiltered == true) {
-                            Button("Clear") {
-                                viewModel.filterTextValue = ""
-                                viewModel.updateFilteredItems()
-                            }
+                    TextField("Type to filter...", text: $viewModel.filterTextValue)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal)
+                        .onSubmit {
+                            viewModel.updateFilteredItems()
                         }
+                    if viewModel.isFiltered {
+                        Button(action: {
+                            viewModel.filterTextValue = ""
+                            viewModel.updateFilteredItems()
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.trailing)
                     }
                 }
                 List(selection: $viewModel.selectedItem) {
@@ -38,7 +42,6 @@ struct CategoryListView: View {
                             HStack {
                                 Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
                                     .font(.caption)
-                                    
                             }
                         }
                         .tag(item)
@@ -52,7 +55,6 @@ struct CategoryListView: View {
                         _ = viewModel.addNewCategory()
                     }
                     .disabled(viewModel.isLoaded == false)
-                    
                     Button("Remove") {
                         viewModel.removeCategory()
                     }
@@ -66,16 +68,12 @@ struct CategoryListView: View {
 
 #Preview("with items") {
     var viewModel = CategoryListViewModel()
-    
     let categories = CategoryUtilities.getPopulatedCategories(numberOfItems: 5)
-    
     viewModel.load(from: categories)
-    
     return CategoryListView().environmentObject(viewModel)
 }
 
 #Preview("no items") {
     var viewModel = CategoryListViewModel()
-    
     return CategoryListView().environmentObject(viewModel)
 }

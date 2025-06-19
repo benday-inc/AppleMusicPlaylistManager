@@ -85,7 +85,7 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
     }
     
-    func testSetNameReportsHasChangesIsTrue() throws {
+    func testSetName_HasChangesIsTrue() throws {
         // arrange
         let category = getPopulatedCategory()
         
@@ -103,6 +103,66 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertFalse(sut.genres.isEmpty)
         XCTAssertFalse(sut.artists.isEmpty)
         XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
+    }
+    
+    func testRemoveGenre_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.genres.remove(at: 0)
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre2"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
+    }
+    
+    func testAddGenre_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.genres.append("genre3")
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2", "genre3"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
+    }
+    
+    func testModifyGenre_HasChangesIsTrue() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        
+        // act
+        sut.genres[0] = "genre123"
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertTrue(sut.hasChanges)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre123", "genre2"])
         XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
     }
 

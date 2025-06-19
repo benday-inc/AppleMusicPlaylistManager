@@ -22,7 +22,16 @@ public class CategoryViewModel : ObservableObject {
             }
         }
     }
-    @Published var genres: [String] = []
+    @Published var genres: [String] = [] {
+        didSet {
+            if let model = model {
+                hasChanges = (genres != model.genres)
+            }
+            else {
+                hasChanges = true
+            }
+        }
+    }
     @Published var artists: [String] = []
     private var model: Category?
     

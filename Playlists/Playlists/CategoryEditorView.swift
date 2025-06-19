@@ -85,34 +85,7 @@ struct CategoryEditorView: View {
             AddArtistView(isPresented: $isAddArtistSheetPresented, category: category)
         }
         .sheet(isPresented: $isAddGenreSheetPresented) {
-            NavigationStack {
-                VStack(spacing: 16) {
-                    Text("Add Genre")
-                        .font(.headline)
-                    TextField("Genre name", text: $newGenreName)
-                        .textFieldStyle(.roundedBorder)
-                        .padding()
-                    Button("Add") {
-                        let trimmed = newGenreName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if !trimmed.isEmpty && !category.genres.contains(trimmed) {
-                            category.genres.append(trimmed)
-                        }
-                        newGenreName = ""
-                        isAddGenreSheetPresented = false
-                    }
-                    .disabled(newGenreName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    Spacer()
-                }
-                .padding()
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            isAddGenreSheetPresented = false
-                            newGenreName = ""
-                        }
-                    }
-                }
-            }
+            AddGenreView(isPresented: $isAddGenreSheetPresented, category: category)
         }
         .navigationTitle("Edit Category")
         .toolbar {

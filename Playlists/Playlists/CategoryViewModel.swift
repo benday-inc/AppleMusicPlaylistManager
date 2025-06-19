@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public class CategoryViewModel : ObservableObject, Identifiable {
+public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
     @Published public var id: UUID = UUID()
     @Published var isLoaded: Bool = false
     @Published var hasChanges: Bool = false
@@ -23,6 +23,11 @@ public class CategoryViewModel : ObservableObject, Identifiable {
             }
         }
     }
+    
+    public static func == (lhs: CategoryViewModel, rhs: CategoryViewModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     @Published var genres: [String] = [] {
         didSet {
             if let model = model {
@@ -49,6 +54,10 @@ public class CategoryViewModel : ObservableObject, Identifiable {
     
     init() {
         self.name = ""
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     public func undoChanges() {
@@ -88,3 +97,5 @@ public class CategoryViewModel : ObservableObject, Identifiable {
         return updatedModel
     }
 }
+
+

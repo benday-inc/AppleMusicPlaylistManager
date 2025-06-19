@@ -29,7 +29,28 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertTrue(sut.artists.isEmpty)
     }
     
-    func testLoad() throws {
+    func testLoadFromEmptyCategoryNamePopulateName() throws {
+        // arrange
+        var category = Category()
+        
+        category.artists = []
+        category.genres = []
+        category.name = ""
+        
+        let sut = CategoryViewModel()
+        
+        // act
+        sut.load(category)
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertFalse(sut.hasChanges)
+        XCTAssertEqual("New Category", sut.name)
+        XCTAssertTrue(sut.genres.isEmpty)
+        XCTAssertTrue(sut.artists.isEmpty)
+    }
+    
+    func testLoadFromPopulatedCategory() throws {
         // arrange
         var category = Category()
         

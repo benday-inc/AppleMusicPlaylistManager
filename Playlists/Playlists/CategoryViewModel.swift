@@ -26,6 +26,11 @@ public class CategoryViewModel : ObservableObject {
         
         model = fromValue
         name = fromValue.name
+        
+        if (name.isEmpty == true) {
+            name = "New Category"
+        }
+        
         genres = fromValue.genres
         artists = fromValue.artists
         

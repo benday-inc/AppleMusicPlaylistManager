@@ -29,17 +29,18 @@ struct CategoryListView: View {
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
-                        })
-                    
+                        }
+                    )
+                    .buttonStyle(PlainButtonStyle())                    
                 }
                 
                 .navigationDestination(isPresented: $isNavigating) {
-                        if let selected = viewModel.selectedItem {
-                            CategoryEditorView(category: selected, viewModel: viewModel)
-                        } else {
-                            Text("Nothing selected")
-                        }
+                    if let selected = viewModel.selectedItem {
+                        CategoryEditorView(category: selected, viewModel: viewModel)
+                    } else {
+                        Text("Nothing selected")
                     }
+                }
             }
             .searchable(text: $viewModel.filterTextValue, prompt: "Filter categories")
             .onChange(of: viewModel.filterTextValue) {

@@ -25,7 +25,7 @@ struct CategoryEditorView: View {
         }
         .onAppear {
             print("CategoryEditorView onAppear")
-            // viewModel.selectedItem = category
+            viewModel.selectedItem = category
         }
         
     }

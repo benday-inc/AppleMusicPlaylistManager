@@ -12,11 +12,31 @@ struct CategoryEditorView: View {
     @ObservedObject var viewModel: CategoryListViewModel
     @Environment(\.dismiss) private var dismiss
 
-    
     var body: some View {
-        NavigationStack {
-            Text(category.name)
-                .font(.largeTitle)
+        Form {
+            Section(header: Text("Category Name")) {
+                TextField("Name", text: $category.name)
+            }
+            Section(header: Text("Artists")) {
+                if category.artists.isEmpty {
+                    Text("No artists in this category.")
+                        .foregroundColor(.secondary)
+                } else {
+                    List(category.artists, id: \.self) { artist in
+                        Text(artist)
+                    }
+                }
+            }
+            Section(header: Text("Genres")) {
+                if category.genres.isEmpty {
+                    Text("No genres in this category.")
+                        .foregroundColor(.secondary)
+                } else {
+                    List(category.genres, id: \.self) { genre in
+                        Text(genre)
+                    }
+                }
+            }
         }
         .navigationTitle("Edit Category")
         .toolbar {
@@ -30,17 +50,11 @@ struct CategoryEditorView: View {
             print("CategoryEditorView onAppear")
             viewModel.selectedItem = category
         }
-        
     }
-    
-    
-    
 }
 
 #Preview {
     let viewModel = CategoryListViewModel()
-    
     let selected = viewModel.addNewCategory()
-    
     CategoryEditorView(category: selected, viewModel: viewModel)
 }

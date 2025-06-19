@@ -9,7 +9,8 @@
 import Foundation
 import Combine
 
-public class CategoryViewModel : ObservableObject {
+public class CategoryViewModel : ObservableObject, Identifiable {
+    @Published public var id: UUID = UUID()
     @Published var isLoaded: Bool = false
     @Published var hasChanges: Bool = false
     @Published var name: String {
@@ -59,6 +60,7 @@ public class CategoryViewModel : ObservableObject {
     public func load(_ fromValue: Category) {
         isLoaded = false
         
+        id = fromValue.id
         model = fromValue
         name = fromValue.name
         
@@ -78,7 +80,7 @@ public class CategoryViewModel : ObservableObject {
         updatedModel.id = model?.id ?? UUID()
         updatedModel.name = name
         updatedModel.genres = genres
-        updatedModel.artists = artists        
+        updatedModel.artists = artists
         
         model = updatedModel
         hasChanges = false

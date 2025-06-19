@@ -37,14 +37,29 @@ public class CategoryListViewModel : ObservableObject {
         unfilteredItems = items
         isLoaded = true
     }
-
-    public func addNewCategory() {
+    
+    public func addNewCategory() -> CategoryViewModel {
         let newCategory = CategoryViewModel()
         newCategory.name = getNewCategoryName()
         unfilteredItems.append(newCategory)
         selectedItem = newCategory
         
         updateFilteredItems()
+        
+        return newCategory
+    }
+    
+    public func removeCategory() {
+        if selectedItem == nil {
+            return
+        }
+        
+        if let tempSelectedItem = selectedItem,
+           let selectedIndex = unfilteredItems.firstIndex(where: { $0.id == tempSelectedItem.id }) {
+            unfilteredItems.remove(at: selectedIndex)
+            selectedItem = nil
+            updateFilteredItems()
+        }
     }
     
     private func getNewCategoryName() -> String {

@@ -31,7 +31,7 @@ final class CategoryViewModelTests: XCTestCase {
     
     func testLoadFromEmptyCategoryNamePopulateName() throws {
         // arrange
-        var category = getEmptyCategory()
+        let category = getEmptyCategory()
         
         let sut = CategoryViewModel()
         
@@ -68,7 +68,7 @@ final class CategoryViewModelTests: XCTestCase {
     
     func testLoadFromPopulatedCategory() throws {
         // arrange
-        var category = getPopulatedCategory()
+        let category = getPopulatedCategory()
         
         let sut = CategoryViewModel()
         

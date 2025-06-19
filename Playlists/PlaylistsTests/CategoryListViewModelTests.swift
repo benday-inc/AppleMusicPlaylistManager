@@ -52,7 +52,7 @@ final class CategoryListViewModelTests: XCTestCase {
     func testAddNewCategory() throws {
         let sut = CategoryListViewModel()
         
-        sut.addNewCategory()
+        _ = sut.addNewCategory()
         
         XCTAssertFalse(sut.isLoaded)
         XCTAssertFalse(sut.isFiltered)
@@ -70,19 +70,19 @@ final class CategoryListViewModelTests: XCTestCase {
     func testAddNewCategoryMultipleTimes() throws {
         let sut = CategoryListViewModel()
         
-        sut.addNewCategory()
+        _ = sut.addNewCategory()
         
         XCTAssertNotNil(sut.selectedItem)
         var selected = sut.selectedItem!
         XCTAssertEqual("New Category", selected.name)
         
-        sut.addNewCategory()
+        _ = sut.addNewCategory()
         
         XCTAssertNotNil(sut.selectedItem)
         selected = sut.selectedItem!
         XCTAssertEqual("New Category 1", selected.name)
         
-        sut.addNewCategory()
+        _ = sut.addNewCategory()
         
         XCTAssertNotNil(sut.selectedItem)
         selected = sut.selectedItem!
@@ -94,13 +94,42 @@ final class CategoryListViewModelTests: XCTestCase {
     func testToModels() throws {
         let sut = CategoryListViewModel()
         
-        sut.addNewCategory()
-        sut.addNewCategory()
-        sut.addNewCategory()
+        _ = sut.addNewCategory()
+        _ = sut.addNewCategory()
+        _ = sut.addNewCategory()
         
         let categories = sut.toModels()
         
         XCTAssertEqual(3, categories.count)
+        
+        XCTAssertFalse(sut.hasChanges)
+    }
+    
+    func testRemoveCategoryRemovesSelected() throws {
+        let sut = CategoryListViewModel()
+        
+        let val0 = sut.addNewCategory()
+        XCTAssertEqual("New Category", val0.name)
+        
+        let val1 = sut.addNewCategory()
+        XCTAssertEqual("New Category 1", val1.name)
+        
+        let val2 = sut.addNewCategory()
+        XCTAssertEqual("New Category 2", val2.name)
+        
+        sut.selectedItem = val1
+        
+        XCTAssertEqual(3, sut.items.count)
+        
+        // act
+        sut.removeCategory()
+        
+        // assert
+        XCTAssertEqual(2, sut.items.count)
+        
+        let categories = sut.toModels()
+        
+        XCTAssertEqual(2, categories.count)
         
         XCTAssertFalse(sut.hasChanges)
     }

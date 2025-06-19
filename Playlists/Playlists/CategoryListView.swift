@@ -9,48 +9,65 @@ import SwiftUI
 
 struct CategoryListView: View {
     @EnvironmentObject var viewModel: CategoryListViewModel
-
+    
+    @State private var isNavigating = false
+    
     var body: some View {
         NavigationStack {
-            List(selection: $viewModel.selectedItem) {
-                ForEach(viewModel.items) { item in
-                    VStack(alignment: .leading) {
-                        Text(item.name)
-                            .font(.headline)
-                        Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .tag(item)
+            VStack {
+                List(viewModel.items) { item in
+                    Button(
+                        action: {
+                            viewModel.selectedItem = item
+                            isNavigating = true
+                        },
+                        label: {
+                            VStack(alignment: .leading) {
+                                Text(item.name)
+                                    .font(.headline)
+                                Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        })
+                    
                 }
+                
+                .navigationDestination(isPresented: $isNavigating) {
+                        if let selected = viewModel.selectedItem {
+                            CategoryEditorView(category: selected, viewModel: viewModel)
+                        } else {
+                            Text("Nothing selected")
+                        }
+                    }
             }
             .searchable(text: $viewModel.filterTextValue, prompt: "Filter categories")
-            .onChange(of: viewModel.filterTextValue) { 
+            .onChange(of: viewModel.filterTextValue) {
                 viewModel.updateFilteredItems()
             }
             .navigationTitle("Category List")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Add") { _ = viewModel.addNewCategory() }
-                        .disabled(!viewModel.isLoaded)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Remove") { viewModel.removeCategory() }
-                        .disabled(viewModel.selectedItem == nil || !viewModel.isLoaded)
-                }
+                Button("Add") { _ = viewModel.addNewCategory() }
+                    .disabled(!viewModel.isLoaded)
             }
+            
+            
+            
         }
     }
+    
+    
+    
 }
 
 #Preview("with items") {
-    var viewModel = CategoryListViewModel()
+    let viewModel = CategoryListViewModel()
     let categories = CategoryUtilities.getPopulatedCategories(numberOfItems: 5)
     viewModel.load(from: categories)
     return CategoryListView().environmentObject(viewModel)
 }
 
 #Preview("no items") {
-    var viewModel = CategoryListViewModel()
+    let viewModel = CategoryListViewModel()
     return CategoryListView().environmentObject(viewModel)
 }

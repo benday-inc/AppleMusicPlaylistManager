@@ -33,6 +33,7 @@ struct ContentView: View {
                                 categoryViewModel.load(from: [])
                             }
                         }
+                    
                     SongsView()
                         .environmentObject(storage)
                         .environmentObject(SongsViewModel(storage: storage))

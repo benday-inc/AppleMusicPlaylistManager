@@ -18,8 +18,7 @@ struct PlaylistsView: View {
     
     @State var _playlists: Array<PlaylistItem>
     
-    var body: some View {
-        
+    var body: some View {        
         NavigationView {
             List {
                 ForEach(_playlists) { item in

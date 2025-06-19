@@ -22,17 +22,22 @@ struct ContentView: View {
             }
             else {
                 TabView {
+                    CategoryListView()
+                        .environmentObject(CategoryListViewModel())
+                        .tabItem {
+                            Label("Categories", systemImage: "list.bullet")
+                        }.tag(0)
                     SongsView()
                         .environmentObject(storage)
                         .environmentObject(SongsViewModel(storage: storage))
                         .tabItem {
                             Label("Build Playlist", systemImage: "square.and.pencil")
-                        }.tag(0)
+                        }.tag(1)
                     ExclusionsView()
                         .environmentObject(storage)
                         .tabItem {
                             Label("Playlist Exclusions", systemImage: "slider.horizontal.3")
-                        }.tag(1)
+                        }.tag(2)
 //                    PlaylistsView(_playlists: [])
 //                        .tabItem {
 //                            Label("Playlists", systemImage: "music.note.list")

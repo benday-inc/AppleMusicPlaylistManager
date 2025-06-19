@@ -11,7 +11,7 @@ struct CategoryListView: View {
     @EnvironmentObject var viewModel: CategoryListViewModel
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack {
                 HStack {
                     if (viewModel.isLoaded == true) {
@@ -45,7 +45,22 @@ struct CategoryListView: View {
                     }                
                 }
             }
+            .navigationTitle("Category List")
         }
+        .navigationViewStyle(.stack)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button("Add") {
+                    _ = viewModel.addNewCategory()
+                }
+                .disabled(viewModel.isLoaded == false)
+                
+                Button("Remove") {
+                    viewModel.removeCategory()
+                }
+                .disabled(viewModel.selectedItem == nil || viewModel.isLoaded == false)
+            }
+        })
     }
 }
 

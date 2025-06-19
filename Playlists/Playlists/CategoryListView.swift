@@ -9,60 +9,37 @@ import SwiftUI
 
 struct CategoryListView: View {
     @EnvironmentObject var viewModel: CategoryListViewModel
-    
+
     var body: some View {
-        NavigationView {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Filter Categories")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .padding(.leading)
-                HStack {
-                    TextField("Type to filter...", text: $viewModel.filterTextValue)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.horizontal)
-                        .onSubmit {
-                            viewModel.updateFilteredItems()
-                        }
-                    if viewModel.isFiltered {
-                        Button(action: {
-                            viewModel.filterTextValue = ""
-                            viewModel.updateFilteredItems()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.trailing)
+        NavigationStack {
+            List(selection: $viewModel.selectedItem) {
+                ForEach(viewModel.items) { item in
+                    VStack(alignment: .leading) {
+                        Text(item.name)
+                            .font(.headline)
+                        Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
-                }
-                List(selection: $viewModel.selectedItem) {
-                    ForEach(viewModel.items) { item in
-                        VStack{
-                            Text(item.name)
-                            HStack {
-                                Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
-                                    .font(.caption)
-                            }
-                        }
-                        .tag(item)
-                    }                
+                    .tag(item)
                 }
             }
+            .searchable(text: $viewModel.filterTextValue, prompt: "Filter categories")
+            .onChange(of: viewModel.filterTextValue) { 
+                viewModel.updateFilteredItems()
+            }
             .navigationTitle("Category List")
-            .toolbar(content: {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    Button("Add") {
-                        _ = viewModel.addNewCategory()
-                    }
-                    .disabled(viewModel.isLoaded == false)
-                    Button("Remove") {
-                        viewModel.removeCategory()
-                    }
-                    .disabled(viewModel.selectedItem == nil || viewModel.isLoaded == false)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Add") { _ = viewModel.addNewCategory() }
+                        .disabled(!viewModel.isLoaded)
                 }
-            })
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Remove") { viewModel.removeCategory() }
+                        .disabled(viewModel.selectedItem == nil || !viewModel.isLoaded)
+                }
+            }
         }
-        .navigationViewStyle(.stack)
     }
 }
 

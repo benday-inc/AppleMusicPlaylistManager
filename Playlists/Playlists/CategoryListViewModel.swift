@@ -16,9 +16,15 @@ public class CategoryListViewModel : ObservableObject {
     var anyCancellable: AnyCancellable? = nil
     @Published var isFiltered: Bool = false
     @Published var filterTextValue: String = ""
+    private var model: [Category]?
     
     public init() {
         
+    }
+    
+    // declare a property to get hasChanges
+    public var hasChanges: Bool {
+        return items.contains(where: { $0.hasChanges })
     }
     
     public func load(from categories: [Category]) {

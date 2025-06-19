@@ -225,5 +225,62 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertEqual(sut.genres, ["genre1", "genre2"])
         XCTAssertEqual(sut.artists, ["artist123", "artist2", "artist3"])
     }
+    
+    func testUndoChanges_RevertsValuesAndHasChangesIsFalse() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        sut.name = "New Name"
+        sut.artists[0] = "artist123"
+        sut.genres.remove(at: 0)
+        XCTAssertTrue(sut.hasChanges)
+        
+        // act
+        sut.undoChanges()
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertFalse(sut.hasChanges)
+        XCTAssertEqual("Test Category", sut.name)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre1", "genre2"])
+        XCTAssertEqual(sut.artists, ["artist1", "artist2", "artist3"])
+    }
+    
+    func testSaveChanges_UpdatesModelAndHasChangesIsFalse() throws {
+        // arrange
+        let category = getPopulatedCategory()
+        
+        let sut = CategoryViewModel()
+        
+        sut.load(category)
+        sut.name = "New Name"
+        sut.artists[0] = "artist123"
+        sut.genres.remove(at: 0)
+        XCTAssertTrue(sut.hasChanges)
+        
+        // act
+        let updatedModel = sut.saveChanges()
+        
+        // assert
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertFalse(sut.hasChanges)
+        XCTAssertEqual("New Name", sut.name)
+        XCTAssertFalse(sut.genres.isEmpty)
+        XCTAssertFalse(sut.artists.isEmpty)
+        XCTAssertEqual(sut.genres, ["genre2"])
+        XCTAssertEqual(sut.artists, ["artist123", "artist2", "artist3"])
+        
+        XCTAssertEqual(updatedModel.name, "New Name")
+        XCTAssertEqual(updatedModel.genres, ["genre2"])
+        XCTAssertEqual(updatedModel.artists, ["artist123", "artist2", "artist3"])
+        
+        XCTAssertEqual(updatedModel.id, category.id) // id should be unchanged
+        
+    }
 
 }

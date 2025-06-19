@@ -50,6 +50,12 @@ public class CategoryViewModel : ObservableObject {
         self.name = ""
     }
     
+    public func undoChanges() {
+        if let model = model {
+            load(model)
+        }
+    }
+    
     public func load(_ fromValue: Category) {
         isLoaded = false
         
@@ -64,5 +70,19 @@ public class CategoryViewModel : ObservableObject {
         artists = fromValue.artists
         
         isLoaded = true
+    }
+    
+    public func saveChanges() -> Category {
+        var updatedModel = Category()
+        
+        updatedModel.id = model?.id ?? UUID()
+        updatedModel.name = name
+        updatedModel.genres = genres
+        updatedModel.artists = artists        
+        
+        model = updatedModel
+        hasChanges = false
+        
+        return updatedModel
     }
 }

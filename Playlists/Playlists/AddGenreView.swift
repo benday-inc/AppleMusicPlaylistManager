@@ -42,6 +42,7 @@ struct AddGenreView: View {
                 else {
                     Text("no matching genres")
                 }
+                Spacer()
                 Button("Add") {
                     let trimmed = newGenreName.trimmingCharacters(in: .whitespacesAndNewlines)
                     if !trimmed.isEmpty && !category.genres.contains(trimmed) {
@@ -50,8 +51,9 @@ struct AddGenreView: View {
                     newGenreName = ""
                     isPresented = false
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(selectedGenre == nil || newGenreName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                Spacer()
+                
             }
             .padding()
             .toolbar {

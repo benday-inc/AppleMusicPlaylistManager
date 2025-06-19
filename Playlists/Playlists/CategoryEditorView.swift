@@ -32,6 +32,15 @@ struct CategoryEditorView: View {
                     } else {
                         ForEach(category.artists, id: \.self) { artist in
                             Text(artist)
+                                .swipeActions(content: {
+                                    Button(role: .destructive) {
+                                        if let index = category.artists.firstIndex(of: artist) {
+                                            category.artists.remove(at: index)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                })
                         }
                     }
                     
@@ -51,7 +60,16 @@ struct CategoryEditorView: View {
                             .foregroundColor(.secondary)
                     } else {
                         ForEach(category.genres, id: \.self) { genre in
-                            Text(genre)                            
+                            Text(genre)
+                                .swipeActions(content: {
+                                Button(role: .destructive) {
+                                    if let index = category.genres.firstIndex(of: genre) {
+                                        category.genres.remove(at: index)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            })
                         }
                     }
                     Button(action: { isAddGenreSheetPresented = true }) {

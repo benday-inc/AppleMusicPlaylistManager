@@ -16,43 +16,50 @@ struct CategoryEditorView: View {
     @State private var newArtistName = ""
     @State private var isAddGenreSheetPresented = false
     @State private var newGenreName = ""
-
+    
     var body: some View {
         Form {
             Section(header: Text("Category Name")) {
                 TextField("Name", text: $category.name)
             }
-            Section(header: HStack {
-                Text("Artists")
-                Spacer()
-                Button(action: { isAddArtistSheetPresented = true }) {
-                    Image(systemName: "plus.circle")
-                }
-                .accessibilityLabel("Add Artist")
-            }) {
-                if category.artists.isEmpty {
-                    Text("No artists in this category.")
-                        .foregroundColor(.secondary)
-                } else {
-                    List(category.artists, id: \.self) { artist in
-                        Text(artist)
+            Section(header: Text("Artists")) {
+                List {
+                    if category.artists.isEmpty {
+                        
+                        Text("No artists in this category.")
+                            .foregroundColor(.secondary)
+                        
+                    } else {
+                        ForEach(category.artists, id: \.self) { artist in
+                            Text(artist)
+                        }
+                    }
+                    
+                    Button(action: { isAddArtistSheetPresented = true }) {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add Artist")
+                        }
+                        .foregroundColor(.accentColor)
                     }
                 }
             }
-            Section(header: HStack {
-                Text("Genres")
-                Spacer()
-                Button(action: { isAddGenreSheetPresented = true }) {
-                    Image(systemName: "plus.circle")
-                }
-                .accessibilityLabel("Add Genre")
-            }) {
-                if category.genres.isEmpty {
-                    Text("No genres in this category.")
-                        .foregroundColor(.secondary)
-                } else {
-                    List(category.genres, id: \.self) { genre in
-                        Text(genre)
+            Section(header: Text("Genres")) {
+                List {
+                    if category.genres.isEmpty {
+                        Text("No genres in this category.")
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(category.genres, id: \.self) { genre in
+                            Text(genre)
+                        }
+                    }
+                    Button(action: { isAddGenreSheetPresented = true }) {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add Genre")
+                        }
+                        .foregroundColor(.accentColor)
                     }
                 }
             }

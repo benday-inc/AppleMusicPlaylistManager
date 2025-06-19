@@ -13,7 +13,6 @@ struct CategoryEditorView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var isAddArtistSheetPresented = false
-    @State private var newArtistName = ""
     @State private var isAddGenreSheetPresented = false
     @State private var newGenreName = ""
     
@@ -83,34 +82,7 @@ struct CategoryEditorView: View {
             }
         }
         .sheet(isPresented: $isAddArtistSheetPresented) {
-            NavigationStack {
-                VStack(spacing: 16) {
-                    Text("Add Artist")
-                        .font(.headline)
-                    TextField("Artist name", text: $newArtistName)
-                        .textFieldStyle(.roundedBorder)
-                        .padding()
-                    Button("Add") {
-                        let trimmed = newArtistName.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if !trimmed.isEmpty && !category.artists.contains(trimmed) {
-                            category.artists.append(trimmed)
-                        }
-                        newArtistName = ""
-                        isAddArtistSheetPresented = false
-                    }
-                    .disabled(newArtistName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                    Spacer()
-                }
-                .padding()
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            isAddArtistSheetPresented = false
-                            newArtistName = ""
-                        }
-                    }
-                }
-            }
+            AddArtistView(isPresented: $isAddArtistSheetPresented, category: category)
         }
         .sheet(isPresented: $isAddGenreSheetPresented) {
             NavigationStack {

@@ -13,6 +13,7 @@ struct AddGenreView: View {
     @State private var newItemName = ""
     @State private var selectedItem: String?
     @State private var searchText = ""
+    @State private var isSearching = false
     @Binding var isPresented: Bool
     @ObservedObject var category: CategoryViewModel
     @State public var matchingItems: [IdentifiableString] = []
@@ -68,7 +69,7 @@ struct AddGenreView: View {
             }
             .onAppear() {
                 debouncer.start { genreName in
-                    updateMatchingGenres(for: genreName)
+                    updateMatching(for: genreName)
                 }
             }
             .navigationTitle("Add genre")
@@ -76,11 +77,13 @@ struct AddGenreView: View {
         
     }
     
-    private func updateMatchingGenres(for query: String) {
+    private func updateMatching(for query: String) {
         guard !query.isEmpty else {
             matchingItems = []
             return
         }
+        isSearching = true
+        
         let mediaQuery = MPMediaQuery.genres()
         let allGenres = mediaQuery.collections?.compactMap { $0.representativeItem?.genre } ?? []
         var uniqueGenres = Array(Set(allGenres)).sorted()
@@ -91,6 +94,7 @@ struct AddGenreView: View {
             returnValue.append(IdentifiableString(value: genre))
         }
         matchingItems = returnValue
+        isSearching = false
     }
 }
 

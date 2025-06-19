@@ -68,7 +68,7 @@ struct AddArtistView: View {
             }
             .onAppear() {
                 debouncer.start { artistName in
-                    updateMatchingartists(for: artistName)
+                    updateMatching(for: artistName)
                 }
             }
             .navigationTitle("Add artist")
@@ -76,7 +76,7 @@ struct AddArtistView: View {
         
     }
     
-    private func updateMatchingartists(for query: String) {
+    private func updateMatching(for query: String) {
         guard !query.isEmpty else {
             matchingItems = []
             return

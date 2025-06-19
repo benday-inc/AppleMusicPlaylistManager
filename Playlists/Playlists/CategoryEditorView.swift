@@ -14,6 +14,8 @@ struct CategoryEditorView: View {
     
     @State private var isAddArtistSheetPresented = false
     @State private var newArtistName = ""
+    @State private var isAddGenreSheetPresented = false
+    @State private var newGenreName = ""
 
     var body: some View {
         Form {
@@ -37,7 +39,14 @@ struct CategoryEditorView: View {
                     }
                 }
             }
-            Section(header: Text("Genres")) {
+            Section(header: HStack {
+                Text("Genres")
+                Spacer()
+                Button(action: { isAddGenreSheetPresented = true }) {
+                    Image(systemName: "plus.circle")
+                }
+                .accessibilityLabel("Add Genre")
+            }) {
                 if category.genres.isEmpty {
                     Text("No genres in this category.")
                         .foregroundColor(.secondary)
@@ -73,6 +82,36 @@ struct CategoryEditorView: View {
                         Button("Cancel") {
                             isAddArtistSheetPresented = false
                             newArtistName = ""
+                        }
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $isAddGenreSheetPresented) {
+            NavigationStack {
+                VStack(spacing: 16) {
+                    Text("Add Genre")
+                        .font(.headline)
+                    TextField("Genre name", text: $newGenreName)
+                        .textFieldStyle(.roundedBorder)
+                        .padding()
+                    Button("Add") {
+                        let trimmed = newGenreName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty && !category.genres.contains(trimmed) {
+                            category.genres.append(trimmed)
+                        }
+                        newGenreName = ""
+                        isAddGenreSheetPresented = false
+                    }
+                    .disabled(newGenreName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    Spacer()
+                }
+                .padding()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            isAddGenreSheetPresented = false
+                            newGenreName = ""
                         }
                     }
                 }

@@ -10,21 +10,21 @@ import Foundation
 import MediaPlayer
 
 struct AddGenreView: View {
-    @State private var newGenreName = ""
-    @State private var selectedGenre: String?
+    @State private var newItemName = ""
+    @State private var selectedItem: String?
     @State private var searchText = ""
     @Binding var isPresented: Bool
     @ObservedObject var category: CategoryViewModel
-    @State public var matchingGenres: [IdentifiableString] = []
+    @State public var matchingItems: [IdentifiableString] = []
     @StateObject private var debouncer = Debouncer()
     
     var body: some View {
         NavigationStack {
-            List($matchingGenres) { $genre in
+            List($matchingItems) { $item in
                 Button(action: {
-                    selectedGenre = $genre.wrappedValue.value
+                    selectedItem = $item.wrappedValue.value
                 }) {
-                    Text(genre.value)
+                    Text(item.value)
                 }.buttonStyle(.plain)
             }
             .searchable(text: $searchText, prompt: "Search for genres")
@@ -36,32 +36,32 @@ struct AddGenreView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         isPresented = false
-                        newGenreName = ""
+                        newItemName = ""
                     }
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
-                    if (selectedGenre == nil || selectedGenre?.isEmpty == true) {
+                    if (selectedItem == nil || selectedItem?.isEmpty == true) {
                         Text("Select a genre above")
                             .foregroundStyle(.secondary)
                             .padding()
                     } else {
-                        Text("Selected genre: \(selectedGenre!)")
+                        Text("Selected genre: \(selectedItem!)")
                             .padding()
                     }
                     
                     Button("Add") {
-                        if let selectedGenre {
-                            let trimmed = selectedGenre.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if let selectedItem {
+                            let trimmed = selectedItem.trimmingCharacters(in: .whitespacesAndNewlines)
                             if !trimmed.isEmpty && !category.genres.contains(trimmed) {
                                 category.genres.append(trimmed)
                             }
-                            newGenreName = ""
+                            newItemName = ""
                             isPresented = false
                         }
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(
-                        selectedGenre == nil || selectedGenre?.isEmpty == true
+                        selectedItem == nil || selectedItem?.isEmpty == true
                     )
                 }
                 
@@ -71,14 +71,14 @@ struct AddGenreView: View {
                     updateMatchingGenres(for: genreName)
                 }
             }
-            .navigationTitle("Add Genre")
+            .navigationTitle("Add genre")
         }
         
     }
     
     private func updateMatchingGenres(for query: String) {
         guard !query.isEmpty else {
-            matchingGenres = []
+            matchingItems = []
             return
         }
         let mediaQuery = MPMediaQuery.genres()
@@ -90,7 +90,7 @@ struct AddGenreView: View {
         for genre in uniqueGenres {
             returnValue.append(IdentifiableString(value: genre))
         }
-        matchingGenres = returnValue
+        matchingItems = returnValue
     }
 }
 
@@ -101,7 +101,7 @@ struct AddGenreView: View {
     var categoryVM = CategoryViewModel()
     categoryVM.load(category)
     
-    return AddGenreView(isPresented: .constant(true), category: categoryVM, matchingGenres: temp)
+    return AddGenreView(isPresented: .constant(true), category: categoryVM, matchingItems: temp)
 }
 
 

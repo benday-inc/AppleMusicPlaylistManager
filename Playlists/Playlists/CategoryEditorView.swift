@@ -100,7 +100,7 @@ struct CategoryEditorView: View {
                 }
                 Spacer()
                 Button("Save") {
-                    category.saveChanges()
+                    _ = category.saveChanges()
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)

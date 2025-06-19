@@ -75,6 +75,19 @@ public class CategoryListViewModel : ObservableObject {
             }
         }
     }
+    
+    public func toModels() -> [Category] {
+        
+        var returnValues = [Category]()
+        
+        for item in items {
+            let toItem = item.saveChanges()
+            
+            returnValues.append(toItem)
+        }
+        
+        return returnValues
+    }
 }
 
 

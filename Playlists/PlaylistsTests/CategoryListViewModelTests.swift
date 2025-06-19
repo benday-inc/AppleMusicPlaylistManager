@@ -90,6 +90,20 @@ final class CategoryListViewModelTests: XCTestCase {
         
         XCTAssertTrue(sut.hasChanges)
     }
+    
+    func testToModels() throws {
+        let sut = CategoryListViewModel()
+        
+        sut.addNewCategory()
+        sut.addNewCategory()
+        sut.addNewCategory()
+        
+        let categories = sut.toModels()
+        
+        XCTAssertEqual(3, categories.count)
+        
+        XCTAssertFalse(sut.hasChanges)
+    }
 
     func testLoadFromList() throws {
         let sut = CategoryListViewModel()

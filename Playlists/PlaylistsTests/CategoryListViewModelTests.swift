@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import Playlists
 
 final class CategoryListViewModelTests: XCTestCase {
 
@@ -16,20 +17,56 @@ final class CategoryListViewModelTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func getListOfCategories() -> [Playlists.Category] {
+        var categories: [Playlists.Category] = []
+        
+        var category1 = Playlists.Category()
+        category1.name = "Category 1"
+        category1.genres = ["Genre A", "Genre B"]
+        category1.artists = ["Artist X", "Artist Y"]
+        
+        var category2 = Playlists.Category()
+        category2.name = "Category 2"
+        category2.genres = ["Genre C"]
+        category2.artists = ["Artist Z"]
+        
+        categories.append(category1)
+        categories.append(category2)
+        
+        return categories
+    }
+    
+    func testVerifyAfterInit() throws {
+        let sut = CategoryListViewModel()
+        
+        XCTAssertFalse(sut.isLoaded)
+        XCTAssertFalse(sut.isFiltered)
+        XCTAssertTrue(sut.items.isEmpty)
+        XCTAssertTrue(sut.unfilteredItems.isEmpty)
+        XCTAssertNil(sut.selectedItem)
+        XCTAssertEqual("", sut.filterTextValue)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testLoadFromList() throws {
+        let sut = CategoryListViewModel()
+        
+        let categories = getListOfCategories()
+        
+        sut.load(from: categories)
+        
+        XCTAssertTrue(sut.isLoaded)
+        XCTAssertFalse(sut.isFiltered)
+        XCTAssertEqual(2, sut.items.count)
+        XCTAssertEqual(2, sut.unfilteredItems.count)
+        XCTAssertNil(sut.selectedItem)
+        XCTAssertEqual("", sut.filterTextValue)
+        XCTAssertEqual("Category 1", sut.items[0].name)
+        XCTAssertEqual("Category 2", sut.items[1].name)
+        XCTAssertEqual("Category 1", sut.unfilteredItems[0].name)
+        XCTAssertEqual("Category 2", sut.unfilteredItems[1].name)
+        
+        
     }
 
 }

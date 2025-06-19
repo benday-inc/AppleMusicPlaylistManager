@@ -21,7 +21,17 @@ public class CategoryListViewModel : ObservableObject {
         
     }
     
-    
+    public func load(from categories: [Category]) {
+        isLoaded = false
+        items = categories.map { category in
+            let viewModel = CategoryViewModel()
+            viewModel.load(category)
+            return viewModel
+        }
+        unfilteredItems = items
+        isLoaded = true        
+    }
+
 }
 
 

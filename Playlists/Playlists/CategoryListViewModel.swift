@@ -29,9 +29,46 @@ public class CategoryListViewModel : ObservableObject {
             return viewModel
         }
         unfilteredItems = items
-        isLoaded = true        
+        isLoaded = true
     }
 
+    public func addNewCategory() {
+        let newCategory = CategoryViewModel()
+        newCategory.name = getNewCategoryName()
+        unfilteredItems.append(newCategory)
+        selectedItem = newCategory
+        
+        updateFilteredItems()
+    }
+    
+    private func getNewCategoryName() -> String {
+        let baseName = "New Category"
+        var uniquifier = 0
+        var uniqueName = baseName
+        
+        // while contains baseName, increment number
+        
+        while unfilteredItems.contains(where: { $0.name == uniqueName }) {
+            uniquifier += 1
+            uniqueName = "\(baseName) \(uniquifier)"
+        }
+        
+        return uniqueName
+    }
+    
+    public func updateFilteredItems() {
+        if filterTextValue.isEmpty {
+            isFiltered = false
+            items = unfilteredItems
+        }
+        else {
+            isFiltered = true
+            let lowerFilter = filterTextValue.lowercased()
+            items = unfilteredItems.filter { categoryVM in
+                categoryVM.name.lowercased().contains(lowerFilter)
+            }
+        }
+    }
 }
 
 

@@ -47,6 +47,45 @@ final class CategoryListViewModelTests: XCTestCase {
         XCTAssertNil(sut.selectedItem)
         XCTAssertEqual("", sut.filterTextValue)
     }
+    
+    func testAddNewCategory() throws {
+        let sut = CategoryListViewModel()
+        
+        sut.addNewCategory()
+        
+        XCTAssertFalse(sut.isLoaded)
+        XCTAssertFalse(sut.isFiltered)
+        XCTAssertFalse(sut.items.isEmpty)
+        XCTAssertFalse(sut.unfilteredItems.isEmpty)
+        XCTAssertNotNil(sut.selectedItem)
+        XCTAssertEqual("", sut.filterTextValue)
+        
+        let selected = sut.selectedItem!
+        
+        XCTAssertEqual("New Category", selected.name)
+    }
+    
+    func testAddNewCategoryMultipleTimes() throws {
+        let sut = CategoryListViewModel()
+        
+        sut.addNewCategory()
+        
+        XCTAssertNotNil(sut.selectedItem)
+        var selected = sut.selectedItem!
+        XCTAssertEqual("New Category", selected.name)
+        
+        sut.addNewCategory()
+        
+        XCTAssertNotNil(sut.selectedItem)
+        selected = sut.selectedItem!
+        XCTAssertEqual("New Category 1", selected.name)
+        
+        sut.addNewCategory()
+        
+        XCTAssertNotNil(sut.selectedItem)
+        selected = sut.selectedItem!
+        XCTAssertEqual("New Category 2", selected.name)
+    }
 
     func testLoadFromList() throws {
         let sut = CategoryListViewModel()

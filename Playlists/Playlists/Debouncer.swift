@@ -17,7 +17,7 @@ class Debouncer: ObservableObject {
 
     func start(onDebounced: @escaping (String) -> Void) {
         cancellable = input
-            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { value in
                 onDebounced(value)
             }

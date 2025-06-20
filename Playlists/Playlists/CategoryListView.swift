@@ -31,7 +31,16 @@ struct CategoryListView: View {
                             }
                         }
                     )
-                    .buttonStyle(PlainButtonStyle())                    
+                    .buttonStyle(PlainButtonStyle())
+                    .tag(item)
+                    .swipeActions(content: {
+                        Button(role: .destructive) {
+                            viewModel.selectedItem = item
+                            viewModel.removeCategory()
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    })
                 }
                 
                 .navigationDestination(isPresented: $isNavigating) {

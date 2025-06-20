@@ -15,24 +15,25 @@ struct CategoryListView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                List(viewModel.items) { item in
-                    Button(
-                        action: {
-                            viewModel.selectedItem = item
-                            isNavigating = true
-                        },
-                        label: {
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                    .font(.headline)
-                                Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                List(viewModel.items, selection: $viewModel.selectedItem) { item in
+                    HStack()
+                    {
+                        Image(systemName: "music.note")
+                        VStack(alignment: .leading) {
+                            Text(item.name)
+                                .font(.headline)
+                            
+                            Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
-                    )
-                    .buttonStyle(PlainButtonStyle())
-                    .tag(item)
+                        Spacer()
+                    }
+                    .onTapGesture {
+                        print("ontapgesture")
+                        viewModel.selectedItem = item
+                        isNavigating = true
+                    }
                     .swipeActions(content: {
                         Button(role: .destructive) {
                             viewModel.selectedItem = item
@@ -41,8 +42,8 @@ struct CategoryListView: View {
                             Label("Delete", systemImage: "trash")
                         }
                     })
+                    
                 }
-                
                 .navigationDestination(isPresented: $isNavigating) {
                     if let selected = viewModel.selectedItem {
                         CategoryEditorView(category: selected, viewModel: viewModel)
@@ -60,9 +61,6 @@ struct CategoryListView: View {
                 Button("Add") { _ = viewModel.addNewCategory() }
                     .disabled(!viewModel.isLoaded)
             }
-            
-            
-            
         }
     }
     

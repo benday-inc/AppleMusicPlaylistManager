@@ -21,7 +21,7 @@ class PlaylistDataStore: ObservableObject {
     private var isLoadedCompleteGenre: Bool = false
     private var isLoadedCompleteArtist: Bool = false
     private var isLoadedCompleteAlbum: Bool = false
-    @Published var isLoadedCategories: Bool = false
+    private var isLoadedCategories: Bool = false
     
     init() {
         load()
@@ -113,6 +113,16 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
+    fileprivate func populateIsLoaded() {
+        if (self.isLoadedCategories && self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
+            self.isLoaded = true
+            print("all loaded")
+        }
+        else {
+            print("not all loaded yet")
+        }
+    }
+    
     func load() {
         if (isTestMode == true) {
             isLoaded = true
@@ -141,13 +151,7 @@ class PlaylistDataStore: ObservableObject {
                 self.excludedGenres = temp
                 self.isLoadedCompleteGenre = true
                 
-                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
-                    self.isLoaded = true
-                    print("all loaded")
-                }
-                else {
-                    print("genres loaded but not all complete")
-                }
+                self.populateIsLoaded()
             }
         }
 
@@ -160,13 +164,7 @@ class PlaylistDataStore: ObservableObject {
                 self.excludedArtists = temp
                 self.isLoadedCompleteArtist = true
                 
-                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
-                    self.isLoaded = true
-                    print("all loaded")
-                }
-                else {
-                    print("artists loaded but not all complete")
-                }
+                self.populateIsLoaded()
             }
         }
 
@@ -179,13 +177,7 @@ class PlaylistDataStore: ObservableObject {
                 self.excludedAlbums = temp
                 self.isLoadedCompleteAlbum = true
                 
-                if (self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
-                    self.isLoaded = true
-                    print("all loaded")
-                }
-                else {
-                    print("albums loaded but not all complete")
-                }
+                self.populateIsLoaded()
             }
         }
     }

@@ -138,6 +138,8 @@ class PlaylistDataStore: ObservableObject {
                 print("Loaded categories: \(temp.count)")
                 self.categories = temp
                 self.isLoadedCategories = true
+                
+                self.populateIsLoaded()
             }
         }
 
@@ -234,6 +236,9 @@ class PlaylistDataStore: ObservableObject {
         DispatchQueue.global(qos: .background).async {
             do {
                 let fileURL = try self.fileURL(filename: filename)
+                
+                print("Loading \(filename) from \(fileURL.absoluteString)...")
+                
                 guard let file = try? FileHandle(forReadingFrom: fileURL) else {
                     DispatchQueue.main.async {
                         // For arrays, return empty array; for other types this would need adjustment
@@ -245,11 +250,14 @@ class PlaylistDataStore: ObservableObject {
                     }
                     return
                 }
-                let returnValues = try JSONDecoder().decode(T.self, from: file.availableData)
+                
+                let data = file.availableData
+                                
+                let returnValues = try JSONDecoder().decode([T].self, from: data)
                 DispatchQueue.main.async {
-                    completion(.success(returnValues as! [T]))
+                    completion(.success(returnValues))
                 }
-            } catch {
+            } catch (let error) {
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }

@@ -23,6 +23,9 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
             }
         }
     }
+
+    let didSave = PassthroughSubject<Category, Never>()
+    var anyCancellable = Set<AnyCancellable>()
     
     public static func == (lhs: CategoryViewModel, rhs: CategoryViewModel) -> Bool {
         return lhs.id == rhs.id
@@ -83,7 +86,7 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
         isLoaded = true
     }
     
-    public func saveChanges() -> Category {
+    public func toModel() -> Category {
         var updatedModel = Category()
         
         updatedModel.id = model?.id ?? UUID()
@@ -92,9 +95,20 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
         updatedModel.artists = artists
         
         model = updatedModel
-        hasChanges = false
         
         return updatedModel
+    }
+    
+    public func saveChanges() -> Category? {
+        print("Saving changes for category: \(name)")
+
+        let returnValue = toModel()
+        
+        hasChanges = false
+
+        didSave.send(returnValue)
+
+        return returnValue
     }
 }
 

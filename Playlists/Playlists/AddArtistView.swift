@@ -98,7 +98,7 @@ struct AddArtistView: View {
     @Previewable @State var temp = [IdentifiableString(value: "Rock"), IdentifiableString(value: "Pop"), IdentifiableString(value: "Jazz")]
     var category = Category()
     category.name = "Test"
-    var categoryVM = CategoryViewModel()
+    let categoryVM = CategoryViewModel()
     categoryVM.load(category)
     
     return AddArtistView(isPresented: .constant(true), category: categoryVM, matchingItems: temp)
@@ -108,7 +108,7 @@ struct AddArtistView: View {
 #Preview("empty") {
     var category = Category()
     category.name = "Test"
-    var categoryVM = CategoryViewModel()
+    let categoryVM = CategoryViewModel()
     categoryVM.load(category)
     return AddArtistView(isPresented: .constant(true), category: categoryVM)
 }

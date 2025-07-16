@@ -102,7 +102,7 @@ struct AddGenreView: View {
     @Previewable @State var temp = [IdentifiableString(value: "Rock"), IdentifiableString(value: "Pop"), IdentifiableString(value: "Jazz")]
     var category = Category()
     category.name = "Test"
-    var categoryVM = CategoryViewModel()
+    let categoryVM = CategoryViewModel()
     categoryVM.load(category)
     
     return AddGenreView(isPresented: .constant(true), category: categoryVM, matchingItems: temp)
@@ -112,7 +112,7 @@ struct AddGenreView: View {
 #Preview("empty") {
     var category = Category()
     category.name = "Test"
-    var categoryVM = CategoryViewModel()
+    let categoryVM = CategoryViewModel()
     categoryVM.load(category)
     return AddGenreView(isPresented: .constant(true), category: categoryVM)
 }

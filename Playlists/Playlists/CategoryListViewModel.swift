@@ -13,10 +13,13 @@ public class CategoryListViewModel : ObservableObject {
     @Published var items: [CategoryViewModel] = []
     @Published var unfilteredItems: [CategoryViewModel] = []
     @Published var selectedItem: CategoryViewModel?
-    var anyCancellable: AnyCancellable? = nil
+    // var anyCancellable: AnyCancellable? = nil
     @Published var isFiltered: Bool = false
     @Published var filterTextValue: String = ""
     private var model: [Category]?
+
+    let didSave = PassthroughSubject<[Category], Never>()
+    var anyCancellable = Set<AnyCancellable>()
     
     public init() {
         
@@ -32,10 +35,21 @@ public class CategoryListViewModel : ObservableObject {
         items = categories.map { category in
             let viewModel = CategoryViewModel()
             viewModel.load(category)
+            viewModel.didSave.sink { savedCategory in
+                self.handleCategorySaved(savedCategory)
+            }.store(in: &viewModel.anyCancellable)
             return viewModel
         }
         unfilteredItems = items
         isLoaded = true
+    }
+
+    private func handleCategorySaved(_ savedCategory: Category) {
+        print("CategoryListViewModel: Category saved: \(savedCategory.name)")
+        
+        let models = toModels()
+
+        didSave.send(models)
     }
     
     public func addNewCategory() -> CategoryViewModel {
@@ -43,6 +57,10 @@ public class CategoryListViewModel : ObservableObject {
         let newCategory = CategoryViewModel()
         newCategory.name = getNewCategoryName()
         unfilteredItems.append(newCategory)
+        newCategory.didSave.sink { savedCategory in
+            self.handleCategorySaved(savedCategory)
+        }.store(in: &newCategory.anyCancellable)
+        
         selectedItem = newCategory
         
         updateFilteredItems()
@@ -97,7 +115,7 @@ public class CategoryListViewModel : ObservableObject {
         var returnValues = [Category]()
         
         for item in items {
-            let toItem = item.saveChanges()
+            let toItem = item.toModel()
             
             returnValues.append(toItem)
         }

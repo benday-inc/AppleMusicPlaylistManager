@@ -10,14 +10,26 @@ import MusicKit
 import MediaPlayer
 
 struct SongsView: View {
-    @EnvironmentObject var viewModel: SongsViewModel
-    
     @State var showPlaylistExistsAlert = false
     
     @Environment(\.editMode) var editMode
     
     @State var isFirstShowOfForm = true
     @State var isPlaylistSheetVisible = false
+    
+    @EnvironmentObject private var storage: PlaylistDataStore
+    @StateObject private var viewModel: SongsViewModel
+    
+    init(_ storage: PlaylistDataStore) {
+        print("SongsView init")
+        _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
+    }
+    
+    init(testItems: [MediaItemWrapper]) {
+        print("SongsView init using test data")
+        let dummyStore = PlaylistDataStore()
+        _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))       
+    }
     
     var body: some View {
         NavigationView {
@@ -112,7 +124,6 @@ struct SongsView: View {
                     }
                     .onMove(perform: viewModel.move)
                 }
-                .id(viewModel.items.map { $0.id.uuidString }.joined())
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
                 PlaylistNameSheetView() { doSave, playlistName in
@@ -136,7 +147,7 @@ struct SongsView: View {
                             Text("Save")
                         }
 #if(ios)
-.padding(.bottom)
+                        .padding(.bottom)
 #endif
                     }
                     
@@ -153,7 +164,7 @@ struct SongsView: View {
                             Image(systemName: "play.rectangle")
                         }
 #if(ios)
-.padding(.bottom)
+                        .padding(.bottom)
 #endif
                     }
                 }
@@ -236,7 +247,7 @@ struct SongsView: View {
             }
             
             let mediaItems = viewModel.items.compactMap { $0.mediaItem }
-                  
+            
             playlist.add(mediaItems) { addError in
                 if let addError = addError {
                     print("Failed to add items: \(addError.localizedDescription)")
@@ -258,12 +269,12 @@ struct SongsView: View {
         MediaItemWrapper(trackName: "track name 2", artistName: "artist name 2", albumName: "album name 2", genreName: "genre 1"),
         MediaItemWrapper(trackName: "track name 3", artistName: "artist name 3", albumName: "album name 3", genreName: "genre 1")]
     
-    let playlistDataStore = PlaylistDataStore()
+    let playlistDataStore = PlaylistDataStore(
+        testDataExcludedGenres: [], testDataExcludedArtists: [], testDataExcludedAlbums: [])
     
     // let viewModel = SongsViewModel(testItems: items, storage: playlistDataStore)
     
-    SongsView()
-        .environmentObject(PlaylistDataStore())
+    SongsView(testItems: items)
+        .environmentObject(playlistDataStore)
 }
-
 

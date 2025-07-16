@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct PlaylistsApp: App {
+    // @StateObject var storage = PlaylistDataStore()
+    
     var body: some Scene {
         WindowGroup {
             if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {

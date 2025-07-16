@@ -35,6 +35,7 @@ class PlaylistDataStore: ObservableObject {
         excludedAlbums = testDataExcludedAlbums
         excludedArtists = testDataExcludedArtists
         categories = []
+        load()        
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
@@ -113,7 +114,7 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    fileprivate func populateIsLoaded() {
+    private func populateIsLoaded() {
         if (self.isLoadedCategories && self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
             self.isLoaded = true
             print("all loaded")

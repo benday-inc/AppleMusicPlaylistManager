@@ -31,9 +31,7 @@ struct ContentView: View {
                             Label("Categories", systemImage: "list.bullet")
                         }.tag(0)
                     
-                    SongsView()
-                        .environmentObject(storage)
-                        .environmentObject(SongsViewModel(storage: storage))
+                    SongsView(storage)
                         .tabItem {
                             Label("Build Playlist", systemImage: "square.and.pencil")
                         }.tag(1)

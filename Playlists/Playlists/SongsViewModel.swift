@@ -9,7 +9,7 @@ import Foundation
 import MediaPlayer
 
 class SongsViewModel : ObservableObject {
-    @Published public var guid: String = UUID().uuidString
+    @Published public var guid: String
     @Published public var items: [MediaItemWrapper] = []
     @Published public var allItems: [MediaItemWrapper]? = nil
     
@@ -26,12 +26,15 @@ class SongsViewModel : ObservableObject {
     
     init (storage: PlaylistDataStore) {
         self.storage = storage
+        self.guid = UUID().uuidString
     }
     
     init(testItems: [MediaItemWrapper], storage: PlaylistDataStore) {
         isPreview = true
         
         self.storage = storage
+        
+        self.guid = UUID().uuidString
         
         items.append(contentsOf: testItems)        
     }

@@ -11,7 +11,6 @@ import MediaPlayer
 
 struct ContentView: View {
     @StateObject private var storage = PlaylistDataStore()
-    @StateObject private var categoryListVM = CategoryListViewModel()
     @State var musicAuthorizationStatus: MusicAuthorization.Status
     
     var body: some View {
@@ -20,24 +19,17 @@ struct ContentView: View {
         if (musicAuthorizationStatus == .authorized)         {
             if (storage.isLoaded == false) {
                 Text("Loading...")
+                    .onAppear() {
+                        storage.load()
+                    }
             }
             else {
                 TabView {
                     CategoryListView()
-                        .environmentObject(categoryListVM)
+                        .environmentObject(storage)
                         .tabItem {
                             Label("Categories", systemImage: "list.bullet")
                         }.tag(0)
-                        .onAppear() {
-                            if (categoryListVM.isLoaded == false) {
-                                categoryListVM.load(from: [])
-                                
-                                // subscribe to save events
-                                categoryListVM.didSave.sink { categories in
-                                    self.saveCategories(categories: categories)
-                                }.store(in: &categoryListVM.anyCancellable)
-                            }
-                        }
                     
                     SongsView()
                         .environmentObject(storage)
@@ -64,12 +56,7 @@ struct ContentView: View {
         }
     }
 
-    func saveCategories(categories: [Category]) {
-        print("ContentView: Saving categories...")
-        self.storage.categories = categories
-        self.storage.save()
-        print("ContentView: Categories saved.")
-    }
+    
     
     func requestMusicAuthorization() async -> MusicAuthorization.Status {
         let currentStatus = MusicAuthorization.currentStatus

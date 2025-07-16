@@ -8,63 +8,83 @@
 import SwiftUI
 
 struct CategoryListView: View {
-    @EnvironmentObject var viewModel: CategoryListViewModel
+    @StateObject var viewModel: CategoryListViewModel = CategoryListViewModel()
+    @EnvironmentObject var storage: PlaylistDataStore
     
     @State private var isNavigating = false
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                List(viewModel.items, selection: $viewModel.selectedItem) { item in
-                    HStack()
-                    {
-                        Image(systemName: "music.note")
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.headline)
-                            
-                            Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+        if (storage.isLoaded == false) {
+            Text("Loading categories...")
+        }
+        else {
+            NavigationStack {
+                VStack {
+                    List(viewModel.items, selection: $viewModel.selectedItem) { item in
+                        HStack()
+                        {
+                            Image(systemName: "music.note")
+                            VStack(alignment: .leading) {
+                                Text(item.name)
+                                    .font(.headline)
+                                
+                                Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
                         }
-                        Spacer()
-                    }
-                    .onTapGesture {
-                        print("ontapgesture")
-                        viewModel.selectedItem = item
-                        isNavigating = true
-                    }
-                    .swipeActions(content: {
-                        Button(role: .destructive) {
+                        .onTapGesture {
+                            print("ontapgesture")
                             viewModel.selectedItem = item
-                            viewModel.removeCategory()
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+                            isNavigating = true
                         }
-                    })
-                    
-                }
-                .navigationDestination(isPresented: $isNavigating) {
-                    if let selected = viewModel.selectedItem {
-                        CategoryEditorView(category: selected, viewModel: viewModel)
-                    } else {
-                        Text("Nothing selected")
+                        .swipeActions(content: {
+                            Button(role: .destructive) {
+                                viewModel.selectedItem = item
+                                viewModel.removeCategory()
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        })
+                        
+                    }
+                    .navigationDestination(isPresented: $isNavigating) {
+                        if let selected = viewModel.selectedItem {
+                            CategoryEditorView(category: selected, viewModel: viewModel)
+                        } else {
+                            Text("Nothing selected")
+                        }
                     }
                 }
-            }
-            .searchable(text: $viewModel.filterTextValue, prompt: "Filter categories")
-            .onChange(of: viewModel.filterTextValue) {
-                viewModel.updateFilteredItems()
-            }
-            .navigationTitle("Category List")
-            .toolbar {
-                Button("Add") { _ = viewModel.addNewCategory() }
-                    .disabled(!viewModel.isLoaded)
+                .searchable(text: $viewModel.filterTextValue, prompt: "Filter categories")
+                .onChange(of: viewModel.filterTextValue) {
+                    viewModel.updateFilteredItems()
+                }
+                .navigationTitle("Category List")
+                .toolbar {
+                    Button("Add") { _ = viewModel.addNewCategory() }
+                        .disabled(!viewModel.isLoaded)
+                }
+                .onAppear() {
+                    print("ContentView: Loading categories...")
+                    viewModel.load(from: storage.categories)
+                    
+                    // subscribe to save events
+                    viewModel.didSave.sink { categories in
+                        self.saveCategories(categories: categories)
+                    }.store(in: &viewModel.anyCancellable)
+                }
             }
         }
     }
     
-    
+    func saveCategories(categories: [Category]) {
+        print("ContentView: Saving categories...")
+        self.storage.categories = categories
+        self.storage.save()
+        print("ContentView: Categories saved.")
+    }
     
 }
 

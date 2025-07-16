@@ -22,11 +22,21 @@ class SongsViewModel : ObservableObject {
     
     private var storage: PlaylistDataStore
     
+    private var forCategory: Category?
+    
     private var isPreview = false
     
     init (storage: PlaylistDataStore) {
         self.storage = storage
         self.guid = UUID().uuidString
+    }
+    
+    init (category: Category, storage: PlaylistDataStore) {
+        forCategory = category
+        self.storage = storage
+        self.guid = UUID().uuidString
+        handleGetRandomSongs()
+        play()
     }
     
     init(testItems: [MediaItemWrapper], storage: PlaylistDataStore) {
@@ -112,18 +122,13 @@ class SongsViewModel : ObservableObject {
     }
     
     public func changePlaylistMode() {
-        let modes: [String] = [
-            AppConstants.PLAYLIST_MODE_ALL,
-            AppConstants.PLAYLIST_MODE_JAZZ,
-            AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN,
-            AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ,
-            AppConstants.PLAYLIST_MODE_CLASSICAL,
-            AppConstants.PLAYLIST_MODE_YELLOWJACKETS,
-            AppConstants.PLAYLIST_MODE_CHICK_COREA,
-            AppConstants.PLAYLIST_MODE_RIPPINGTONS,
-            AppConstants.PLAYLIST_MODE_SPYRO_GYRA,
-            AppConstants.PLAYLIST_MODE_HENDRIE
+        var modes: [String] = [
+            AppConstants.PLAYLIST_MODE_ALL
         ]
+        
+        if (forCategory != nil) {
+            modes.append(AppConstants.PLAYLIST_MODE_CATEGORY)
+        }
         
         let selectedIndex = modes.firstIndex(of: playlistMode)
         
@@ -162,99 +167,56 @@ class SongsViewModel : ObservableObject {
         allItems = returnValues
     }
     
-    private func isGenreCategory(mode: String) -> Bool {
-        if (mode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN) {
-            return true
-        }
-        else {
-            return false
-        }
-    }
-    
-    private func isArtistCategory(mode: String) -> Bool {
-        if (mode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ) {
-            return true
-        }
-        else {
-            return false
-        }
-    }
-    
-    private func handleGetAllSongsForGenreCategory() {
-        if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_LATIN) {
-            populateResultsForGenres(genres: ["Latin", "Latin Jazz", "Salsa", "Timba", "Música tropical"])
-        }
-        else {
+    private func handleGetAllSongsForCategory() {
+        // guard forCategory
+        guard let forCategory = forCategory else {
             populateResultsForWhenSomethingWentWrong()
+            return
         }
+        var returnValues = Array<MediaItemWrapper>()
+        
+        if (forCategory.genres.isEmpty == false) {
+            for genre in forCategory.genres {
+                let query = getMediaQueryForGenre(genre: genre)
+                
+                if (query.items != nil) {
+                    for item in query.items! {
+                        returnValues.append(MediaItemWrapper(item: item))
+                    }
+                }
+            }
+        }
+        
+        if (forCategory.artists.isEmpty == false) {
+            for artist in forCategory.artists {
+                let query = getMediaQueryForArtist(artist: artist)
+                
+                if (query.items != nil) {
+                    for item in query.items! {
+                        returnValues.append(MediaItemWrapper(item: item))
+                    }
+                }
+            }
+        }
+        
+        items = returnValues
+        allItems = returnValues
     }
-    
-    private func handleGetAllSongsForArtistCategory() {
-        if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_CATEGORY_SMOOTH_JAZZ) {
-            let artists = [
-                "Everette Harp",
-                "Gerald Albright",
-                "Nelson Rangell",
-                "Torcuato Mariano",
-                "Eric Marienthal",
-                "Fourplay",
-                "Jeff Kashiwa",
-                "Spyro Gyra",
-                "Rippingtons",
-                "Russ Freeman",
-                "Tom Schuman",
-                "Jeff Lorber",
-                "Brandon Fields",
-                "Dave Koz",
-                "Incognito",
-                "Lee Ritenour",
-                "Dave Samuels",
-                "David Samuels",
-                "Grover Washington",
-                "Chuck Loeb",
-                "Larry Carlton",
-                "Najee",
-                "Brian Culbertson"]
-            
-            populateResultsForArtists(artists: artists)
-        }
-        else {
-            populateResultsForWhenSomethingWentWrong()
-        }
-    }
-    
+        
     private func populateResultsForWhenSomethingWentWrong() {
         populateResultsForMediaQuery(query: MPMediaQuery.songs())
     }
     
     private func handleGetAllSongs() {
         
-        if (isGenreCategory(mode: playlistMode)) {
-            handleGetAllSongsForGenreCategory()
-        }
-        else if (isArtistCategory(mode: playlistMode)) {
-            handleGetAllSongsForArtistCategory()
+        if (forCategory != nil) {
+            handleGetAllSongsForCategory()
         }
         else {
             var query: MPMediaQuery
             
             if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
                 query = MPMediaQuery.songs()
-            }
-            else if (playlistMode == AppConstants.PLAYLIST_MODE_HENDRIE) {
-                query = getMediaQueryForArtist(artist: "Phil Hendrie")
-            }
-            else if (playlistMode == AppConstants.PLAYLIST_MODE_SPYRO_GYRA) {
-                query = getMediaQueryForArtist(artist: "Spyro Gyra")
-            }
-            else if (playlistMode == AppConstants.PLAYLIST_MODE_RIPPINGTONS) {
-                query = getMediaQueryForArtist(artist: "Rippingtons")
-            }
-            else if (playlistMode == AppConstants.PLAYLIST_MODE_YELLOWJACKETS) {
-                query = getMediaQueryForArtist(artist: "Yellowjackets")
-            }
-            else if (playlistMode == AppConstants.PLAYLIST_MODE_CHICK_COREA) {
-                query = getMediaQueryForArtist(artist: "Chick Corea")
             }
             else if (playlistMode == AppConstants.PLAYLIST_MODE_RANDOMIZE_ARTIST) {
                 query = getMediaQueryForArtist(artist: currentArtist)
@@ -485,7 +447,7 @@ class SongsViewModel : ObservableObject {
 
         return sortedTracks ?? []
     }
-    
+
     public func randomizeGenre(item: MediaItemWrapper) {
         let genre = item.genreName
         

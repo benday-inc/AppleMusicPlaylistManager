@@ -10,7 +10,7 @@ import SwiftUI
 struct CategoryListView: View {
     @StateObject var viewModel: CategoryListViewModel = CategoryListViewModel()
     @EnvironmentObject var storage: PlaylistDataStore
-    
+    @State private var categoryToPlay: Category? = nil
     @State private var isNavigating = false
     
     var body: some View {
@@ -54,7 +54,11 @@ struct CategoryListView: View {
                                 }
                                 Spacer()
                                 Button("Play") {
+                                    let category = item.toModel()
                                     
+                                    categoryToPlay = category
+                                    
+                                    isNavigating = true
                                 }
                                 .buttonStyle(.borderedProminent)
                             }
@@ -74,10 +78,15 @@ struct CategoryListView: View {
                             
                         }
                         .navigationDestination(isPresented: $isNavigating) {
-                            if let selected = viewModel.selectedItem {
-                                CategoryEditorView(category: selected, viewModel: viewModel)
-                            } else {
-                                Text("Nothing selected")
+                            if (categoryToPlay != nil) {
+                                SongsView(category: categoryToPlay!, storage: storage)
+                            }
+                            else {
+                                if let selected = viewModel.selectedItem {
+                                    CategoryEditorView(category: selected, viewModel: viewModel)
+                                } else {
+                                    Text("Nothing selected")
+                                }
                             }
                         }
                     }
@@ -95,6 +104,7 @@ struct CategoryListView: View {
                     .disabled(!viewModel.isLoaded)
                 }
                 .onAppear() {
+                    categoryToPlay = nil
                     print("ContentView: Loading categories...")
                     viewModel.load(from: storage.categories)
                     

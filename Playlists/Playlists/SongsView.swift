@@ -20,6 +20,8 @@ struct SongsView: View {
     @EnvironmentObject private var storage: PlaylistDataStore
     @StateObject private var viewModel: SongsViewModel
     
+    @State var autoPlay = false
+    
     init(_ storage: PlaylistDataStore) {
         print("SongsView init")
         _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
@@ -29,6 +31,13 @@ struct SongsView: View {
         print("SongsView init using test data")
         let dummyStore = PlaylistDataStore()
         _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))
+    }
+    
+    init(category: Category, storage: PlaylistDataStore) {
+        print("SongsView init with category")
+        autoPlay = true
+        _viewModel = StateObject(wrappedValue: SongsViewModel(category: category, storage: storage))
+        
     }
     
     var body: some View {
@@ -134,7 +143,6 @@ struct SongsView: View {
                     isPlaylistSheetVisible = false
                 }
             })
-            
             .navigationTitle("Playlist Builder")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .bottomBar) {
@@ -211,7 +219,10 @@ struct SongsView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear() {
-            if (isFirstShowOfForm == true) {
+            if (autoPlay == true) {
+                viewModel.play()
+            }
+            else if (isFirstShowOfForm == true) {
                 isFirstShowOfForm = false;
                 viewModel.handleGetRandomSongs();
             }
@@ -275,4 +286,3 @@ struct SongsView: View {
     SongsView(testItems: items)
         .environmentObject(playlistDataStore)
 }
-

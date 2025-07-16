@@ -10,12 +10,14 @@ import SwiftUI
 @main
 struct PlaylistsApp: App {
     // @StateObject var storage = PlaylistDataStore()
+    @StateObject private var storage = PlaylistDataStore()
     
     var body: some Scene {
         WindowGroup {
             if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
                 ContentView(musicAuthorizationStatus: .notDetermined)
                     .navigationTitle("Random Playlist Generator")
+                    .environmentObject(storage)
             }
         }
     }

@@ -10,7 +10,7 @@ import MusicKit
 import MediaPlayer
 
 struct ContentView: View {
-    @StateObject private var storage = PlaylistDataStore()
+    @EnvironmentObject private var storage: PlaylistDataStore
     @State var musicAuthorizationStatus: MusicAuthorization.Status
     
     var body: some View {
@@ -83,7 +83,15 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview("categories") {
+    let categories = CategoryUtilities.getPopulatedCategories(numberOfItems: 5)
+    let playlistDataStore = PlaylistDataStore(
+        testCategories: categories)
+    ContentView(musicAuthorizationStatus: .authorized)
+        .environmentObject(playlistDataStore)
+}
+
+#Preview("no categories") {
     ContentView(musicAuthorizationStatus: .authorized)
 }
 

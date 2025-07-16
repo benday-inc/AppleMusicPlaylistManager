@@ -6,10 +6,6 @@
 	objectVersion = 90;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		04919F162E0444BD001872BF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04919F152E0444BD001872BF /* Category.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		04E5B4DC2DEF377A0058CA43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -28,7 +24,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04919F152E0444BD001872BF /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		04E5B4CE2DEF37790058CA43 /* Playlists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Playlists.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E5B4DB2DEF377A0058CA43 /* PlaylistsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlaylistsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E5B4E52DEF377A0058CA43 /* PlaylistsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlaylistsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +86,6 @@
 				04E5B4DE2DEF377A0058CA43 /* PlaylistsTests */,
 				04E5B4E82DEF377A0058CA43 /* PlaylistsUITests */,
 				04E5B4CF2DEF37790058CA43 /* Products */,
-				04919F152E0444BD001872BF /* Category.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -234,7 +228,6 @@
 		04E5B4CA2DEF37790058CA43 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
-				04919F162E0444BD001872BF /* Category.swift in Sources */,
 			);
 		};
 		04E5B4D72DEF377A0058CA43 /* Sources */ = {

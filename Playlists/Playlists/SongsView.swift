@@ -28,7 +28,7 @@ struct SongsView: View {
     init(testItems: [MediaItemWrapper]) {
         print("SongsView init using test data")
         let dummyStore = PlaylistDataStore()
-        _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))       
+        _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))
     }
     
     var body: some View {
@@ -152,9 +152,7 @@ struct SongsView: View {
                     }
                     
                     Spacer()
-                    Text("Track Count: \(viewModel.items.count)")
-                    Spacer()
-                    Text("Guid: \(viewModel.guid)")
+                    Text("Track Count: \(viewModel.items.count)")                    
                     Spacer()
                     Button() {
                         viewModel.play()

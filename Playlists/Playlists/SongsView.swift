@@ -74,6 +74,30 @@ struct SongsView: View {
                                         viewModel.playAlbum(item: item)
                                     }
                                 }
+                                Divider()
+                                Button("Exclude Genre") {
+                                    print("Item count: \(viewModel.items.count) before withAnimation")
+                                    withAnimation {
+                                        viewModel.addGenreExclusion(item: item)
+                                        print("Item count: \(viewModel.items.count) inside withAnimation")
+                                    }
+                                    print("Item count: \(viewModel.items.count) after withAnimation")
+                                }
+                                Button("Exclude Artist") {
+                                    withAnimation {
+                                        viewModel.addArtistExclusion(item: item)
+                                    }
+                                }
+                                Button("Exclude Album") {
+                                    withAnimation {
+                                        viewModel.addAlbumExclusion(item: item)
+                                    }
+                                }
+                                Button("Remove Track", systemImage: "trash", role: .destructive) {
+                                    withAnimation {
+                                        viewModel.removeTrack(item: item)
+                                    }
+                                }
                             }
                             .swipeActions(edge: .trailing) {
                                 Button("genre") {
@@ -87,7 +111,8 @@ struct SongsView: View {
                         
                     }
                     .onMove(perform: viewModel.move)
-                }                
+                }
+                .id(viewModel.items.map { $0.id.uuidString }.joined())
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
                 PlaylistNameSheetView() { doSave, playlistName in
@@ -115,6 +140,10 @@ struct SongsView: View {
 #endif
                     }
                     
+                    Spacer()
+                    Text("Track Count: \(viewModel.items.count)")
+                    Spacer()
+                    Text("Guid: \(viewModel.guid)")
                     Spacer()
                     Button() {
                         viewModel.play()
@@ -231,11 +260,10 @@ struct SongsView: View {
     
     let playlistDataStore = PlaylistDataStore()
     
-    let viewModel = SongsViewModel(testItems: items, storage: playlistDataStore)
+    // let viewModel = SongsViewModel(testItems: items, storage: playlistDataStore)
     
     SongsView()
         .environmentObject(PlaylistDataStore())
-        .environmentObject(viewModel)
 }
 
 

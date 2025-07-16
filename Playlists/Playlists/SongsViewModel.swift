@@ -9,6 +9,7 @@ import Foundation
 import MediaPlayer
 
 class SongsViewModel : ObservableObject {
+    @Published public var guid: String = UUID().uuidString
     @Published public var items: [MediaItemWrapper] = []
     @Published public var allItems: [MediaItemWrapper]? = nil
     
@@ -35,18 +36,28 @@ class SongsViewModel : ObservableObject {
         items.append(contentsOf: testItems)        
     }
     
-    public func removeExcluded(items: Array<MediaItemWrapper>) {
-        var removeThese = Array<MediaItemWrapper>()
+    private func removeExcluded() {
+        removeExcluded(items: items)        
+    }
+    
+    private func removeExcluded(items: [MediaItemWrapper]) {
+        var removeThese = [MediaItemWrapper]()
         
         for item in items {
             if (storage.isExcluded(item: item, playlistMode: playlistMode) == true) {
+                print("Removing excluded item: \(item.artistName) - \(item.trackName)")
                 removeThese.append(item)
             }
         }
         
+        print("Found \(removeThese.count) excluded items.")
+        print("Items has \(items.count) before removing...")
+        
         for item in removeThese {
             removeItem(item: item)
         }
+        
+        print("Items has \(items.count) after removing.")
     }
     
     public func removeItem(item: MediaItemWrapper) {
@@ -55,25 +66,31 @@ class SongsViewModel : ObservableObject {
         if (removeAtIndex != nil) {
             items.remove(at: removeAtIndex!)
         }
+        
+        print("removeItem(): Items has \(items.count) after removing.")
     }
     
     public func addAlbumExclusion(item: MediaItemWrapper) {
         storage.addAlbumExclusion(item: item)
-        removeExcluded(items: items)
+        removeExcluded()
+        print("SongsViewModel: item count is now \(items.count)")
     }
     
     public func addGenreExclusion(item: MediaItemWrapper) {
         storage.addGenreExclusion(item: item)
-        removeExcluded(items: items)
+        removeExcluded()
+        print("SongsViewModel: item count is now \(items.count)")
     }
     
     public func addArtistExclusion(item: MediaItemWrapper) {
         storage.addArtistExclusion(item: item)
-        removeExcluded(items: items)
+        removeExcluded()
+        print("SongsViewModel: item count is now \(items.count)")
     }
     
     public func removeTrack(item: MediaItemWrapper) {
         removeItem(item: item)
+        print("SongsViewModel: item count is now \(items.count)")
     }
     
     public func move(from source: IndexSet, to destination: Int) {

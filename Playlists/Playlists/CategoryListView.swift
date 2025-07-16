@@ -20,40 +20,61 @@ struct CategoryListView: View {
         else {
             NavigationStack {
                 VStack {
-                    List(viewModel.items, selection: $viewModel.selectedItem) { item in
-                        HStack()
-                        {
-                            Image(systemName: "music.note")
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                    .font(.headline)
+                    if (viewModel.items.count == 0) {
+                        VStack {
+                            Text("No categories found.")
+                                .font(.headline)
+                            Text("Click the add button to create a new category.")
+                            
+                            Button("Add") {
+                                _ = viewModel.addNewCategory()
+                                isNavigating = true
+                            }
+                                .disabled(!viewModel.isLoaded)
+                                .buttonStyle(.borderedProminent)
+                                .font(.title3)
+                                .padding()
+                                .frame(minWidth: 150, minHeight: 44)
+
                                 
-                                Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
                         }
-                        .onTapGesture {
-                            print("ontapgesture")
-                            viewModel.selectedItem = item
-                            isNavigating = true
-                        }
-                        .swipeActions(content: {
-                            Button(role: .destructive) {
-                                viewModel.selectedItem = item
-                                viewModel.removeCategory()
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        })
-                        
                     }
-                    .navigationDestination(isPresented: $isNavigating) {
-                        if let selected = viewModel.selectedItem {
-                            CategoryEditorView(category: selected, viewModel: viewModel)
-                        } else {
-                            Text("Nothing selected")
+                    else {
+                        List(viewModel.items, selection: $viewModel.selectedItem) { item in
+                            HStack()
+                            {
+                                Image(systemName: "music.note")
+                                VStack(alignment: .leading) {
+                                    Text(item.name)
+                                        .font(.headline)
+                                    
+                                    Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .onTapGesture {
+                                print("ontapgesture")
+                                viewModel.selectedItem = item
+                                isNavigating = true
+                            }
+                            .swipeActions(content: {
+                                Button(role: .destructive) {
+                                    viewModel.selectedItem = item
+                                    viewModel.removeCategory()
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            })
+                            
+                        }
+                        .navigationDestination(isPresented: $isNavigating) {
+                            if let selected = viewModel.selectedItem {
+                                CategoryEditorView(category: selected, viewModel: viewModel)
+                            } else {
+                                Text("Nothing selected")
+                            }
                         }
                     }
                 }
@@ -63,8 +84,11 @@ struct CategoryListView: View {
                 }
                 .navigationTitle("Category List")
                 .toolbar {
-                    Button("Add") { _ = viewModel.addNewCategory() }
-                        .disabled(!viewModel.isLoaded)
+                    Button("Add") {
+                        _ = viewModel.addNewCategory()
+                        isNavigating = true
+                    }
+                    .disabled(!viewModel.isLoaded)
                 }
                 .onAppear() {
                     print("ContentView: Loading categories...")
@@ -89,13 +113,14 @@ struct CategoryListView: View {
 }
 
 #Preview("with items") {
-    let viewModel = CategoryListViewModel()
     let categories = CategoryUtilities.getPopulatedCategories(numberOfItems: 5)
-    viewModel.load(from: categories)
-    return CategoryListView().environmentObject(viewModel)
+    let playlistDataStore = PlaylistDataStore(
+        testCategories: categories)
+    return CategoryListView().environmentObject(playlistDataStore)
 }
 
 #Preview("no items") {
-    let viewModel = CategoryListViewModel()
-    return CategoryListView().environmentObject(viewModel)
+    let playlistDataStore = PlaylistDataStore(
+        testCategories: [])
+    return CategoryListView().environmentObject(playlistDataStore)
 }

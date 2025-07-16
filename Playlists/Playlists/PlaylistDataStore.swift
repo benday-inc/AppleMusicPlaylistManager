@@ -38,6 +38,15 @@ class PlaylistDataStore: ObservableObject {
         load()        
     }
     
+    init(testCategories: [Category]) {
+        isTestMode = true
+        excludedGenres = []
+        excludedAlbums = []
+        excludedArtists = []
+        categories = testCategories
+        load()
+    }
+    
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
 //        print("Checking \(playlistMode) exclusion: '\(item.artistName)'; '\(item.albumName)'; '\(item.genreName)'")
         

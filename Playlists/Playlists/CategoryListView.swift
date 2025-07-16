@@ -53,6 +53,10 @@ struct CategoryListView: View {
                                         .foregroundColor(.secondary)
                                 }
                                 Spacer()
+                                Button("Play") {
+                                    
+                                }
+                                .buttonStyle(.borderedProminent)
                             }
                             .onTapGesture {
                                 print("ontapgesture")

@@ -110,10 +110,6 @@ struct AddArtistView: View {
                 return joined
             }
         }
-        
-
-        
-                
     }
     
     private func updateMatching(for query: String) {

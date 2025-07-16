@@ -15,11 +15,13 @@ class PlaylistDataStore: ObservableObject {
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
+    @Published var categories: [Category] = []
     @Published var isLoaded: Bool = false
     private var isTestMode: Bool = false
     private var isLoadedCompleteGenre: Bool = false
     private var isLoadedCompleteArtist: Bool = false
     private var isLoadedCompleteAlbum: Bool = false
+    @Published var isLoadedCategories: Bool = false
     
     init() {
         load()
@@ -32,6 +34,7 @@ class PlaylistDataStore: ObservableObject {
         excludedGenres = testDataExcludedGenres
         excludedAlbums = testDataExcludedAlbums
         excludedArtists = testDataExcludedArtists
+        categories = []
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
@@ -116,7 +119,19 @@ class PlaylistDataStore: ObservableObject {
             return;
         }
         
-        PlaylistDataStore.load(filename: "excluded-genres") { result in
+        load(Category.self, filename: "categories") { result in
+            switch result {
+            case .failure(let error):
+                print("Error loading categories: \(error)")
+                fatalError(error.localizedDescription)
+            case .success(let temp):
+                print("Loaded categories: \(temp.count)")
+                self.categories = temp
+                self.isLoadedCategories = true
+            }
+        }
+
+        load(IdentifiableString.self, filename: "excluded-genres") { result in
             switch result {
             case .failure(let error):
                 print("Error loading excluded genres: \(error)")
@@ -135,8 +150,8 @@ class PlaylistDataStore: ObservableObject {
                 }
             }
         }
-        
-        PlaylistDataStore.load(filename: "excluded-artists") { result in
+
+        load(IdentifiableString.self, filename: "excluded-artists") { result in
             switch result {
             case .failure(let error):
                 fatalError(error.localizedDescription)
@@ -154,8 +169,8 @@ class PlaylistDataStore: ObservableObject {
                 }
             }
         }
-        
-        PlaylistDataStore.load(filename: "excluded-albums") { result in
+
+        load(IdentifiableString.self, filename: "excluded-albums") { result in
             switch result {
             case .failure(let error):
                 fatalError(error.localizedDescription)
@@ -180,26 +195,40 @@ class PlaylistDataStore: ObservableObject {
             return;
         }
         
-        PlaylistDataStore.save(filename: "excluded-genres", itemsToSave: excludedGenres) { result in
+        save(
+            IdentifiableString.self,
+            filename: "excluded-genres", itemsToSave: excludedGenres) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
         
-        PlaylistDataStore.save(filename: "excluded-artists", itemsToSave: excludedArtists) { result in
+        save(
+            IdentifiableString.self,
+            filename: "excluded-artists", itemsToSave: excludedArtists) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
         
-        PlaylistDataStore.save(filename: "excluded-albums", itemsToSave: excludedAlbums) { result in
+        save(
+            IdentifiableString.self,
+            filename: "excluded-albums", itemsToSave: excludedAlbums) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+        
+        save(
+            Category.self,
+            filename: "categories", itemsToSave: categories) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
     }
     
-    private static func fileURL(filename: String) throws -> URL {
+    private func fileURL(filename: String) throws -> URL {
         try FileManager.default.url(for: .documentDirectory,
                                        in: .userDomainMask,
                                        appropriateFor: nil,
@@ -207,19 +236,26 @@ class PlaylistDataStore: ObservableObject {
             .appendingPathComponent("\(filename).data")
     }
     
-    private static func load(filename: String, completion: @escaping (Result<[IdentifiableString], Error>)->Void) {
+    private func load<T>(
+        _ type: T.Type,
+        filename: String, completion: @escaping (Result<[T], Error>)->Void) where T : Decodable {
         DispatchQueue.global(qos: .background).async {
             do {
-                let fileURL = try fileURL(filename: filename)
+                let fileURL = try self.fileURL(filename: filename)
                 guard let file = try? FileHandle(forReadingFrom: fileURL) else {
                     DispatchQueue.main.async {
-                        completion(.success([]))
+                        // For arrays, return empty array; for other types this would need adjustment
+                        if let emptyArray = [] as? [T] {
+                            completion(.success(emptyArray))
+                        } else {
+                            completion(.failure(NSError(domain: "FileNotFound", code: 404, userInfo: nil)))
+                        }
                     }
                     return
                 }
-                let returnValues = try JSONDecoder().decode([IdentifiableString].self, from: file.availableData)
+                let returnValues = try JSONDecoder().decode(T.self, from: file.availableData)
                 DispatchQueue.main.async {
-                    completion(.success(returnValues))
+                    completion(.success(returnValues as! [T]))
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -229,11 +265,15 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    private static func save(filename: String, itemsToSave: [IdentifiableString], completion: @escaping (Result<Int, Error>)->Void) {
+    private func save<T: Encodable>(
+        _ type: T.Type,
+        filename: String,
+        itemsToSave: [T],
+        completion: @escaping (Result<Int, Error>)->Void) {
         DispatchQueue.global(qos: .background).async {
             do {
                 let data = try JSONEncoder().encode(itemsToSave)
-                let outfile = try fileURL(filename: filename)
+                let outfile = try self.fileURL(filename: filename)
                 try data.write(to: outfile)
                 DispatchQueue.main.async {
                     completion(.success(itemsToSave.count))

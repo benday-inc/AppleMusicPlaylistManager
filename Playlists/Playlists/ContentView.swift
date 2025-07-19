@@ -20,7 +20,9 @@ struct ContentView: View {
             if (storage.isLoaded == false) {
                 Text("Loading...")
                     .onAppear() {
-                        storage.load()
+                        Task {
+                            await storage.load()
+                        }
                     }
             }
             else {

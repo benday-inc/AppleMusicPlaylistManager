@@ -24,7 +24,9 @@ class PlaylistDataStore: ObservableObject {
     private var isLoadedCategories: Bool = false
     
     init() {
-        load()
+        Task {
+            await load()
+        }
     }
     
     init(testDataExcludedGenres: [IdentifiableString],
@@ -35,7 +37,9 @@ class PlaylistDataStore: ObservableObject {
         excludedAlbums = testDataExcludedAlbums
         excludedArtists = testDataExcludedArtists
         categories = []
-        load()        
+        Task {
+            await load()
+        }    
     }
     
     init(testCategories: [Category]) {
@@ -44,7 +48,9 @@ class PlaylistDataStore: ObservableObject {
         excludedAlbums = []
         excludedArtists = []
         categories = testCategories
-        load()
+        Task {
+            await load()
+        }
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
@@ -133,63 +139,49 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    func load() {
-        if (isTestMode == true) {
+    func load() async {
+        if isTestMode {
             isLoaded = true
-            return;
-        }
-        
-        load(Category.self, filename: "categories") { result in
-            switch result {
-            case .failure(let error):
-                print("Error loading categories: \(error)")
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded categories: \(temp.count)")
-                self.categories = temp
-                self.isLoadedCategories = true
-                
-                self.populateIsLoaded()
-            }
+            return
         }
 
-        load(IdentifiableString.self, filename: "excluded-genres") { result in
-            switch result {
-            case .failure(let error):
-                print("Error loading excluded genres: \(error)")
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded genres: \(temp.count)")
-                self.excludedGenres = temp
-                self.isLoadedCompleteGenre = true
-                
-                self.populateIsLoaded()
-            }
-        }
+        async let categoriesResult = loadAsync(Category.self, filename: "categories")
+        async let genresResult = loadAsync(IdentifiableString.self, filename: "excluded-genres")
+        async let artistsResult = loadAsync(IdentifiableString.self, filename: "excluded-artists")
+        async let albumsResult = loadAsync(IdentifiableString.self, filename: "excluded-albums")
 
-        load(IdentifiableString.self, filename: "excluded-artists") { result in
-            switch result {
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded artists: \(temp.count)")
-                self.excludedArtists = temp
-                self.isLoadedCompleteArtist = true
-                
-                self.populateIsLoaded()
-            }
-        }
+        do {
+            categories = try await categoriesResult
+            excludedGenres = try await genresResult
+            excludedArtists = try await artistsResult
+            excludedAlbums = try await albumsResult
 
-        load(IdentifiableString.self, filename: "excluded-albums") { result in
-            switch result {
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded albums: \(temp.count)")
-                self.excludedAlbums = temp
-                self.isLoadedCompleteAlbum = true
-                
-                self.populateIsLoaded()
+            isLoadedCategories = true
+            isLoadedCompleteGenre = true
+            isLoadedCompleteArtist = true
+            isLoadedCompleteAlbum = true
+            populateIsLoaded()
+        } catch {
+            print("Error loading data: \(error)")
+            // Handle error as needed
+        }
+    }
+
+    private func loadAsync<T: Decodable>(_ type: T.Type, filename: String) async throws -> [T] {
+        let fileURL = try fileURL(filename: filename)
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    guard let file = try? FileHandle(forReadingFrom: fileURL) else {
+                        continuation.resume(returning: [])
+                        return
+                    }
+                    let data = file.availableData
+                    let returnValues = try JSONDecoder().decode([T].self, from: data)
+                    continuation.resume(returning: returnValues)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }

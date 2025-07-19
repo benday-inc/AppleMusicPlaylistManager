@@ -18,8 +18,12 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                     let symbol = UIImage(systemName: "music.note") ?? UIImage()
                     return CPGridButton(titleVariants: [category.name], image: symbol) { [weak self] _ in
                         guard let self = self else { return }
-                        let detail = self.makeDetailList(for: category)
-                        self.interfaceController?.presentTemplate(detail, animated: true, completion: nil)
+//                        let detail = self.makeDetailList(for: category)
+//                        self.interfaceController?.presentTemplate(detail, animated: true, completion: nil)
+                        
+                        let viewModel = SongsViewModel(category: category, storage: dataStore)
+                        
+                        viewModel.play()
                     }
                 }
                 

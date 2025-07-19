@@ -5,6 +5,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     
     var interfaceController: CPInterfaceController?
     var playingCategoryId: UUID?
+    var categoryGridTemplate: CPGridTemplate?
     
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -43,8 +44,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
             let isPlaying = category.id == self.playingCategoryId
             let symbolName = isPlaying ? "music.note.list" : "music.note"
             let symbol = UIImage(systemName: symbolName, withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
-
-            return CPGridButton(titleVariants: [category.name], image: symbol) { [weak self] _ in
+            let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
+            return CPGridButton(titleVariants: [displayTitle], image: symbol) { [weak self] _ in
                 guard let self = self else { return }
                 self.playingCategoryId = category.id
                 let viewModel = SongsViewModel(category: category, storage: dataStore)
@@ -53,11 +54,16 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
             }
         }
 
-        let grid = CPGridTemplate(title: "Categories", gridButtons: buttons)
-        do {
-            try await interfaceController?.setRootTemplate(grid, animated: true)
-        } catch {
-            print("Failed to update grid template: \(error)")
+        if let grid = self.categoryGridTemplate {
+            grid.updateGridButtons(buttons)
+        } else {
+            let grid = CPGridTemplate(title: "Categories", gridButtons: buttons)
+            self.categoryGridTemplate = grid
+            do {
+                try await interfaceController?.setRootTemplate(grid, animated: true)
+            } catch {
+                print("Failed to set root template: \(error)")
+            }
         }
     }
 }

@@ -52,7 +52,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                 symbol = UIImage(systemName: symbolName, withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
             }
             else {
-                symbol = UIImage(named: "now-playing-transparent")?.withRenderingMode(.alwaysTemplate) ?? unknownImage
+                symbol = UIImage(named: "now-playing-transparent-2")?.withRenderingMode(.alwaysTemplate) ?? unknownImage
             }
             
             let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
@@ -68,7 +68,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         if let grid = self.categoryGridTemplate {
             grid.updateGridButtons(buttons)
         } else {
-            let grid = CPGridTemplate(title: "Categories", gridButtons: buttons)
+            let grid = CPGridTemplate(title: "Click a category to play its songs", gridButtons: buttons)
             self.categoryGridTemplate = grid
             do {
                 try await interfaceController?.setRootTemplate(grid, animated: true)

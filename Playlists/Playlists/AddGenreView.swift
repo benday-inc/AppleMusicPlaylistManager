@@ -56,8 +56,8 @@ struct AddGenreView: View {
                         
                         Button("Add") {
                             let trimmedItems = selectedItems.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.artists.contains($0) }
-                            category.artists.append(contentsOf: newItems)
+                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.genres.contains($0) }
+                            category.genres.append(contentsOf: newItems)
                             newItemName = ""
                             isPresented = false
                         }

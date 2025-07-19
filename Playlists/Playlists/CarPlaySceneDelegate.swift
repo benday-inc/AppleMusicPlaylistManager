@@ -43,7 +43,18 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
             let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .semibold, scale: .large)
             let isPlaying = category.id == self.playingCategoryId
             let symbolName = isPlaying ? "music.note.list" : "music.note"
-            let symbol = UIImage(systemName: symbolName, withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
+            
+            let unknownImage = UIImage(systemName: "exclamationmark.questionmark", withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
+            
+            let symbol: UIImage
+            
+            if (isPlaying == false) {
+                symbol = UIImage(systemName: symbolName, withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
+            }
+            else {
+                symbol = UIImage(named: "now-playing-transparent")?.withRenderingMode(.alwaysTemplate) ?? unknownImage
+            }
+            
             let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
             return CPGridButton(titleVariants: [displayTitle], image: symbol) { [weak self] _ in
                 guard let self = self else { return }

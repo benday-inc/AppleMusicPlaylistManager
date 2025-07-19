@@ -23,12 +23,23 @@ struct AddArtistView: View {
         NavigationStack {
             List(matchingItems, id: \.value, selection: $selectedItems) { item in
                 Text(item.value)
+                    .onTapGesture {
+                    UIApplication.shared.dismissKeyboard()
+                    if selectedItems.contains(item.value) {
+                        selectedItems.remove(item.value)
+                    } else {
+                        selectedItems.insert(item.value)
+                    }
+                }
             }
             .environment(\.editMode, $editMode)
             .searchable(text: $searchText, prompt: "Search for artists")
             .onChange(of: searchText) { oldValue, newValue in
                 let trimmed = newValue.trimmingCharacters(in: .whitespaces)
                 debouncer.input.send(trimmed)
+            }
+            .onChange(of: selectedItems) {
+                UIApplication.shared.dismissKeyboard()
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

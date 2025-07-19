@@ -19,7 +19,9 @@ struct CategoryEditorView: View {
     var body: some View {
         Form {
             Section(header: Text("Category Name")) {
-                TextField("Name", text: $category.name)
+                ClearableTextField(
+                    text: $category.name,
+                    placeholder: "Name")
             }
             Section(header: Text("Artists")) {
                 List {

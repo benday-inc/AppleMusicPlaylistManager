@@ -5,7 +5,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     
     var interfaceController: CPInterfaceController?
     var playingCategoryId: UUID?
-    var categoryGridTemplate: CPGridTemplate?
+    var categoryListTemplate: CPListTemplate?
     
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -17,7 +17,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                 await dataStore.load()
                 guard dataStore.isLoaded else { return }
                 
-                await reloadCategoryGrid(with: dataStore)
+                await reloadCategoryList(with: dataStore)
             }
         }
     
@@ -38,43 +38,31 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         self.interfaceController = nil
     }
 
-    func reloadCategoryGrid(with dataStore: PlaylistDataStore) async {
-        let buttons = dataStore.categories.map { category in
-            let config = UIImage.SymbolConfiguration(pointSize: 36, weight: .semibold, scale: .large)
-            let isPlaying = category.id == self.playingCategoryId
-            let symbolName = isPlaying ? "music.note.list" : "music.note"
-            
-            let unknownImage = UIImage(systemName: "exclamationmark.questionmark", withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
-            
-            let symbol: UIImage
-            
-            if (isPlaying == false) {
-                symbol = UIImage(systemName: symbolName, withConfiguration: config)?.withRenderingMode(.alwaysTemplate) ?? UIImage()
+    func reloadCategoryList(with dataStore: PlaylistDataStore) async {
+        let items = dataStore.categories
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            .map { category in
+                let isPlaying = category.id == self.playingCategoryId
+                let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
+                let detailText = isPlaying ? "Now Playing" : nil
+                let item = CPListItem(text: displayTitle, detailText: detailText)
+                item.handler = { [weak self] _, completion in
+                    guard let self = self else { completion(); return }
+                    self.playingCategoryId = category.id
+                    let viewModel = SongsViewModel(category: category, storage: dataStore)
+                    viewModel.play()
+                    Task { await self.reloadCategoryList(with: dataStore) }
+                    completion()
+                }
+                return item
             }
-            else {
-                symbol = UIImage(named: "now-playing-transparent-2")?.withRenderingMode(.alwaysTemplate) ?? unknownImage
-            }
-            
-            let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
-            return CPGridButton(titleVariants: [displayTitle], image: symbol) { [weak self] _ in
-                guard let self = self else { return }
-                self.playingCategoryId = category.id
-                let viewModel = SongsViewModel(category: category, storage: dataStore)
-                viewModel.play()
-                Task { await self.reloadCategoryGrid(with: dataStore) }
-            }
-        }
-
-        if let grid = self.categoryGridTemplate {
-            grid.updateGridButtons(buttons)
-        } else {
-            let grid = CPGridTemplate(title: "Click a category to play its songs", gridButtons: buttons)
-            self.categoryGridTemplate = grid
-            do {
-                try await interfaceController?.setRootTemplate(grid, animated: true)
-            } catch {
-                print("Failed to set root template: \(error)")
-            }
+        let section = CPListSection(items: items)
+        let listTemplate = CPListTemplate(title: "Click a category to play its songs", sections: [section])
+        self.categoryListTemplate = listTemplate
+        do {
+            try await interfaceController?.setRootTemplate(listTemplate, animated: true)
+        } catch {
+            print("Failed to set root template: \(error)")
         }
     }
 }

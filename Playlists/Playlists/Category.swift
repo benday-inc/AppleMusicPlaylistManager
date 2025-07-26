@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public struct Category: Codable, Identifiable {
+public struct Category: Codable, Identifiable, Equatable, Sendable {
     public var id: UUID = UUID()
     var name: String
     var genres: [String]

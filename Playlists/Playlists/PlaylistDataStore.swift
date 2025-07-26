@@ -11,7 +11,7 @@ import SwiftUI
 
 
 
-class PlaylistDataStore: ObservableObject {
+class PlaylistDataStore: ObservableObject, @unchecked Sendable {
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
@@ -39,7 +39,7 @@ class PlaylistDataStore: ObservableObject {
         categories = []
         Task {
             await load()
-        }    
+        }
     }
     
     init(testCategories: [Category]) {
@@ -131,8 +131,10 @@ class PlaylistDataStore: ObservableObject {
     
     private func populateIsLoaded() {
         if (self.isLoadedCategories && self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
-            self.isLoaded = true
-            print("all loaded")
+            DispatchQueue.main.async {
+                self.isLoaded = true
+                print("all loaded")
+            }
         }
         else {
             print("not all loaded yet")
@@ -151,19 +153,25 @@ class PlaylistDataStore: ObservableObject {
         async let albumsResult = loadAsync(IdentifiableString.self, filename: "excluded-albums")
 
         do {
-            categories = try await categoriesResult
-            excludedGenres = try await genresResult
-            excludedArtists = try await artistsResult
-            excludedAlbums = try await albumsResult
+            let loadedCategories = try await categoriesResult
+            let loadedGenres = try await genresResult
+            let loadedArtists = try await artistsResult
+            let loadedAlbums = try await albumsResult
 
-            isLoadedCategories = true
-            isLoadedCompleteGenre = true
-            isLoadedCompleteArtist = true
-            isLoadedCompleteAlbum = true
-            populateIsLoaded()
+            DispatchQueue.main.async {
+                self.categories = loadedCategories
+                self.excludedGenres = loadedGenres
+                self.excludedArtists = loadedArtists
+                self.excludedAlbums = loadedAlbums
+
+                self.isLoadedCategories = true
+                self.isLoadedCompleteGenre = true
+                self.isLoadedCompleteArtist = true
+                self.isLoadedCompleteAlbum = true
+                self.populateIsLoaded()
+            }
         } catch {
             print("Error loading data: \(error)")
-            // Handle error as needed
         }
     }
 
@@ -272,7 +280,8 @@ class PlaylistDataStore: ObservableObject {
         filename: String,
         itemsToSave: [T],
         completion: @escaping (Result<Int, Error>)->Void) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self else { return }
             do {
                 let data = try JSONEncoder().encode(itemsToSave)
                 let outfile = try self.fileURL(filename: filename)

@@ -2,12 +2,11 @@ import CarPlay
 import UIKit
 
 class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
-    // MARK: - Properties
     var interfaceController: CPInterfaceController?
     var playingCategoryId: UUID?
     var categoryListTemplate: CPListTemplate?
+    var tabBarTemplate: CPTabBarTemplate?
     
-    // MARK: - Lifecycle
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
         didConnect interfaceController: CPInterfaceController) {
@@ -16,7 +15,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         Task {
             await dataStore.load()
             guard dataStore.isLoaded else { return }
-            await reloadCategoryList(with: dataStore)
+            await setupAndShowTabBar(with: dataStore)
         }
     }
     
@@ -25,54 +24,62 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         self.interfaceController = nil
     }
     
-    // MARK: - UI Helpers
-    private func makeListItem(for category: Category, dataStore: PlaylistDataStore) -> CPListItem {
-        let isPlaying = category.id == self.playingCategoryId
-        let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
-        let detailText = isPlaying ? "Now Playing" : nil
-        let item = CPListItem(text: displayTitle, detailText: detailText)
-        item.handler = { [weak self] _, completion in
-            self?.handleCategorySelection(category: category, dataStore: dataStore, completion: completion)
-        }
-        return item
-    }
-    
-    private func makeCategoryListTemplate(with categories: [Category], dataStore: PlaylistDataStore) -> CPListTemplate {
-        let items = categories
-            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-            .map { makeListItem(for: $0, dataStore: dataStore) }
-        let section = CPListSection(items: items)
-        return CPListTemplate(title: "Click a category to play its songs", sections: [section])
-    }
-    
-    // MARK: - Actions
-    private func handleCategorySelection(category: Category, dataStore: PlaylistDataStore, completion: @escaping () -> Void) {
-        self.playingCategoryId = category.id
-        let viewModel = SongsViewModel(category: category, storage: dataStore)
-        viewModel.play()
-        Task { await self.reloadCategoryList(with: dataStore) }
-        completion()
-    }
-    
-    // MARK: - Public Methods
-    func reloadCategoryList(with dataStore: PlaylistDataStore) async {
-        let listTemplate = makeCategoryListTemplate(with: dataStore.categories, dataStore: dataStore)
-        self.categoryListTemplate = listTemplate
-        do {
-            try await interfaceController?.setRootTemplate(listTemplate, animated: true)
-        } catch {
-            print("Failed to set root template: \(error)")
-        }
-    }
-    
-    // MARK: - Detail List (Example)
     func makeDetailList(for category: Category) -> CPListTemplate {
         let item = CPListItem(text: "\(category.name) Song", detailText: "Example")
         item.handler = { _, completion in
-            // Do something on selection
             completion()
         }
         let section = CPListSection(items: [item])
         return CPListTemplate(title: category.name, sections: [section])
+    }
+    
+    private func makeCategoryListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {
+        let items = dataStore.categories
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            .map { category in
+                let isPlaying = category.id == self.playingCategoryId
+                let displayTitle = isPlaying ? "▶️ \(category.name)" : category.name
+                let detailText = isPlaying ? "Now Playing" : nil
+                let item = CPListItem(text: displayTitle, detailText: detailText)
+                item.handler = { [weak self] _, completion in
+                    guard let self = self else { completion(); return }
+                    self.playingCategoryId = category.id
+                    let viewModel = SongsViewModel(category: category, storage: dataStore)
+                    viewModel.play()
+                    Task { await self.reloadCategoryList(with: dataStore) }
+                    completion()
+                }
+                return item
+            }
+        let section = CPListSection(items: items)
+        let listTemplate = CPListTemplate(title: "Click a category to play its songs", sections: [section])
+        listTemplate.tabTitle = "Categories"
+        listTemplate.tabImage = UIImage(systemName: "music.note.list")
+        return listTemplate
+    }
+    
+    private func setupAndShowTabBar(with dataStore: PlaylistDataStore) async {
+        let categoriesTemplate = makeCategoryListTemplate(with: dataStore)
+        self.categoryListTemplate = categoriesTemplate
+        let tabBar = CPTabBarTemplate(templates: [categoriesTemplate])
+        self.tabBarTemplate = tabBar
+        interfaceController?.setRootTemplate(tabBar, animated: true) { success, error in
+            if let error = error {
+                print("Failed to set root template: \(error)")
+            }
+        }
+    }
+    
+    func reloadCategoryList(with dataStore: PlaylistDataStore) async {
+        let newListTemplate = makeCategoryListTemplate(with: dataStore)
+        self.categoryListTemplate = newListTemplate
+        if let tabBar = self.tabBarTemplate {
+            tabBar.updateTemplates([newListTemplate])
+            interfaceController?.setRootTemplate(tabBar, animated: true) { success, error in
+                if let error = error {
+                    print("Failed to set root template: \(error)")
+                }
+            }
+        }
     }
 }

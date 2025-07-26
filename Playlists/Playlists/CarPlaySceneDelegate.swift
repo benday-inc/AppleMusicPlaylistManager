@@ -36,8 +36,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
                                           didDisconnect interfaceController: CPInterfaceController) {
         self.interfaceController = nil
     }
-
-    private func setupAndShowTabBar(with dataStore: PlaylistDataStore) async {
+    
+    private func getCategoryListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {
         let items = dataStore.categories
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             .map { category in
@@ -59,8 +59,37 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         let listTemplate = CPListTemplate(title: "Click a category to play its songs", sections: [section])
         listTemplate.tabTitle = "Categories"
         listTemplate.tabImage = UIImage(systemName: "music.note.list")
+        
+        return listTemplate
+    }
+    
+    private func getRandomMusicListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {
+        let viewModel = SongsViewModel(storage: dataStore)
+        viewModel.handleGetRandomSongs()
+        let items = viewModel.items.map { song in
+            let item = CPListItem(text: song.trackName, detailText: song.artistName)
+            item.handler = { _, completion in
+                // Handle song selection
+                // viewModel.playSong(song)
+                completion()
+            }
+            return item
+        }
+            
+        let section = CPListSection(items: items)
+        let listTemplate = CPListTemplate(title: "Random Music", sections: [section])
+        listTemplate.tabTitle = "Random Music"
+        listTemplate.tabImage = UIImage(systemName: "music.note.list")
+        
+        return listTemplate
+    }
+
+    private func setupAndShowTabBar(with dataStore: PlaylistDataStore) async {
+        let listTemplate = getCategoryListTemplate(with: dataStore)
+        let randomMusicTemplate = getRandomMusicListTemplate(with: dataStore)
+        
         self.categoryListTemplate = listTemplate
-        let tabBar = CPTabBarTemplate(templates: [listTemplate])
+        let tabBar = CPTabBarTemplate(templates: [listTemplate, randomMusicTemplate])
         self.tabBarTemplate = tabBar
         interfaceController?.setRootTemplate(tabBar, animated: true) { success, error in
             if let error = error {

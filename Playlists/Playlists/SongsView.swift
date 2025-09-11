@@ -29,7 +29,7 @@ struct SongsView: View {
     
     init(testItems: [MediaItemWrapper]) {
         print("SongsView init using test data")
-        let dummyStore = PlaylistDataStore()
+        let dummyStore = PlaylistDataStore(testDataExcludedGenres: [], testDataExcludedArtists: [], testDataExcludedAlbums: [])
         _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))
     }
     

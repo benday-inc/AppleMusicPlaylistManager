@@ -9,8 +9,8 @@ import SwiftUI
 
 @main
 struct PlaylistsApp: App {
-    // @StateObject var storage = PlaylistDataStore()
-    @StateObject private var storage = PlaylistDataStore()
+    // Use the shared instance to ensure data consistency between main app and CarPlay
+    @StateObject private var storage = PlaylistDataStore.shared
     
     var body: some Scene {
         WindowGroup {

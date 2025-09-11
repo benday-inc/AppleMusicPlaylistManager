@@ -40,6 +40,8 @@ public class CategoryListViewModel : ObservableObject {
             }.store(in: &viewModel.anyCancellable)
             return viewModel
         }
+        // Sort items by name
+        items = items.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         unfilteredItems = items
         isLoaded = true
     }
@@ -99,14 +101,15 @@ public class CategoryListViewModel : ObservableObject {
     public func updateFilteredItems() {
         if filterTextValue.isEmpty {
             isFiltered = false
-            items = unfilteredItems
+            // Sort items by name
+            items = unfilteredItems.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
         else {
             isFiltered = true
             let lowerFilter = filterTextValue.lowercased()
             items = unfilteredItems.filter { categoryVM in
                 categoryVM.name.lowercased().contains(lowerFilter)
-            }
+            }.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
     }
     
@@ -123,7 +126,3 @@ public class CategoryListViewModel : ObservableObject {
         return returnValues
     }
 }
-
-
-
-

@@ -24,12 +24,23 @@ struct AddGenreView: View {
         NavigationStack {
             List(matchingItems, id: \.value, selection: $selectedItems) { item in
                 Text(item.value)
+                    .onTapGesture {
+                        UIApplication.shared.dismissKeyboard()
+                        if selectedItems.contains(item.value) {
+                            selectedItems.remove(item.value)
+                        } else {
+                            selectedItems.insert(item.value)
+                        }
+                    }
             }
             .environment(\.editMode, $editMode)
             .searchable(text: $searchText, prompt: "Search for genres")
             .onChange(of: searchText) { oldValue, newValue in
                 let trimmed = newValue.trimmingCharacters(in: .whitespaces)
                 debouncer.input.send(trimmed)
+            }
+            .onChange(of: selectedItems) {
+                UIApplication.shared.dismissKeyboard()
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -56,8 +67,8 @@ struct AddGenreView: View {
                         
                         Button("Add") {
                             let trimmedItems = selectedItems.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.artists.contains($0) }
-                            category.artists.append(contentsOf: newItems)
+                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.genres.contains($0) }
+                            category.genres.append(contentsOf: newItems)
                             newItemName = ""
                             isPresented = false
                         }
@@ -80,7 +91,7 @@ struct AddGenreView: View {
     
     private func getSelectedText() -> String {
         let joined = selectedItems.joined(separator: ", ")
-
+        
         if (UIDevice.current.userInterfaceIdiom == .phone) {
             let orientation = UIDevice.current.orientation
             
@@ -93,11 +104,11 @@ struct AddGenreView: View {
             {
                 maxChars = 15
             }
-                
+            
             let text = joined.count > maxChars
-                ? joined.prefix(maxChars) + "…"
-                : joined
-
+            ? joined.prefix(maxChars) + "…"
+            : joined
+            
             return text
         }
         else {
@@ -135,8 +146,8 @@ struct AddGenreView: View {
 
 #Preview("with matching genres") {
     @Previewable @State var temp = [IdentifiableString(value: "Rock"), IdentifiableString(value: "Pop"),
-        IdentifiableString(value: "Pop 1"), IdentifiableString(value: "Pop 2"), IdentifiableString(value: "Pop 3"), IdentifiableString(value: "Jazz"),
-        IdentifiableString(value: "Latin Jazz")
+                                    IdentifiableString(value: "Pop 1"), IdentifiableString(value: "Pop 2"), IdentifiableString(value: "Pop 3"), IdentifiableString(value: "Jazz"),
+                                    IdentifiableString(value: "Latin Jazz")
     ]
     var category = Category()
     category.name = "Test"
@@ -154,3 +165,5 @@ struct AddGenreView: View {
     categoryVM.load(category)
     return AddGenreView(isPresented: .constant(true), category: categoryVM)
 }
+
+

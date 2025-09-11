@@ -11,7 +11,9 @@ import SwiftUI
 
 
 
-class PlaylistDataStore: ObservableObject {
+class PlaylistDataStore: ObservableObject, @unchecked Sendable {
+    static let shared = PlaylistDataStore()
+    
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
@@ -22,9 +24,15 @@ class PlaylistDataStore: ObservableObject {
     private var isLoadedCompleteArtist: Bool = false
     private var isLoadedCompleteAlbum: Bool = false
     private var isLoadedCategories: Bool = false
+    private var isCurrentlyLoading: Bool = false
     
-    init() {
-        load()
+    private init() {
+        // Load data asynchronously but don't create multiple concurrent load tasks
+        Task { @MainActor in
+            if !isLoaded {
+                await load()
+            }
+        }
     }
     
     init(testDataExcludedGenres: [IdentifiableString],
@@ -35,7 +43,9 @@ class PlaylistDataStore: ObservableObject {
         excludedAlbums = testDataExcludedAlbums
         excludedArtists = testDataExcludedArtists
         categories = []
-        load()        
+        Task {
+            await load()
+        }
     }
     
     init(testCategories: [Category]) {
@@ -44,7 +54,9 @@ class PlaylistDataStore: ObservableObject {
         excludedAlbums = []
         excludedArtists = []
         categories = testCategories
-        load()
+        Task {
+            await load()
+        }
     }
     
     func isExcluded(item: MediaItemWrapper, playlistMode: String) -> Bool {
@@ -133,63 +145,66 @@ class PlaylistDataStore: ObservableObject {
         }
     }
     
-    func load() {
-        if (isTestMode == true) {
-            isLoaded = true
-            return;
-        }
+    func load() async {
+        // Prevent multiple concurrent loads
+        guard !isCurrentlyLoading && !isLoaded else { return }
         
-        load(Category.self, filename: "categories") { result in
-            switch result {
-            case .failure(let error):
-                print("Error loading categories: \(error)")
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded categories: \(temp.count)")
-                self.categories = temp
+        isCurrentlyLoading = true
+        defer { isCurrentlyLoading = false }
+        
+        if isTestMode {
+            await MainActor.run {
+                self.isLoaded = true
+            }
+            return
+        }
+
+        async let categoriesResult = loadAsync(Category.self, filename: "categories")
+        async let genresResult = loadAsync(IdentifiableString.self, filename: "excluded-genres")
+        async let artistsResult = loadAsync(IdentifiableString.self, filename: "excluded-artists")
+        async let albumsResult = loadAsync(IdentifiableString.self, filename: "excluded-albums")
+
+        do {
+            let loadedCategories = try await categoriesResult
+            let loadedGenres = try await genresResult
+            let loadedArtists = try await artistsResult
+            let loadedAlbums = try await albumsResult
+
+            DispatchQueue.main.async {
+                self.categories = loadedCategories
+                self.excludedGenres = loadedGenres
+                self.excludedArtists = loadedArtists
+                self.excludedAlbums = loadedAlbums
+
                 self.isLoadedCategories = true
-                
-                self.populateIsLoaded()
-            }
-        }
-
-        load(IdentifiableString.self, filename: "excluded-genres") { result in
-            switch result {
-            case .failure(let error):
-                print("Error loading excluded genres: \(error)")
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded genres: \(temp.count)")
-                self.excludedGenres = temp
                 self.isLoadedCompleteGenre = true
-                
-                self.populateIsLoaded()
-            }
-        }
-
-        load(IdentifiableString.self, filename: "excluded-artists") { result in
-            switch result {
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded artists: \(temp.count)")
-                self.excludedArtists = temp
                 self.isLoadedCompleteArtist = true
-                
+                self.isLoadedCompleteAlbum = true
                 self.populateIsLoaded()
             }
+        } catch {
+            print("Error loading data: \(error)")
+            await MainActor.run {
+                self.isCurrentlyLoading = false
+            }
         }
+    }
 
-        load(IdentifiableString.self, filename: "excluded-albums") { result in
-            switch result {
-            case .failure(let error):
-                fatalError(error.localizedDescription)
-            case .success(let temp):
-                print("Loaded excluded albums: \(temp.count)")
-                self.excludedAlbums = temp
-                self.isLoadedCompleteAlbum = true
-                
-                self.populateIsLoaded()
+    private func loadAsync<T: Decodable>(_ type: T.Type, filename: String) async throws -> [T] {
+        let fileURL = try fileURL(filename: filename)
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    guard let file = try? FileHandle(forReadingFrom: fileURL) else {
+                        continuation.resume(returning: [])
+                        return
+                    }
+                    let data = file.availableData
+                    let returnValues = try JSONDecoder().decode([T].self, from: data)
+                    continuation.resume(returning: returnValues)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }
@@ -280,7 +295,8 @@ class PlaylistDataStore: ObservableObject {
         filename: String,
         itemsToSave: [T],
         completion: @escaping (Result<Int, Error>)->Void) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self else { return }
             do {
                 let data = try JSONEncoder().encode(itemsToSave)
                 let outfile = try self.fileURL(filename: filename)

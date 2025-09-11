@@ -12,10 +12,15 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         _ templateApplicationScene: CPTemplateApplicationScene,
         didConnect interfaceController: CPInterfaceController) {
         self.interfaceController = interfaceController
-        let dataStore = PlaylistDataStore()
-        Task {
-            await dataStore.load()
-            guard dataStore.isLoaded else { return }
+        
+        // Use shared data store instance
+        let dataStore = PlaylistDataStore.shared
+        
+        Task { @MainActor in
+            // Wait for the data store to be fully loaded
+            while !dataStore.isLoaded {
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+            }
             await setupAndShowTabBar(with: dataStore)
         }
     }
@@ -32,9 +37,13 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     }
     
     // CarPlay disconnected
-    private func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+    func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
                                           didDisconnect interfaceController: CPInterfaceController) {
         self.interfaceController = nil
+        self.categoryListTemplate = nil
+        self.tabBarTemplate = nil
+        self.playingCategoryId = nil
+        // Keep dataStore around for potential reconnection
     }
     
     private func getCategoryListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {

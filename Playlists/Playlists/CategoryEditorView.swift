@@ -1,4 +1,3 @@
-//
 //  CategoryEditorView.swift
 //  Playlists
 //
@@ -60,14 +59,14 @@ struct CategoryEditorView: View {
                         ForEach(category.genres, id: \.self) { genre in
                             Text(genre)
                                 .swipeActions(content: {
-                                Button(role: .destructive) {
-                                    if let index = category.genres.firstIndex(of: genre) {
-                                        category.genres.remove(at: index)
+                                    Button(role: .destructive) {
+                                        if let index = category.genres.firstIndex(of: genre) {
+                                            category.genres.remove(at: index)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
                                     }
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            })
+                                })
                         }
                     }
                     Button(action: { isAddGenreSheetPresented = true }) {
@@ -95,12 +94,13 @@ struct CategoryEditorView: View {
                 }
                 .disabled(viewModel.selectedItem == nil || !viewModel.isLoaded)
             }
-            ToolbarItemGroup(placement: .bottomBar) {
+            ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {
                     category.undoChanges()
                     dismiss()
                 }
-                Spacer()
+            }
+            ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
                     _ = category.saveChanges()
                     dismiss()

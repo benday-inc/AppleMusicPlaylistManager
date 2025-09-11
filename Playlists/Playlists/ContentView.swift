@@ -19,11 +19,6 @@ struct ContentView: View {
         if (musicAuthorizationStatus == .authorized)         {
             if (storage.isLoaded == false) {
                 Text("Loading...")
-                    .onAppear() {
-                        Task {
-                            await storage.load()
-                        }
-                    }
             }
             else {
                 TabView {

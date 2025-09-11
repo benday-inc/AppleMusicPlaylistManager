@@ -12,6 +12,8 @@ import SwiftUI
 
 
 class PlaylistDataStore: ObservableObject, @unchecked Sendable {
+    static let shared = PlaylistDataStore()
+    
     @Published var excludedGenres: [IdentifiableString] = []
     @Published var excludedArtists: [IdentifiableString] = []
     @Published var excludedAlbums: [IdentifiableString] = []
@@ -22,10 +24,14 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
     private var isLoadedCompleteArtist: Bool = false
     private var isLoadedCompleteAlbum: Bool = false
     private var isLoadedCategories: Bool = false
+    private var isCurrentlyLoading: Bool = false
     
-    init() {
-        Task {
-            await load()
+    private init() {
+        // Load data asynchronously but don't create multiple concurrent load tasks
+        Task { @MainActor in
+            if !isLoaded {
+                await load()
+            }
         }
     }
     
@@ -131,10 +137,8 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
     
     private func populateIsLoaded() {
         if (self.isLoadedCategories && self.isLoadedCompleteGenre && self.isLoadedCompleteArtist && self.isLoadedCompleteAlbum) {
-            DispatchQueue.main.async {
-                self.isLoaded = true
-                print("all loaded")
-            }
+            self.isLoaded = true
+            print("all loaded")
         }
         else {
             print("not all loaded yet")
@@ -142,8 +146,16 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
     }
     
     func load() async {
+        // Prevent multiple concurrent loads
+        guard !isCurrentlyLoading && !isLoaded else { return }
+        
+        isCurrentlyLoading = true
+        defer { isCurrentlyLoading = false }
+        
         if isTestMode {
-            isLoaded = true
+            await MainActor.run {
+                self.isLoaded = true
+            }
             return
         }
 
@@ -172,6 +184,9 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
             }
         } catch {
             print("Error loading data: \(error)")
+            await MainActor.run {
+                self.isCurrentlyLoading = false
+            }
         }
     }
 

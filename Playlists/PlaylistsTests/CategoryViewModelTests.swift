@@ -275,11 +275,11 @@ final class CategoryViewModelTests: XCTestCase {
         XCTAssertEqual(sut.genres, ["genre2"])
         XCTAssertEqual(sut.artists, ["artist123", "artist2", "artist3"])
         
-        XCTAssertEqual(updatedModel.name, "New Name")
-        XCTAssertEqual(updatedModel.genres, ["genre2"])
-        XCTAssertEqual(updatedModel.artists, ["artist123", "artist2", "artist3"])
+        XCTAssertEqual(updatedModel?.name, "New Name")
+        XCTAssertEqual(updatedModel?.genres, ["genre2"])
+        XCTAssertEqual(updatedModel?.artists, ["artist123", "artist2", "artist3"])
         
-        XCTAssertEqual(updatedModel.id, category.id) // id should be unchanged
+        XCTAssertEqual(updatedModel?.id, category.id) // id should be unchanged
         
     }
 

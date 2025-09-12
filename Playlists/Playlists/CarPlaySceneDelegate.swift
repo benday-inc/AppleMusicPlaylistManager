@@ -7,6 +7,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     var playingCategoryId: UUID?
     var categoryListTemplate: CPListTemplate?
     var tabBarTemplate: CPTabBarTemplate?
+    var randomMusicViewModel: SongsViewModel?
+    var randomMusicListTemplate: CPListTemplate?
     
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -43,6 +45,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         self.categoryListTemplate = nil
         self.tabBarTemplate = nil
         self.playingCategoryId = nil
+        self.randomMusicViewModel = nil
+        self.randomMusicListTemplate = nil
         // Keep dataStore around for potential reconnection
     }
     
@@ -73,9 +77,33 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     }
     
     private func getRandomMusicListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {
-        let viewModel = SongsViewModel(storage: dataStore)
-        viewModel.handleGetRandomSongs()
-        let items = viewModel.items.map { song in
+        // Create or reuse the view model
+        if randomMusicViewModel == nil {
+            randomMusicViewModel = SongsViewModel(storage: dataStore)
+            randomMusicViewModel?.handleGetRandomSongs()
+        }
+        
+        guard let viewModel = randomMusicViewModel else {
+            return CPListTemplate(title: "Random Music", sections: [])
+        }
+        
+        // Create action buttons as list items at the top
+        let playButton = CPListItem(text: "▶️ Play All", detailText: "Play the current random playlist")
+        playButton.handler = { [weak self] _, completion in
+            self?.randomMusicViewModel?.play()
+            completion()
+        }
+        
+        let refreshButton = CPListItem(text: "🔄 Refresh", detailText: "Generate new random playlist")
+        refreshButton.handler = { [weak self] _, completion in
+            self?.refreshRandomPlaylist(with: dataStore)
+            completion()
+        }
+        
+        // Create sections - buttons section first, then songs
+        let buttonSection = CPListSection(items: [playButton, refreshButton])
+        
+        let songItems = viewModel.items.map { song in
             let item = CPListItem(text: song.trackName, detailText: song.artistName)
             item.handler = { _, completion in
                 // Handle song selection
@@ -84,11 +112,14 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
             }
             return item
         }
-            
-        let section = CPListSection(items: items)
-        let listTemplate = CPListTemplate(title: "Random Music", sections: [section])
+        
+        let songsSection = CPListSection(items: songItems, header: "Songs", sectionIndexTitle: nil)
+        
+        let listTemplate = CPListTemplate(title: "Random Music", sections: [buttonSection, songsSection])
         listTemplate.tabTitle = "Random Music"
-        listTemplate.tabImage = UIImage(systemName: "music.note.list")
+        listTemplate.tabImage = UIImage(systemName: "shuffle")
+        
+        self.randomMusicListTemplate = listTemplate
         
         return listTemplate
     }
@@ -107,6 +138,43 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         }
     }
 
+    private func refreshRandomPlaylist(with dataStore: PlaylistDataStore) {
+        // Regenerate the random playlist
+        randomMusicViewModel?.handleGetRandomSongs()
+        
+        // Update the UI with new songs
+        guard let viewModel = randomMusicViewModel else { return }
+        
+        // Recreate the button items
+        let playButton = CPListItem(text: "▶️ Play All", detailText: "Play the current random playlist")
+        playButton.handler = { [weak self] _, completion in
+            self?.randomMusicViewModel?.play()
+            completion()
+        }
+        
+        let refreshButton = CPListItem(text: "🔄 Refresh", detailText: "Generate new random playlist")
+        refreshButton.handler = { [weak self] _, completion in
+            self?.refreshRandomPlaylist(with: dataStore)
+            completion()
+        }
+        
+        let buttonSection = CPListSection(items: [playButton, refreshButton])
+        
+        // Create the song items
+        let songItems = viewModel.items.map { song in
+            let item = CPListItem(text: song.trackName, detailText: song.artistName)
+            item.handler = { _, completion in
+                completion()
+            }
+            return item
+        }
+        
+        let songsSection = CPListSection(items: songItems, header: "Songs", sectionIndexTitle: nil)
+        
+        // Update the existing template's sections
+        randomMusicListTemplate?.updateSections([buttonSection, songsSection])
+    }
+    
     func reloadCategoryList(with dataStore: PlaylistDataStore) async {
         let items = dataStore.categories
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }

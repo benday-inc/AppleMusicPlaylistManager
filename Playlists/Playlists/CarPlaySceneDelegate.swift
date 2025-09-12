@@ -130,8 +130,11 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         listTemplate.tabTitle = "Categories"
         listTemplate.tabImage = UIImage(systemName: "music.note.list")
         self.categoryListTemplate = listTemplate
+        
+        // Preserve both tabs when updating
         if let tabBar = self.tabBarTemplate {
-            tabBar.updateTemplates([listTemplate])
+            let randomMusicTemplate = getRandomMusicListTemplate(with: dataStore)
+            tabBar.updateTemplates([listTemplate, randomMusicTemplate])
         }
     }
 }

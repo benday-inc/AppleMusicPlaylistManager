@@ -8,8 +8,11 @@
 import SwiftUI
 import MusicKit
 import MediaPlayer
+import os.log
 
 struct SongsView: View {
+    private let logger = Logger(subsystem: "com.randomplaylistgenerator", category: "SongsView")
+    
     @State var showPlaylistExistsAlert = false
     
     @Environment(\.editMode) var editMode
@@ -17,27 +20,37 @@ struct SongsView: View {
     @State var isFirstShowOfForm = true
     @State var isPlaylistSheetVisible = false
     
+    
+    @State var title: String
+    
+    
+    
     @EnvironmentObject private var storage: PlaylistDataStore
     @StateObject private var viewModel: SongsViewModel
     
     @State var autoPlay = false
     
     init(_ storage: PlaylistDataStore) {
-        print("SongsView init")
+        logger.info("SongsView init started")
         _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
+        title = "Playlist Builder"
+        logger.info("SongsView init completed")
     }
     
     init(testItems: [MediaItemWrapper]) {
-        print("SongsView init using test data")
+        logger.info("SongsView test init started")
         let dummyStore = PlaylistDataStore(testDataExcludedGenres: [], testDataExcludedArtists: [], testDataExcludedAlbums: [])
         _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))
+        title = "Test Data"
+        logger.info("SongsView test init completed")
     }
     
     init(category: Category, storage: PlaylistDataStore) {
-        print("SongsView init with category")
+        logger.info("SongsView category init started for: \(category.name)")
         autoPlay = true
         _viewModel = StateObject(wrappedValue: SongsViewModel(category: category, storage: storage))
-        
+        title = category.name
+        logger.info("SongsView category init completed")
     }
     
     var body: some View {
@@ -47,54 +60,56 @@ struct SongsView: View {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button("Remove Track", systemImage: "minus.circle.fill", role: .destructive) {
+                                
+                                
+                                Button("track", systemImage: "trash", role: .destructive) {
                                     viewModel.removeTrack(item: item)
                                 }
                                 .tint(.red)
                                 
-                                Button("Exclude Album", systemImage: "opticaldisc") {
+                                Button("album") {
                                     viewModel.addAlbumExclusion(item: item)
                                 }
                                 .tint(.secondary)
                             }
                             .contextMenu() {
-                                Button("Play Track", systemImage: "play.fill") {
+                                Button("Play Track") {
                                     withAnimation {
                                         viewModel.playNow(item: item)
                                     }
                                 }
                                 Divider()
-                                Button("Randomize Artist and Play", systemImage: "person.2.crop.square.stack") {
+                                Button("Randomize Artist and Play") {
                                     withAnimation {
                                         viewModel.randomizeArtist(item: item)
                                         viewModel.play()
                                     }
                                 }
-                                Button("Randomize Genre and Play", systemImage: "music.note.tv") {
+                                Button("Randomize Genre and Play") {
                                     withAnimation {
                                         viewModel.randomizeGenre(item: item)
                                         viewModel.play()
                                     }
                                 }
                                 Divider()
-                                Button("Randomize Artist", systemImage: "person.crop.circle.dashed") {
+                                Button("Randomize Artist") {
                                     withAnimation {
                                         viewModel.randomizeArtist(item: item)
                                     }
                                 }
-                                Button("Randomize Genre", systemImage: "guitars") {
+                                Button("Randomize Genre") {
                                     withAnimation {
                                         viewModel.randomizeGenre(item: item)
                                     }
                                 }
                                 Divider()
-                                Button("Play Album", systemImage: "opticaldisc") {
+                                Button("Play Album") {
                                     withAnimation {
                                         viewModel.playAlbum(item: item)
                                     }
                                 }
                                 Divider()
-                                Button("Exclude Genre", systemImage: "guitars.fill") {
+                                Button("Exclude Genre") {
                                     print("Item count: \(viewModel.items.count) before withAnimation")
                                     withAnimation {
                                         viewModel.addGenreExclusion(item: item)
@@ -102,31 +117,30 @@ struct SongsView: View {
                                     }
                                     print("Item count: \(viewModel.items.count) after withAnimation")
                                 }
-                                Button("Exclude Artist", systemImage: "person.crop.circle.badge.minus") {
+                                Button("Exclude Artist") {
                                     withAnimation {
                                         viewModel.addArtistExclusion(item: item)
                                     }
                                 }
-                                Button("Exclude Album", systemImage: "opticaldisc.fill") {
+                                Button("Exclude Album") {
                                     withAnimation {
                                         viewModel.addAlbumExclusion(item: item)
                                     }
                                 }
-                                Button("Remove Track", systemImage: "minus.circle.fill", role: .destructive) {
+                                Button("Remove Track", systemImage: "trash", role: .destructive) {
                                     withAnimation {
                                         viewModel.removeTrack(item: item)
                                     }
                                 }
                             }
                             .swipeActions(edge: .trailing) {
-                                Button("Exclude Genre", systemImage: "guitars") {
+                                Button("genre") {
                                     viewModel.addGenreExclusion(item: item)
                                 }
                                 .tint(.secondary)
-                                Button("Exclude Artist", systemImage: "person.crop.circle") {
+                                Button("artist") {
                                     viewModel.addArtistExclusion(item: item)
                                 }
-                                .tint(.secondary)
                             }
                         
                     }
@@ -142,18 +156,19 @@ struct SongsView: View {
                     isPlaylistSheetVisible = false
                 }
             })
-            .navigationTitle("Playlist Builder")
+            .navigationTitle(title)
             .toolbar(id: "main-toolbar") {
-                // Bottom toolbar items with IDs for customizable toolbar
-                ToolbarItem(id: "save", placement: .bottomBar) {
-                    Button {
-                        isPlaylistSheetVisible.toggle()
-                    } label: {
-                        Label("Save", systemImage: "plus.square.on.square")
-                    }
-                }
+//                // Leading navigation items
+//                ToolbarItem(id: "playlist-mode", placement: .topBarLeading) {
+//                    Button {
+//                        viewModel.changePlaylistMode()
+//                    } label: {
+//                        Text(viewModel.playlistMode)
+//                    }
+//                }
                 
-                ToolbarItem(id: "track-count", placement: .bottomBar) {
+                // Principal item for track count (appears in center when space allows)
+                ToolbarItem(id: "track-count", placement: .principal) {
                     HStack(spacing: 4) {
                         Image(systemName: "music.note.list")
                             .font(.caption2)
@@ -164,7 +179,16 @@ struct SongsView: View {
                     }
                 }
                 
-                ToolbarItem(id: "play", placement: .bottomBar) {
+                // Trailing navigation items - moved from bottom to top
+                ToolbarItem(id: "save", placement: .topBarTrailing) {
+                    Button {
+                        isPlaylistSheetVisible.toggle()
+                    } label: {
+                        Label("Save", systemImage: "plus.square.on.square")
+                    }
+                }
+                
+                ToolbarItem(id: "play", placement: .topBarTrailing) {
                     Button {
                         viewModel.play()
                     } label: {
@@ -172,16 +196,6 @@ struct SongsView: View {
                     }
                 }
                 
-                // Leading navigation item
-                ToolbarItem(id: "playlist-mode", placement: .topBarLeading) {
-                    Button {
-                        viewModel.changePlaylistMode()
-                    } label: {
-                        Text(viewModel.playlistMode)
-                    }
-                }
-                
-                // Trailing navigation items
                 ToolbarItem(id: "edit", placement: .topBarTrailing) {
                     EditButton()
                 }
@@ -217,10 +231,13 @@ struct SongsView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear() {
+            logger.info("SongsView appeared")
             if (autoPlay == true) {
+                logger.info("Auto-playing")
                 viewModel.play()
             }
             else if (isFirstShowOfForm == true) {
+                logger.info("First show - getting random songs")
                 isFirstShowOfForm = false;
                 viewModel.handleGetRandomSongs();
             }

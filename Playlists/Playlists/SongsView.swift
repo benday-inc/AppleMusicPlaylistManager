@@ -42,7 +42,7 @@ struct SongsView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 List(selection: $viewModel.multiSelection) {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
@@ -133,6 +133,41 @@ struct SongsView: View {
                     }
                     .onMove(perform: viewModel.move)
                 }
+
+                // Bottom toolbar
+                HStack {
+                    Button() {
+                        isPlaylistSheetVisible.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                            Text("Save")
+                        }
+                    }
+                    .padding()
+
+                    Spacer()
+                    Text("Track Count: \(viewModel.items.count)")
+                        .font(.caption)
+                    Spacer()
+
+                    Button() {
+                        viewModel.play()
+                    } label: {
+                        HStack {
+                            Text("Play")
+                            Image(systemName: "play.rectangle")
+                        }
+                    }
+                    .padding()
+                }
+                .background(Color(UIColor.systemBackground))
+                .overlay(
+                    Rectangle()
+                        .frame(height: 0.5)
+                        .foregroundColor(Color(UIColor.separator)),
+                    alignment: .top
+                )
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
                 PlaylistNameSheetView() { doSave, playlistName in
@@ -145,50 +180,14 @@ struct SongsView: View {
             })
             .navigationTitle("Playlist Builder")
             .toolbar(content: {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    
-                    Button() {
-                        isPlaylistSheetVisible.toggle()
-                    } label: {
-                        HStack {
-                            Image(systemName: "square.and.arrow.down")
-                            Text("Save")
-                        }
-#if(ios)
-                        .padding(.bottom)
-#endif
-                    }
-                    
-                    Spacer()
-                    Text("Track Count: \(viewModel.items.count)")                    
-                    Spacer()
-                    Button() {
-                        viewModel.play()
-                    } label: {
-                        HStack {
-                            Text("Play")
-                            Image(systemName: "play.rectangle")
-                        }
-#if(ios)
-                        .padding(.bottom)
-#endif
-                    }
-                }
-                
                 ToolbarItemGroup(placement: .topBarLeading, content: {
                     HStack {
-                        Button() {
-                            viewModel.changePlaylistMode()
-                        } label: {
-                            Text(viewModel.playlistMode)
-                        }
+                        EditButton()
                     }
                 } )
                 
                 ToolbarItemGroup(placement: .topBarTrailing, content: {
                     HStack {
-                        EditButton()
-                        Spacer()
                         if (self.editMode?.wrappedValue == .active) {
                             Button() {
                                 viewModel.removeSelected()

@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
+public class CategoryViewModel : ObservableObject, Identifiable, Hashable, CustomStringConvertible {
     @Published public var id: UUID = UUID()
     @Published var isLoaded: Bool = false
     @Published var hasChanges: Bool = false
@@ -73,7 +73,27 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
+    public var description: String {
+        var parts: [String] = []
+
+        if !artists.isEmpty {
+            parts.append("Artists: \(artists.count)")
+        }
+        if !genres.isEmpty {
+            parts.append("Genres: \(genres.count)")
+        }
+        if !composers.isEmpty {
+            parts.append("Composers: \(composers.count)")
+        }
+
+        if parts.isEmpty {
+            return ""
+        } else {
+            return "\(parts.joined(separator: ", "))"
+        }
+    }
+
     public func undoChanges() {
         if let model = model {
             load(model)

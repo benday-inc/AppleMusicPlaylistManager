@@ -13,6 +13,7 @@ struct CategoryEditorView: View {
     
     @State private var isAddArtistSheetPresented = false
     @State private var isAddGenreSheetPresented = false
+    @State private var isAddComposerSheetPresented = false
     @State private var newGenreName = ""
     
     var body: some View {
@@ -78,12 +79,43 @@ struct CategoryEditorView: View {
                     }
                 }
             }
+            Section(header: Text("Composers")) {
+                List {
+                    if category.composers.isEmpty {
+                        Text("No composers in this category.")
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(category.composers, id: \.self) { composer in
+                            Text(composer)
+                                .swipeActions(content: {
+                                    Button(role: .destructive) {
+                                        if let index = category.composers.firstIndex(of: composer) {
+                                            category.composers.remove(at: index)
+                                        }
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                })
+                        }
+                    }
+                    Button(action: { isAddComposerSheetPresented = true }) {
+                        HStack {
+                            Image(systemName: "plus.circle")
+                            Text("Add Composer")
+                        }
+                        .foregroundColor(.accentColor)
+                    }
+                }
+            }
         }
         .sheet(isPresented: $isAddArtistSheetPresented) {
             AddArtistView(isPresented: $isAddArtistSheetPresented, category: category)
         }
         .sheet(isPresented: $isAddGenreSheetPresented) {
             AddGenreView(isPresented: $isAddGenreSheetPresented, category: category)
+        }
+        .sheet(isPresented: $isAddComposerSheetPresented) {
+            AddComposerView(isPresented: $isAddComposerSheetPresented, category: category)
         }
         .navigationTitle("Edit Category")
         .toolbar {
@@ -122,6 +154,8 @@ struct CategoryEditorView: View {
     selected.artists.append("Artist 2")
     selected.genres.append("Genre A")
     selected.genres.append("Genre B")
+    selected.composers.append("John Dowland")
+    selected.composers.append("William Byrd")
     return CategoryEditorView(category: selected, viewModel: viewModel)
 }
 

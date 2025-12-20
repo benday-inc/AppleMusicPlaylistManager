@@ -174,11 +174,11 @@ class SongsViewModel : ObservableObject {
             return
         }
         var returnValues = Array<MediaItemWrapper>()
-        
+
         if (forCategory.genres.isEmpty == false) {
             for genre in forCategory.genres {
                 let query = getMediaQueryForGenre(genre: genre)
-                
+
                 if (query.items != nil) {
                     for item in query.items! {
                         returnValues.append(MediaItemWrapper(item: item))
@@ -186,11 +186,11 @@ class SongsViewModel : ObservableObject {
                 }
             }
         }
-        
+
         if (forCategory.artists.isEmpty == false) {
             for artist in forCategory.artists {
                 let query = getMediaQueryForArtist(artist: artist)
-                
+
                 if (query.items != nil) {
                     for item in query.items! {
                         returnValues.append(MediaItemWrapper(item: item))
@@ -198,7 +198,19 @@ class SongsViewModel : ObservableObject {
                 }
             }
         }
-        
+
+        if (forCategory.composers.isEmpty == false) {
+            for composer in forCategory.composers {
+                let query = getMediaQueryForComposer(composer: composer)
+
+                if (query.items != nil) {
+                    for item in query.items! {
+                        returnValues.append(MediaItemWrapper(item: item))
+                    }
+                }
+            }
+        }
+
         items = returnValues
         allItems = returnValues
     }
@@ -249,18 +261,32 @@ class SongsViewModel : ObservableObject {
     
     private func getMediaQueryForGenre(genre: String) -> MPMediaQuery {
         let query = MPMediaQuery.songs()
-        
+
         let predicate = MPMediaPropertyPredicate(
             value: genre,
             forProperty: MPMediaItemPropertyGenre,
             comparisonType: .equalTo
         )
-        
+
         query.addFilterPredicate(predicate)
-        
+
         return query
     }
-    
+
+    private func getMediaQueryForComposer(composer: String) -> MPMediaQuery {
+        let query = MPMediaQuery.songs()
+
+        let predicate = MPMediaPropertyPredicate(
+            value: composer,
+            forProperty: MPMediaItemPropertyComposer,
+            comparisonType: .contains
+        )
+
+        query.addFilterPredicate(predicate)
+
+        return query
+    }
+
     private func populateResultsForGenres(genres: [String]) {
         
         var returnValues = Array<MediaItemWrapper>()

@@ -8,11 +8,8 @@
 import SwiftUI
 import MusicKit
 import MediaPlayer
-import os.log
 
 struct SongsView: View {
-    private let logger = Logger(subsystem: "com.randomplaylistgenerator", category: "SongsView")
-    
     @State var showPlaylistExistsAlert = false
     
     @Environment(\.editMode) var editMode
@@ -20,42 +17,32 @@ struct SongsView: View {
     @State var isFirstShowOfForm = true
     @State var isPlaylistSheetVisible = false
     
-    
-    @State var title: String
-    
-    
-    
     @EnvironmentObject private var storage: PlaylistDataStore
     @StateObject private var viewModel: SongsViewModel
     
     @State var autoPlay = false
     
     init(_ storage: PlaylistDataStore) {
-        logger.info("SongsView init started")
+        print("SongsView init")
         _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
-        title = "Playlist Builder"
-        logger.info("SongsView init completed")
     }
     
     init(testItems: [MediaItemWrapper]) {
-        logger.info("SongsView test init started")
+        print("SongsView init using test data")
         let dummyStore = PlaylistDataStore(testDataExcludedGenres: [], testDataExcludedArtists: [], testDataExcludedAlbums: [])
         _viewModel = StateObject(wrappedValue: SongsViewModel(testItems: testItems, storage: dummyStore))
-        title = "Test Data"
-        logger.info("SongsView test init completed")
     }
     
     init(category: Category, storage: PlaylistDataStore) {
-        logger.info("SongsView category init started for: \(category.name)")
+        print("SongsView init with category")
         autoPlay = true
         _viewModel = StateObject(wrappedValue: SongsViewModel(category: category, storage: storage))
-        title = category.name
-        logger.info("SongsView category init completed")
+        
     }
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 List(selection: $viewModel.multiSelection) {
                     ForEach (viewModel.items) { item in
                         SongCell(item: item)
@@ -146,6 +133,41 @@ struct SongsView: View {
                     }
                     .onMove(perform: viewModel.move)
                 }
+
+                // Bottom toolbar
+                HStack {
+                    Button() {
+                        isPlaylistSheetVisible.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                            Text("Save")
+                        }
+                    }
+                    .padding()
+
+                    Spacer()
+                    Text("Track Count: \(viewModel.items.count)")
+                        .font(.caption)
+                    Spacer()
+
+                    Button() {
+                        viewModel.play()
+                    } label: {
+                        HStack {
+                            Text("Play")
+                            Image(systemName: "play.rectangle")
+                        }
+                    }
+                    .padding()
+                }
+                .background(Color(UIColor.systemBackground))
+                .overlay(
+                    Rectangle()
+                        .frame(height: 0.5)
+                        .foregroundColor(Color(UIColor.separator)),
+                    alignment: .top
+                )
             }
             .sheet(isPresented: $isPlaylistSheetVisible, content: {
                 PlaylistNameSheetView() { doSave, playlistName in
@@ -156,88 +178,50 @@ struct SongsView: View {
                     isPlaylistSheetVisible = false
                 }
             })
-            .navigationTitle(title)
-            .toolbar(id: "main-toolbar") {
-//                // Leading navigation items
-//                ToolbarItem(id: "playlist-mode", placement: .topBarLeading) {
-//                    Button {
-//                        viewModel.changePlaylistMode()
-//                    } label: {
-//                        Text(viewModel.playlistMode)
-//                    }
-//                }
-                
-                // Principal item for track count (appears in center when space allows)
-                ToolbarItem(id: "track-count", placement: .principal) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "music.note.list")
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                        Text("\(viewModel.items.count)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+            .navigationTitle("Playlist Builder")
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .topBarLeading, content: {
+                    HStack {
+                        EditButton()
                     }
-                }
+                } )
                 
-                // Trailing navigation items - moved from bottom to top
-                ToolbarItem(id: "save", placement: .topBarTrailing) {
-                    Button {
-                        isPlaylistSheetVisible.toggle()
-                    } label: {
-                        Label("Save", systemImage: "plus.square.on.square")
-                    }
-                }
-                
-                ToolbarItem(id: "play", placement: .topBarTrailing) {
-                    Button {
-                        viewModel.play()
-                    } label: {
-                        Label("Play", systemImage: "play.fill")
-                    }
-                }
-                
-                ToolbarItem(id: "edit", placement: .topBarTrailing) {
-                    EditButton()
-                }
-                
-                if editMode?.wrappedValue == .active {
-                    ToolbarItem(id: "remove-selected", placement: .topBarTrailing) {
-                        Button {
-                            viewModel.removeSelected()
-                        } label: {
-                            Label("Remove from Playlist", systemImage: "minus.circle")
+                ToolbarItemGroup(placement: .topBarTrailing, content: {
+                    HStack {
+                        if (self.editMode?.wrappedValue == .active) {
+                            Button() {
+                                viewModel.removeSelected()
+                                
+                            } label: {
+                                Label("Remove from Playlist", systemImage: "trash")
+                            }
+                        }
+                        if (self.editMode?.wrappedValue == .inactive) {
+                            Button() {
+                                viewModel.handleGetRandomSongs()
+                            } label: {
+                                Label("Get Random", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
+                            }
+                        }
+                        if (self.editMode?.wrappedValue == .active) {
+                            Button() {
+                                viewModel.handleGetRandomSongs()
+                            } label: {
+                                Label("Get Random & Keep Selected", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
+                            }
                         }
                     }
-                    
-                    ToolbarItem(id: "random-keep", placement: .topBarTrailing) {
-                        Button {
-                            viewModel.handleGetRandomSongs()
-                        } label: {
-                            Label("Get Random & Keep Selected", systemImage: "shuffle.circle")
-                        }
-                    }
-                } else {
-                    ToolbarItem(id: "random", placement: .topBarTrailing) {
-                        Button {
-                            viewModel.handleGetRandomSongs()
-                        } label: {
-                            Label("Get Random", systemImage: "shuffle")
-                        }
-                    }
-                }
-            }
+                } )
+            })
             .environment(\.editMode, editMode)
             
         }
         .navigationViewStyle(.stack)
         .onAppear() {
-            logger.info("SongsView appeared")
             if (autoPlay == true) {
-                logger.info("Auto-playing")
                 viewModel.play()
             }
             else if (isFirstShowOfForm == true) {
-                logger.info("First show - getting random songs")
                 isFirstShowOfForm = false;
                 viewModel.handleGetRandomSongs();
             }

@@ -2,7 +2,14 @@
 
 **Rediscover Your Music Library**
 
-Built by a jazz musician with too much music.
+_Built by a jazz musician with too much music._
+
+Benjamin Day  
+Pluralsight Author | Microsoft MVP | Scrum.org Professional Scrum Trainer  
+https://www.benday.com  
+https://www.slidespeaker.ai  
+info@benday.com  
+YouTube: https://www.youtube.com/@_benday  
 
 ## The Problem
 

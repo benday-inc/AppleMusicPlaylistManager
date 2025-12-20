@@ -131,7 +131,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         listTemplate.tabImage = UIImage(systemName: "music.note.list")
         self.categoryListTemplate = listTemplate
         if let tabBar = self.tabBarTemplate {
-            tabBar.updateTemplates([listTemplate])
+            let randomMusicTemplate = getRandomMusicListTemplate(with: dataStore)
+            tabBar.updateTemplates([listTemplate, randomMusicTemplate])
         }
     }
 }

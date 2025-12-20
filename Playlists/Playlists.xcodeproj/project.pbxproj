@@ -393,7 +393,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Playlists/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RND;
+				INFOPLIST_KEY_CFBundleDisplayName = "RND Shuffle";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -429,7 +429,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Playlists/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RND;
+				INFOPLIST_KEY_CFBundleDisplayName = "RND Shuffle";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Read media library playlists and songs. Generate new playlists.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

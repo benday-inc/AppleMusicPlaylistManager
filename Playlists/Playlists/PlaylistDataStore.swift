@@ -26,10 +26,14 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
     private var isLoadedCategories: Bool = false
     private var isCurrentlyLoading: Bool = false
     
+    private static let migrationKey = "hasCompletedICloudMigration"
+    private static let dataFilenames = ["categories", "excluded-genres", "excluded-artists", "excluded-albums"]
+
     private init() {
-        // Load data asynchronously but don't create multiple concurrent load tasks
+        // Migrate local data to iCloud if needed, then load
         Task { @MainActor in
             if !isLoaded {
+                await migrateLocalDataToICloudIfNeeded()
                 await load()
             }
         }
@@ -247,11 +251,97 @@ class PlaylistDataStore: ObservableObject, @unchecked Sendable {
         }
     }
     
+    private static let iCloudContainerIdentifier = "iCloud.com.benday.Playlists"
+
+    private func localFileURL(filename: String) throws -> URL {
+        return try FileManager.default.url(for: .documentDirectory,
+                                           in: .userDomainMask,
+                                           appropriateFor: nil,
+                                           create: false)
+            .appendingPathComponent("\(filename).data")
+    }
+
+    private func iCloudFileURL(filename: String) throws -> URL? {
+        guard let iCloudURL = FileManager.default.url(forUbiquityContainerIdentifier: Self.iCloudContainerIdentifier) else {
+            return nil
+        }
+        let documentsURL = iCloudURL.appendingPathComponent("Documents")
+
+        // Ensure the Documents folder exists in iCloud container
+        if !FileManager.default.fileExists(atPath: documentsURL.path) {
+            try FileManager.default.createDirectory(at: documentsURL, withIntermediateDirectories: true)
+        }
+
+        return documentsURL.appendingPathComponent("\(filename).data")
+    }
+
+    private func migrateLocalDataToICloudIfNeeded() async {
+        // Skip if already migrated
+        guard !UserDefaults.standard.bool(forKey: Self.migrationKey) else {
+            print("iCloud migration: Already completed, skipping")
+            return
+        }
+
+        // Skip if iCloud is not available
+        guard FileManager.default.url(forUbiquityContainerIdentifier: Self.iCloudContainerIdentifier) != nil else {
+            print("iCloud migration: iCloud not available, skipping")
+            return
+        }
+
+        print("iCloud migration: Starting migration of local data to iCloud...")
+
+        var migratedCount = 0
+        for filename in Self.dataFilenames {
+            do {
+                let localURL = try localFileURL(filename: filename)
+                guard let iCloudURL = try iCloudFileURL(filename: filename) else { continue }
+
+                // Check if local file exists
+                guard FileManager.default.fileExists(atPath: localURL.path) else {
+                    print("iCloud migration: No local file for \(filename), skipping")
+                    continue
+                }
+
+                // Check if iCloud file already exists (don't overwrite)
+                if FileManager.default.fileExists(atPath: iCloudURL.path) {
+                    print("iCloud migration: iCloud file already exists for \(filename), skipping")
+                    continue
+                }
+
+                // Copy local file to iCloud
+                try FileManager.default.copyItem(at: localURL, to: iCloudURL)
+                print("iCloud migration: Successfully migrated \(filename)")
+                migratedCount += 1
+            } catch {
+                print("iCloud migration: Error migrating \(filename): \(error)")
+            }
+        }
+
+        // Mark migration as complete
+        UserDefaults.standard.set(true, forKey: Self.migrationKey)
+        print("iCloud migration: Complete. Migrated \(migratedCount) files.")
+    }
+
     private func fileURL(filename: String) throws -> URL {
-        try FileManager.default.url(for: .documentDirectory,
-                                       in: .userDomainMask,
-                                       appropriateFor: nil,
-                                       create: false)
+        // Try iCloud first
+        if let iCloudURL = FileManager.default.url(forUbiquityContainerIdentifier: Self.iCloudContainerIdentifier) {
+            let documentsURL = iCloudURL.appendingPathComponent("Documents")
+
+            // Ensure the Documents folder exists in iCloud container
+            if !FileManager.default.fileExists(atPath: documentsURL.path) {
+                try FileManager.default.createDirectory(at: documentsURL, withIntermediateDirectories: true)
+            }
+
+            print("Using iCloud storage: \(documentsURL.path)")
+            return documentsURL.appendingPathComponent("\(filename).data")
+        }
+
+        // Fallback to local Documents directory if iCloud unavailable
+        print("iCloud unavailable, using local storage")
+        return try FileManager.default.url(for: .documentDirectory,
+                                           in: .userDomainMask,
+                                           appropriateFor: nil,
+                                           create: false)
             .appendingPathComponent("\(filename).data")
     }
     

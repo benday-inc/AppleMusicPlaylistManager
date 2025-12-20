@@ -9,7 +9,7 @@
 import Foundation
 import Combine
 
-public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
+public class CategoryViewModel : ObservableObject, Identifiable, Hashable, CustomStringConvertible {
     @Published public var id: UUID = UUID()
     @Published var isLoaded: Bool = false
     @Published var hasChanges: Bool = false
@@ -52,7 +52,18 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
             }
         }
     }
-    
+
+    @Published var composers: [String] = [] {
+        didSet {
+            if let model = model {
+                hasChanges = (composers != model.composers)
+            }
+            else {
+                hasChanges = true
+            }
+        }
+    }
+
     private var model: Category?
     
     init() {
@@ -62,7 +73,27 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
+    public var description: String {
+        var parts: [String] = []
+
+        if !artists.isEmpty {
+            parts.append("Artists: \(artists.count)")
+        }
+        if !genres.isEmpty {
+            parts.append("Genres: \(genres.count)")
+        }
+        if !composers.isEmpty {
+            parts.append("Composers: \(composers.count)")
+        }
+
+        if parts.isEmpty {
+            return ""
+        } else {
+            return "\(parts.joined(separator: ", "))"
+        }
+    }
+
     public func undoChanges() {
         if let model = model {
             load(model)
@@ -71,31 +102,33 @@ public class CategoryViewModel : ObservableObject, Identifiable, Hashable {
     
     public func load(_ fromValue: Category) {
         isLoaded = false
-        
+
         id = fromValue.id
         model = fromValue
         name = fromValue.name
-        
+
         if (name.isEmpty == true) {
             name = "New Category"
         }
-        
+
         genres = fromValue.genres
         artists = fromValue.artists
-        
+        composers = fromValue.composers
+
         isLoaded = true
     }
     
     public func toModel() -> Category {
         var updatedModel = Category()
-        
+
         updatedModel.id = model?.id ?? UUID()
         updatedModel.name = name
         updatedModel.genres = genres
         updatedModel.artists = artists
-        
+        updatedModel.composers = composers
+
         model = updatedModel
-        
+
         return updatedModel
     }
     

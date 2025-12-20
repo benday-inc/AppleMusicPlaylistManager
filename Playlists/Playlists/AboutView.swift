@@ -29,6 +29,13 @@ struct AboutView: View {
                         .underline()
                 }
             }
+            Link(destination: URL(string: "https://www.youtube.com/@_benday")!) {
+                VStack {
+                    Text("YouTube")
+                        .foregroundColor(.blue)
+                        .underline()
+                }
+            }
             Link(destination: URL(string: "mailto:info@benday.com")!) {
                 VStack {
                     Text("info@benday.com")
@@ -49,6 +56,15 @@ struct AboutView: View {
                         .underline()
                 }
             }
+            
+            Link(destination: URL(string: "https://github.com/benday-inc/AppleMusicPlaylistManager")!) {
+                VStack {
+                    Text("Source code on GitHub")
+                        .foregroundColor(.blue)
+                        .underline()
+                }
+            }
+            
             Spacer()
         }
         .padding()

@@ -48,22 +48,19 @@ struct AddArtistView: View {
                         newItemName = ""
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
+            }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 0) {
+                    Divider()
                     HStack {
                         if selectedItems.isEmpty {
                             Text("Select artist(s) above")
                                 .foregroundStyle(.secondary)
-                                .padding()
-                            Spacer()
                         } else {
-                            let text = getSelectedText()
-                            
-                            
-                            Text("Selected: \(text)")
-                                .padding()
-                            Spacer()
+                            Text("Selected: \(getSelectedText())")
+                                .foregroundStyle(.primary)
                         }
-                        
+                        Spacer()
                         Button("Add") {
                             let trimmedItems = selectedItems.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                             let newItems = trimmedItems.filter { !$0.isEmpty && !category.artists.contains($0) }
@@ -73,11 +70,10 @@ struct AddArtistView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(selectedItems.isEmpty)
-                        .frame(minWidth: 80)
-                    }                    
-                    
+                    }
+                    .padding()
+                    .background(Color(UIColor.systemBackground))
                 }
-                
             }
             .onAppear() {
                 debouncer.start { artistName in

@@ -1,5 +1,5 @@
 //
-//  AddGenreView.swift
+//  AddComposerView.swift
 //  Playlists
 //
 //  Created by Benjamin Day on 6/19/25.
@@ -9,32 +9,31 @@ import SwiftUI
 import Foundation
 import MediaPlayer
 
-struct AddGenreView: View {
+struct AddComposerView: View {
     @State private var newItemName = ""
     @State private var selectedItems: Set<String> = []
     @State private var editMode = EditMode.active
     @State private var searchText = ""
-    @State private var isSearching = false
     @Binding var isPresented: Bool
     @ObservedObject var category: CategoryViewModel
     @State public var matchingItems: [IdentifiableString] = []
     @StateObject private var debouncer = Debouncer()
-    
+
     var body: some View {
         NavigationStack {
             List(matchingItems, id: \.value, selection: $selectedItems) { item in
                 Text(item.value)
                     .onTapGesture {
-                        UIApplication.shared.dismissKeyboard()
-                        if selectedItems.contains(item.value) {
-                            selectedItems.remove(item.value)
-                        } else {
-                            selectedItems.insert(item.value)
-                        }
+                    UIApplication.shared.dismissKeyboard()
+                    if selectedItems.contains(item.value) {
+                        selectedItems.remove(item.value)
+                    } else {
+                        selectedItems.insert(item.value)
                     }
+                }
             }
             .environment(\.editMode, $editMode)
-            .searchable(text: $searchText, prompt: "Search for genres")
+            .searchable(text: $searchText, prompt: "Search for composers")
             .onChange(of: searchText) { oldValue, newValue in
                 let trimmed = newValue.trimmingCharacters(in: .whitespaces)
                 debouncer.input.send(trimmed)
@@ -55,7 +54,7 @@ struct AddGenreView: View {
                     Divider()
                     HStack {
                         if selectedItems.isEmpty {
-                            Text("Select genre(s) above")
+                            Text("Select composer(s) above")
                                 .foregroundStyle(.secondary)
                         } else {
                             Text("Selected: \(getSelectedText())")
@@ -64,8 +63,8 @@ struct AddGenreView: View {
                         Spacer()
                         Button("Add") {
                             let trimmedItems = selectedItems.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.genres.contains($0) }
-                            category.genres.append(contentsOf: newItems)
+                            let newItems = trimmedItems.filter { !$0.isEmpty && !category.composers.contains($0) }
+                            category.composers.append(contentsOf: newItems)
                             newItemName = ""
                             isPresented = false
                         }
@@ -77,23 +76,22 @@ struct AddGenreView: View {
                 }
             }
             .onAppear() {
-                debouncer.start { genreName in
-                    updateMatching(for: genreName)
+                debouncer.start { composerName in
+                    updateMatching(for: composerName)
                 }
             }
-            .navigationTitle("Add genre")
+            .navigationTitle("Add composer")
         }
-        
     }
-    
+
     private func getSelectedText() -> String {
         let joined = selectedItems.joined(separator: ", ")
-        
+
         if (UIDevice.current.userInterfaceIdiom == .phone) {
             let orientation = UIDevice.current.orientation
-            
+
             let maxChars : Int
-            
+
             if (orientation.isLandscape == true) {
                 maxChars = 60
             }
@@ -101,16 +99,16 @@ struct AddGenreView: View {
             {
                 maxChars = 15
             }
-            
+
             let text = joined.count > maxChars
-            ? joined.prefix(maxChars) + "…"
-            : joined
-            
+                ? joined.prefix(maxChars) + "…"
+                : joined
+
             return text
         }
         else {
             let maxChars = 80
-            
+
             if (joined.count > maxChars) {
                 return joined.prefix(maxChars) + "…"
             }
@@ -119,48 +117,44 @@ struct AddGenreView: View {
             }
         }
     }
-    
+
     private func updateMatching(for query: String) {
         guard !query.isEmpty else {
             matchingItems = []
             return
         }
-        isSearching = true
-        
-        let mediaQuery = MPMediaQuery.genres()
-        let allGenres = mediaQuery.collections?.compactMap { $0.representativeItem?.genre } ?? []
-        var uniqueGenres = Array(Set(allGenres)).sorted()
-        
+        let mediaQuery = MPMediaQuery.composers()
+        let allComposers = mediaQuery.collections?.compactMap { $0.representativeItem?.composer } ?? []
+        var uniqueComposers = Array(Set(allComposers)).sorted()
+
         var returnValue = [IdentifiableString]()
-        uniqueGenres = uniqueGenres.filter { $0.range(of: query, options: .caseInsensitive) != nil }
-        for genre in uniqueGenres {
-            returnValue.append(IdentifiableString(value: genre))
+        uniqueComposers = uniqueComposers.filter { $0.range(of: query, options: .caseInsensitive) != nil }
+        for composer in uniqueComposers {
+            returnValue.append(IdentifiableString(value: composer))
         }
         matchingItems = returnValue
-        isSearching = false
     }
 }
 
-#Preview("with matching genres") {
-    @Previewable @State var temp = [IdentifiableString(value: "Rock"), IdentifiableString(value: "Pop"),
-                                    IdentifiableString(value: "Pop 1"), IdentifiableString(value: "Pop 2"), IdentifiableString(value: "Pop 3"), IdentifiableString(value: "Jazz"),
-                                    IdentifiableString(value: "Latin Jazz")
-    ]
+#Preview("with matching composers") {
+    @Previewable @State var temp = [
+        IdentifiableString(value: "John Dowland"),
+        IdentifiableString(value: "William Byrd"),
+        IdentifiableString(value: "Palestrina"),
+        IdentifiableString(value: "Thomas Tallis"),
+        IdentifiableString(value: "Johann Sebastian Bach")]
     var category = Category()
     category.name = "Test"
     let categoryVM = CategoryViewModel()
     categoryVM.load(category)
-    
-    return AddGenreView(isPresented: .constant(true), category: categoryVM, matchingItems: temp)
-}
 
+    return AddComposerView(isPresented: .constant(true), category: categoryVM, matchingItems: temp)
+}
 
 #Preview("empty") {
     var category = Category()
     category.name = "Test"
     let categoryVM = CategoryViewModel()
     categoryVM.load(category)
-    return AddGenreView(isPresented: .constant(true), category: categoryVM)
+    return AddComposerView(isPresented: .constant(true), category: categoryVM)
 }
-
-

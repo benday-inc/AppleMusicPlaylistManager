@@ -48,7 +48,7 @@ struct CategoryListView: View {
                                     Text(item.name)
                                         .font(.headline)
                                     
-                                    Text("Artists: \(item.artists.count) Genres: \(item.genres.count)")
+                                    Text(item.description)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }

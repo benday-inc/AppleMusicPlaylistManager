@@ -10,7 +10,7 @@ import SwiftUI
 struct AboutView: View {
     var body: some View {
         VStack(spacing: 10) {
-            Text("Random Playlist Generator")
+            Text("RND Shuffle")
                 .font(.title)
                 .fontWeight(.bold)
             Text("Written by Benjamin Day")

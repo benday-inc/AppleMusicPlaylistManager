@@ -159,6 +159,24 @@ struct CategoryEditorView: View {
     return CategoryEditorView(category: selected, viewModel: viewModel)
 }
 
+#Preview("lots of stuff") {
+    let viewModel = CategoryListViewModel()
+    let selected = viewModel.addNewCategory()
+    selected.artists.append("Artist 1")
+    selected.artists.append("Artist 2")
+    selected.artists.append("Artist 3")
+    selected.artists.append("Artist 4")
+    selected.genres.append("Genre A")
+    selected.genres.append("Genre B")
+    selected.genres.append("Genre C")
+    selected.genres.append("Genre D")
+    selected.composers.append("John Dowland")
+    selected.composers.append("William Byrd")
+    selected.composers.append("Blah blah")
+    selected.composers.append("qerqwerqwer")
+    return CategoryEditorView(category: selected, viewModel: viewModel)
+}
+
 #Preview("empty category") {
     let viewModel = CategoryListViewModel()
     let selected = viewModel.addNewCategory()

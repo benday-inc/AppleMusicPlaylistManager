@@ -49,22 +49,19 @@ struct AddGenreView: View {
                         newItemName = ""
                     }
                 }
-                ToolbarItemGroup(placement: .bottomBar) {
+            }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 0) {
+                    Divider()
                     HStack {
                         if selectedItems.isEmpty {
-                            Text("Select genres(s) above")
+                            Text("Select genre(s) above")
                                 .foregroundStyle(.secondary)
-                                .padding()
-                            Spacer()
                         } else {
-                            let text = getSelectedText()
-                            
-                            
-                            Text("Selected: \(text)")
-                                .padding()
-                            Spacer()
+                            Text("Selected: \(getSelectedText())")
+                                .foregroundStyle(.primary)
                         }
-                        
+                        Spacer()
                         Button("Add") {
                             let trimmedItems = selectedItems.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                             let newItems = trimmedItems.filter { !$0.isEmpty && !category.genres.contains($0) }
@@ -74,10 +71,10 @@ struct AddGenreView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .disabled(selectedItems.isEmpty)
-                        .frame(minWidth: 80)
                     }
+                    .padding()
+                    .background(Color(UIColor.systemBackground))
                 }
-                
             }
             .onAppear() {
                 debouncer.start { genreName in

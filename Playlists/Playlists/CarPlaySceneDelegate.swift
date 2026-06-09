@@ -9,6 +9,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     var tabBarTemplate: CPTabBarTemplate?
     var randomMusicViewModel: SongsViewModel?
     var randomMusicListTemplate: CPListTemplate?
+    var favoritesViewModel: SongsViewModel?
+    var favoritesListTemplate: CPListTemplate?
     
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -36,6 +38,8 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         self.playingCategoryId = nil
         self.randomMusicViewModel = nil
         self.randomMusicListTemplate = nil
+        self.favoritesViewModel = nil
+        self.favoritesListTemplate = nil
         // Keep dataStore around for potential reconnection
     }
     
@@ -116,9 +120,10 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     private func setupAndShowTabBar(with dataStore: PlaylistDataStore) async {
         let listTemplate = getCategoryListTemplate(with: dataStore)
         let randomMusicTemplate = getRandomMusicListTemplate(with: dataStore)
-        
+        let favoritesTemplate = getFavoritesListTemplate(with: dataStore)
+
         self.categoryListTemplate = listTemplate
-        let tabBar = CPTabBarTemplate(templates: [listTemplate, randomMusicTemplate])
+        let tabBar = CPTabBarTemplate(templates: [listTemplate, randomMusicTemplate, favoritesTemplate])
         self.tabBarTemplate = tabBar
         interfaceController?.setRootTemplate(tabBar, animated: true) { success, error in
             if let error = error {
@@ -163,7 +168,84 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         // Update the existing template's sections
         randomMusicListTemplate?.updateSections([buttonSection, songsSection])
     }
-    
+
+    private func getFavoritesListTemplate(with dataStore: PlaylistDataStore) -> CPListTemplate {
+        // Create or reuse the view model, started in Favorites mode
+        if favoritesViewModel == nil {
+            favoritesViewModel = SongsViewModel(storage: dataStore)
+            favoritesViewModel?.randomizeFavorites()
+        }
+
+        guard let viewModel = favoritesViewModel else {
+            return CPListTemplate(title: "Favorites", sections: [])
+        }
+
+        let playButton = CPListItem(text: "▶️ Play All", detailText: "Play the current favorites playlist")
+        playButton.handler = { [weak self] _, completion in
+            self?.favoritesViewModel?.play()
+            completion()
+        }
+
+        let refreshButton = CPListItem(text: "🔄 Refresh", detailText: "Shuffle favorites again")
+        refreshButton.handler = { [weak self] _, completion in
+            self?.refreshFavorites(with: dataStore)
+            completion()
+        }
+
+        let buttonSection = CPListSection(items: [playButton, refreshButton])
+
+        let songItems = viewModel.items.map { song in
+            let item = CPListItem(text: song.trackName, detailText: song.artistName)
+            item.handler = { _, completion in
+                completion()
+            }
+            return item
+        }
+
+        let songsSection = CPListSection(items: songItems, header: "Songs", sectionIndexTitle: nil)
+
+        let listTemplate = CPListTemplate(title: "Favorites", sections: [buttonSection, songsSection])
+        listTemplate.tabTitle = "Favorites"
+        listTemplate.tabImage = UIImage(systemName: "star.fill")
+
+        self.favoritesListTemplate = listTemplate
+
+        return listTemplate
+    }
+
+    private func refreshFavorites(with dataStore: PlaylistDataStore) {
+        // Re-shuffle from the cached favorites (no need to re-query the playlist)
+        favoritesViewModel?.handleGetRandomSongs()
+
+        guard let viewModel = favoritesViewModel else { return }
+
+        let playButton = CPListItem(text: "▶️ Play All", detailText: "Play the current favorites playlist")
+        playButton.handler = { [weak self] _, completion in
+            self?.favoritesViewModel?.play()
+            completion()
+        }
+
+        let refreshButton = CPListItem(text: "🔄 Refresh", detailText: "Shuffle favorites again")
+        refreshButton.handler = { [weak self] _, completion in
+            self?.refreshFavorites(with: dataStore)
+            completion()
+        }
+
+        let buttonSection = CPListSection(items: [playButton, refreshButton])
+
+        let songItems = viewModel.items.map { song in
+            let item = CPListItem(text: song.trackName, detailText: song.artistName)
+            item.handler = { _, completion in
+                completion()
+            }
+            return item
+        }
+
+        let songsSection = CPListSection(items: songItems, header: "Songs", sectionIndexTitle: nil)
+
+        favoritesListTemplate?.updateSections([buttonSection, songsSection])
+    }
+
     func reloadCategoryList(with dataStore: PlaylistDataStore) async {
         let items = dataStore.categories
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
@@ -188,10 +270,11 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         listTemplate.tabImage = UIImage(systemName: "music.note.list")
         self.categoryListTemplate = listTemplate
         
-        // Preserve both tabs when updating
+        // Preserve all tabs when updating
         if let tabBar = self.tabBarTemplate {
             let randomMusicTemplate = getRandomMusicListTemplate(with: dataStore)
-            tabBar.updateTemplates([listTemplate, randomMusicTemplate])
+            let favoritesTemplate = getFavoritesListTemplate(with: dataStore)
+            tabBar.updateTemplates([listTemplate, randomMusicTemplate, favoritesTemplate])
         }
     }
 }

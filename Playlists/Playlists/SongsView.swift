@@ -197,8 +197,23 @@ struct SongsView: View {
                             }
                         }
                         if (self.editMode?.wrappedValue == .inactive) {
-                            Button() {
-                                viewModel.handleGetRandomSongs()
+                            Menu {
+                                Button {
+                                    viewModel.handleGetRandomSongs()
+                                } label: {
+                                    Label("Regenerate (Current)", systemImage: "wand.and.stars")
+                                }
+                                Divider()
+                                Button {
+                                    viewModel.randomizeAll()
+                                } label: {
+                                    Label("All Songs", systemImage: "music.note.list")
+                                }
+                                Button {
+                                    viewModel.randomizeFavorites()
+                                } label: {
+                                    Label("Favorite Songs", systemImage: "star.fill")
+                                }
                             } label: {
                                 Label("Get Random", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
                             }

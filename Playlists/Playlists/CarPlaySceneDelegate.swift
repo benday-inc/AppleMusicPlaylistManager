@@ -27,20 +27,9 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         }
     }
     
-    func makeDetailList(for category: Category) -> CPListTemplate {
-        let item = CPListItem(text: "\(category.name) Song", detailText: "Example")
-        item.handler = { _, completion in
-            // Do something on selection
-            completion()
-        }
-        
-        let section = CPListSection(items: [item])
-        return CPListTemplate(title: category.name, sections: [section])
-    }
-    
     // CarPlay disconnected
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
-                                          didDisconnect interfaceController: CPInterfaceController) {
+                                          didDisconnectInterfaceController interfaceController: CPInterfaceController) {
         self.interfaceController = nil
         self.categoryListTemplate = nil
         self.tabBarTemplate = nil

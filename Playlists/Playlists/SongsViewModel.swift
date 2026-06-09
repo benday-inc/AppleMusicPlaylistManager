@@ -224,9 +224,12 @@ class SongsViewModel : ObservableObject {
         if (forCategory != nil) {
             handleGetAllSongsForCategory()
         }
+        else if (playlistMode == AppConstants.PLAYLIST_MODE_FAVORITES) {
+            populateResultsForFavorites()
+        }
         else {
             var query: MPMediaQuery
-            
+
             if (playlistMode == AppConstants.PLAYLIST_MODE_ALL) {
                 query = MPMediaQuery.songs()
             }
@@ -333,6 +336,44 @@ class SongsViewModel : ObservableObject {
         allItems = returnValues
     }
     
+    /// Fetches Apple Music's auto-maintained "Favorite Songs" playlist (iOS 17.2+)
+    /// via MPMediaQuery. Returns nil if no playlist by that name is visible to the
+    /// on-device media library.
+    private func getFavoriteSongsPlaylist() -> MPMediaPlaylist? {
+        let query = MPMediaQuery.playlists()
+
+        let predicate = MPMediaPropertyPredicate(
+            value: AppConstants.FAVORITE_SONGS_PLAYLIST_NAME,
+            forProperty: MPMediaPlaylistPropertyName,
+            comparisonType: .equalTo
+        )
+        query.addFilterPredicate(predicate)
+
+        return query.collections?.first as? MPMediaPlaylist
+    }
+
+    private func populateResultsForFavorites() {
+        guard let playlist = getFavoriteSongsPlaylist() else {
+            // Diagnostic: dump every playlist name so we can see what IS visible
+            // if the expected name isn't found (e.g. localized / not synced).
+            print("Favorites: no playlist named '\(AppConstants.FAVORITE_SONGS_PLAYLIST_NAME)' found. Visible playlists:")
+            let allPlaylists = MPMediaQuery.playlists().collections ?? []
+            for playlist in allPlaylists {
+                let name = playlist.value(forProperty: MPMediaPlaylistPropertyName) as? String ?? "(unnamed)"
+                print("\t- \(name) (\(playlist.items.count) items)")
+            }
+            items = []
+            allItems = []
+            return
+        }
+
+        let returnValues = playlist.items.map { MediaItemWrapper(item: $0) }
+        print("Favorites: found '\(AppConstants.FAVORITE_SONGS_PLAYLIST_NAME)' with \(returnValues.count) tracks.")
+
+        items = returnValues
+        allItems = returnValues
+    }
+
     private func getRandomIndexes(maxIndex: Int, numberOfValuesToReturn: Int) -> Array<Int> {
         
         if (maxIndex == 0) {
@@ -508,6 +549,26 @@ class SongsViewModel : ObservableObject {
         }
     }
     
+    public func randomizeFavorites() {
+        currentGenre = ""
+        currentArtist = ""
+        playlistMode = AppConstants.PLAYLIST_MODE_FAVORITES
+
+        allItems = nil
+        items = Array<MediaItemWrapper>()
+        handleGetRandomSongs()
+    }
+
+    public func randomizeAll() {
+        currentGenre = ""
+        currentArtist = ""
+        playlistMode = AppConstants.PLAYLIST_MODE_ALL
+
+        allItems = nil
+        items = Array<MediaItemWrapper>()
+        handleGetRandomSongs()
+    }
+
     public func play() {
         var mediaItems: [MPMediaItem] = []
         

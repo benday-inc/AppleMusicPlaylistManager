@@ -21,9 +21,19 @@ struct SongsView: View {
     @StateObject private var viewModel: SongsViewModel
     
     @State var autoPlay = false
-    
+
+    // When true, the view starts in Favorites mode and shuffles the
+    // "Favorite Songs" playlist on first appearance (used by the Favorites tab).
+    var startInFavoritesMode = false
+
     init(_ storage: PlaylistDataStore) {
         print("SongsView init")
+        _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
+    }
+
+    init(favorites: Bool, storage: PlaylistDataStore) {
+        print("SongsView init for favorites")
+        startInFavoritesMode = favorites
         _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
     }
     
@@ -178,7 +188,7 @@ struct SongsView: View {
                     isPlaylistSheetVisible = false
                 }
             })
-            .navigationTitle("Playlist Builder")
+            .navigationTitle(startInFavoritesMode ? "Favorites" : "Playlist Builder")
             .toolbar(content: {
                 ToolbarItemGroup(placement: .topBarLeading, content: {
                     HStack {
@@ -197,23 +207,8 @@ struct SongsView: View {
                             }
                         }
                         if (self.editMode?.wrappedValue == .inactive) {
-                            Menu {
-                                Button {
-                                    viewModel.handleGetRandomSongs()
-                                } label: {
-                                    Label("Regenerate (Current)", systemImage: "wand.and.stars")
-                                }
-                                Divider()
-                                Button {
-                                    viewModel.randomizeAll()
-                                } label: {
-                                    Label("All Songs", systemImage: "music.note.list")
-                                }
-                                Button {
-                                    viewModel.randomizeFavorites()
-                                } label: {
-                                    Label("Favorite Songs", systemImage: "star.fill")
-                                }
+                            Button() {
+                                viewModel.handleGetRandomSongs()
                             } label: {
                                 Label("Get Random", systemImage: "wand.and.stars").labelStyle(.titleAndIcon)
                             }
@@ -238,7 +233,12 @@ struct SongsView: View {
             }
             else if (isFirstShowOfForm == true) {
                 isFirstShowOfForm = false;
-                viewModel.handleGetRandomSongs();
+                if (startInFavoritesMode == true) {
+                    viewModel.randomizeFavorites()
+                }
+                else {
+                    viewModel.handleGetRandomSongs()
+                }
             }
         }
     }

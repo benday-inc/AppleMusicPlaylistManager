@@ -559,16 +559,6 @@ class SongsViewModel : ObservableObject {
         handleGetRandomSongs()
     }
 
-    public func randomizeAll() {
-        currentGenre = ""
-        currentArtist = ""
-        playlistMode = AppConstants.PLAYLIST_MODE_ALL
-
-        allItems = nil
-        items = Array<MediaItemWrapper>()
-        handleGetRandomSongs()
-    }
-
     public func play() {
         var mediaItems: [MPMediaItem] = []
         

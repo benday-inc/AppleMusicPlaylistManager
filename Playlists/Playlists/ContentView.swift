@@ -32,6 +32,10 @@ struct ContentView: View {
                         .tabItem {
                             Label("Build Playlist", systemImage: "square.and.pencil")
                         }.tag(1)
+                    SongsView(favorites: true, storage: storage)
+                        .tabItem {
+                            Label("Favorites", systemImage: "star.fill")
+                        }.tag(4)
                     ExclusionsView()
                         .environmentObject(storage)
                         .tabItem {

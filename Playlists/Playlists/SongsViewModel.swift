@@ -20,20 +20,29 @@ class SongsViewModel : ObservableObject {
     
     @Published var multiSelection = Set<UUID>()
     
+    @Published private(set) var lastPlayedFilter: LastPlayedFilter = .anyTime
+    private var lastPlayedFilterKey: String?
+    
     private var storage: PlaylistDataStore
     
     private var forCategory: Category?
     
     private var isPreview = false
     
-    init (storage: PlaylistDataStore) {
+    // The phone/iPad UI drives the system Music app; CarPlay passes the
+    // applicationQueuePlayer so this app owns Now Playing in the car.
+    private let musicPlayer: MPMusicPlayerController
+    
+    init (storage: PlaylistDataStore, musicPlayer: MPMusicPlayerController = .systemMusicPlayer) {
         self.storage = storage
+        self.musicPlayer = musicPlayer
         self.guid = UUID().uuidString
     }
     
-    init (category: Category, storage: PlaylistDataStore) {
+    init (category: Category, storage: PlaylistDataStore, musicPlayer: MPMusicPlayerController = .systemMusicPlayer) {
         forCategory = category
         self.storage = storage
+        self.musicPlayer = musicPlayer
         self.guid = UUID().uuidString
         handleGetRandomSongs()
         play()
@@ -43,6 +52,7 @@ class SongsViewModel : ObservableObject {
         isPreview = true
         
         self.storage = storage
+        self.musicPlayer = .systemMusicPlayer
         
         self.guid = UUID().uuidString
         
@@ -386,7 +396,7 @@ class SongsViewModel : ObservableObject {
             var returnValues = Array<Int>()
             
             for _ in 0...numberOfValuesToReturn {
-                let randomValue = Int.random(in: 1..<maxIndex)
+                let randomValue = Int.random(in: 0..<maxIndex)
                 
                 if (returnValues.contains(randomValue) == false) {
                     returnValues.append(randomValue)
@@ -408,14 +418,15 @@ class SongsViewModel : ObservableObject {
             handleGetAllSongs()
         }
         
-        let songCount = allItems!.count
-        
-        if (songCount == 0) {
+        if (allItems!.count == 0) {
             handleGetAllSongs()
         }
         
+        // only songs that pass the last-played filter are eligible
+        let pool = allItems!.filter { lastPlayedFilter.includes($0.mediaItem) }
+        
         let randomIndexes = getRandomIndexes(
-            maxIndex: songCount,
+            maxIndex: pool.count,
             numberOfValuesToReturn: AppConstants.NUMBER_OF_TRACKS_IN_PLAYLIST)
         
         var newPlaylistItems = Array<MediaItemWrapper>()
@@ -432,11 +443,11 @@ class SongsViewModel : ObservableObject {
         
         // create random playlist
         for index in randomIndexes {
-            if index >= allItems!.count {
+            if index >= pool.count {
                 continue
             }
             
-            let tempSong = allItems![index]
+            let tempSong = pool[index]
             
             if (storage.isExcluded(item: tempSong, playlistMode: playlistMode) == false) {
                 newPlaylistItems.append(tempSong)
@@ -451,6 +462,23 @@ class SongsViewModel : ObservableObject {
         items = newPlaylistItems
     }
     
+    /// Loads the saved last-played filter for this list without regenerating it.
+    public func useSavedLastPlayedFilter(key: String) {
+        lastPlayedFilterKey = key
+        lastPlayedFilter = LastPlayedFilter.load(key: key)
+    }
+    
+    /// Changes the last-played filter, saves it, and generates a new random playlist.
+    public func changeLastPlayedFilter(to filter: LastPlayedFilter) {
+        lastPlayedFilter = filter
+        
+        if let key = lastPlayedFilterKey {
+            filter.save(key: key)
+        }
+        
+        handleGetRandomSongs()
+    }
+    
     public func playNow(item: MediaItemWrapper) {
         if item.mediaItem == nil {
             return
@@ -462,9 +490,11 @@ class SongsViewModel : ObservableObject {
     }
     
     public func playMediaItemsNow(items: [MPMediaItem]) {
-        let collection = MPMediaItemCollection(items: items)
+        if items.isEmpty {
+            return
+        }
         
-        let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+        let collection = MPMediaItemCollection(items: items)
         
         musicPlayer.prepend(MPMusicPlayerMediaItemQueueDescriptor(itemCollection: collection))
         
@@ -568,9 +598,28 @@ class SongsViewModel : ObservableObject {
             }
         }
         
-        let musicPlayer = MPMusicPlayerController.systemMusicPlayer
+        if mediaItems.isEmpty {
+            return
+        }
         
         musicPlayer.setQueue(with: MPMediaItemCollection(items: mediaItems))
+        
+        musicPlayer.play()
+    }
+    
+    /// Queues the whole playlist but starts playback at the given track.
+    public func play(startingAt item: MediaItemWrapper) {
+        let mediaItems = items.compactMap { $0.mediaItem }
+        
+        if mediaItems.isEmpty {
+            return
+        }
+        
+        let descriptor = MPMusicPlayerMediaItemQueueDescriptor(
+            itemCollection: MPMediaItemCollection(items: mediaItems))
+        descriptor.startItem = item.mediaItem
+        
+        musicPlayer.setQueue(with: descriptor)
         
         musicPlayer.play()
     }

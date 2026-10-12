@@ -28,13 +28,22 @@ struct SongsView: View {
 
     init(_ storage: PlaylistDataStore) {
         print("SongsView init")
-        _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
+        _viewModel = StateObject(wrappedValue: {
+            let viewModel = SongsViewModel(storage: storage)
+            viewModel.useSavedLastPlayedFilter(key: LastPlayedFilter.randomMusicKey)
+            return viewModel
+        }())
     }
 
     init(favorites: Bool, storage: PlaylistDataStore) {
         print("SongsView init for favorites")
         startInFavoritesMode = favorites
-        _viewModel = StateObject(wrappedValue: SongsViewModel(storage: storage))
+        _viewModel = StateObject(wrappedValue: {
+            let viewModel = SongsViewModel(storage: storage)
+            viewModel.useSavedLastPlayedFilter(
+                key: favorites ? LastPlayedFilter.favoritesKey : LastPlayedFilter.randomMusicKey)
+            return viewModel
+        }())
     }
     
     init(testItems: [MediaItemWrapper]) {
@@ -193,6 +202,24 @@ struct SongsView: View {
                 ToolbarItemGroup(placement: .topBarLeading, content: {
                     HStack {
                         EditButton()
+                        Menu {
+                            Section("Last Played") {
+                                ForEach(LastPlayedFilter.allCases) { filter in
+                                    Button {
+                                        viewModel.changeLastPlayedFilter(to: filter)
+                                    } label: {
+                                        if filter == viewModel.lastPlayedFilter {
+                                            Label(filter.title, systemImage: "checkmark")
+                                        } else {
+                                            Text(filter.title)
+                                        }
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label("Last Played",
+                                  systemImage: viewModel.lastPlayedFilter == .anyTime ? "clock" : "clock.badge.checkmark.fill")
+                        }
                     }
                 } )
                 
